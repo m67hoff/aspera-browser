@@ -1,0 +1,21 @@
+.app-sidenav {
+    padding: 10px;
+    min-width: 200px;
+  }
+  
+  .app-toolbar-filler {
+    flex: 1 1 auto;
+  }
+  
+  .app-content {
+    padding: 20px;
+  }
+  
+  .app-content mat-card {
+    margin: 20px;
+  }
+  
+  .app-content button {
+    margin: 10px;
+  }
+  
