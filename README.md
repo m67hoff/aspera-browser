@@ -1,31 +1,30 @@
 ![](img/aspera.png)
-# AsperaConnectAngularSample
+## AsperaConnectAngularSample
 
 ---
 
 Angular App using Aspera Connect API and Node API, for file and folder upload+download.
 UI using Angular Material components.
 
-My sample is deployed at IBM Cloud:
+See the [Architecture Overview](Architecture.md) for information how it works. 
+
+### See it live:
+My sample is deployed on IBM Cloud:
 http://asperaconnectangularsample.eu-de.mybluemix.net
 
-Documentation for the used Aspera APIs:  
+### run & test local
+(Prereq: Node.js,npm and angular cli installed)
 
-- [Aspera Connect Client API](https://developer.asperasoft.com/web/connect-client/all) 
-- [Aspera Node API (RESTfull)](https://developer.asperasoft.com/web/node/index)
+Run `ng s` to start the Angular Live Development Server,
+open your browser on http://localhost:4200/
 
-(Aspera Developer Network subscription needed) 
-
-## run & test local
-
-Run `ng s` to run the NG Live Development Server on localhost:4200, open your browser on http://localhost:4200/ **
-
-## Build & deploy to IBM Cloud
+### Build & deploy to IBM Cloud
+(Prereq: as above + cloud foundry cli installed and IBM Bluemix accout )
 
 Run `ng build -aot -prod` to build.  The `dist/` directory contains the static WebApp. 
 To deploy copy everything in `dist/*` directory to public dir on the webserver.
 
-Deployment to IBM Cloud - cloud foundry ngix (login to your right Bluemix cf space first):   
+Deployment to IBM Cloud cf-ngix (login to your right Bluemix cf space first):   
 ```
 ng build -aot -prod
 cd dist
@@ -36,14 +35,14 @@ cd ..
 
 
 
-## Todo
+### Todo
 
 - first version
 - ...
 - ...
 - devops integration
 
-## Changelog
+### Changelog
 
 - 20171206 - first code / api tests  
 
