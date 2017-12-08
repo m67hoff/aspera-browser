@@ -44,7 +44,7 @@ cd ..
 
 ### Changelog
 
-- 20171206 - first code / api tests  
+- 20171206 - first code / simple download 
 
 ---
 

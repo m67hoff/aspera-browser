@@ -2,10 +2,10 @@
 
   <mat-sidenav #sidenav mode="side" class="app-sidenav">
     <mat-nav-list dense>
-      <a mat-list-item target="_blank" href="{{baseURL}}/red">
-        <mat-icon>link</mat-icon> bla </a>
-      <a mat-list-item target="_blank" href="{{baseURL}}/db">
-        <mat-icon>link</mat-icon> bla 2 </a>
+      <a mat-list-item target="_blank" href="https://developer.asperasoft.com/web/connect-client/all">
+        <mat-icon>link</mat-icon> Aspera Connect Client API </a>
+      <a mat-list-item target="_blank" href="https://developer.asperasoft.com/web/node/index">
+        <mat-icon>link</mat-icon> Aspera Node API (RESTfull) </a>
     </mat-nav-list>
   </mat-sidenav>
 
@@ -27,7 +27,7 @@
       <mat-card-subtitle>from demo.asperasoft.com server </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-      <button mat-raised-button color="primary">Download 100MB</button>
+      <button mat-raised-button color="primary" (click)="downloadFile()">Download 100MB</button>
     </mat-card-content>
   </mat-card>
 </div>
