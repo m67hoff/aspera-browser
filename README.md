@@ -1,5 +1,5 @@
 ![](img/aspera.png)
-## AsperaConnectAngularSample
+## Aspera Connect -  Angular Sample 
 
 ---
 
@@ -33,17 +33,16 @@ cf p AsperaConnectAngularSample -m 64M
 cd ..
 ``` 
 
-
-
 ### Todo
-
-- first version
 - ...
+- upload sample 
+- node API
 - ...
-- devops integration
+- nice UI
+- ...
+- devops integration (travis / greenkeeper)
 
 ### Changelog
-
 - 20171206 - first code / simple download 
 
 ---

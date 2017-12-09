@@ -8,7 +8,7 @@ declare var AW4: any;
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  baseURL = 'http://localhost:1880';
+
   asperaWeb: any;
 
   constructor() {
@@ -29,6 +29,7 @@ export class AppComponent {
     this.asperaWeb = new AW4.Connect({ sdkLocation: CONNECT_INSTALLER, minVersion: '3.6.0' });
     this.asperaWeb.addEventListener(AW4.Connect.EVENT.STATUS, statusEventListener);
     this.asperaWeb.initSession();
+    this.asperaWeb.addEventListener('transfer', this.handleTransferEvents);
   }
 
   downloadFile() {
@@ -52,5 +53,14 @@ export class AppComponent {
 
     this.asperaWeb.startTransfer(transferSpec, connectSettings);
   }
+
+  handleTransferEvents(event, obj) {
+    switch (event) {
+      case 'transfer':
+        console.log(obj);
+        break;
+    }
+  };
+
 
 }
