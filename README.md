@@ -44,6 +44,8 @@ cd ..
 
 ### Changelog
 - 20171206 - first code / simple download 
+- 20171212 - nodeAPI browse sample 
+- 20171214 - upload sample  
 
 ---
 

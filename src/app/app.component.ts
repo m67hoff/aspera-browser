@@ -52,11 +52,39 @@ export class AppComponent {
       allow_dialogs: 'yes'
     };
 
-    console.log('downloadFile');
-    console.log(transferSpec);
-
+    console.log('downloadFile ', transferSpec);
     this.asperaWeb.startTransfer(transferSpec, connectSettings);
   }
+
+  showSelectFileDialog() {
+    this.asperaWeb.showSelectFileDialog({ success: this.uploadFiles.bind(this) })
+  }
+
+  uploadFiles(cbObj) {
+    console.log('uploadFiles ', cbObj);
+    const transferSpec = {
+      paths: [],
+      remote_host: "demo.asperasoft.com",
+      remote_user: "aspera",
+      remote_password: "demoaspera",
+      direction: "send",
+      target_rate_kbps: 15000,
+      resume: "sparse_checksum",
+      destination_root: "/Upload"
+    };
+
+    transferSpec.paths = cbObj.dataTransfer.files.map(file => { return { source: file.name } });
+
+    if (transferSpec.paths.length === 0)  return;
+    
+    const connectSettings = {
+      allow_dialogs: 'yes'
+    };
+
+    console.log('uploadFiles transferSpec', transferSpec);
+    this.asperaWeb.startTransfer(transferSpec, connectSettings);
+  };
+
 
   handleTransferEvents(event, obj) {
     switch (event) {
