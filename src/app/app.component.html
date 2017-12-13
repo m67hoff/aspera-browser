@@ -20,8 +20,8 @@
   </mat-toolbar>
 
   <div class="app-content">
-    <mat-card>
 
+    <mat-card>
       <mat-card-header>
         <img src="assets/aspera_icon.png" mat-card-avatar>
         <mat-card-title>
@@ -29,11 +29,35 @@
         </mat-card-title>
         <mat-card-subtitle>from demo.asperasoft.com server </mat-card-subtitle>
       </mat-card-header>
-      
+
       <mat-card-content>
         <button mat-raised-button color="primary" (click)="downloadFile()">Download 100MB</button>
       </mat-card-content>
-    
     </mat-card>
+
+    <mat-card>
+      <mat-card-header>
+        <img src="assets/aspera_icon.png" mat-card-avatar>
+        <mat-card-title>
+          <span class="title">Aspera Browse</span>
+        </mat-card-title>
+        <mat-card-subtitle>from demo.asperasoft.com server </mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <button mat-raised-button color="primary" (click)="browse()">Browse</button>
+      </mat-card-content>
+    </mat-card>
+
+    <div *ngIf="dir_ls">
+
+      <mat-list dense *ngFor="let item of dir_ls.items">
+        <mat-divider></mat-divider>
+        <p mat-line>
+          <b>{{item.path}}</b>
+        </p>
+      </mat-list>
+    </div>
+
   </div>
 </mat-sidenav-container>

@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 
+import { AsperaNodeApiService } from './services/aspera-node-api.service';
+
 declare var AW4: any;
 
 @Component({
@@ -10,8 +12,10 @@ declare var AW4: any;
 export class AppComponent {
 
   asperaWeb: any;
+  dir_ls: any;
 
-  constructor() {
+  constructor(private nodeAPI: AsperaNodeApiService) {
+
     const CONNECT_INSTALLER = '//d3gcli72yxqn2z.cloudfront.net/connect/v4';
     const asperaInstaller = new AW4.ConnectInstaller({ sdkLocation: CONNECT_INSTALLER });
     const statusEventListener = function (eventType, data) {
@@ -57,10 +61,24 @@ export class AppComponent {
   handleTransferEvents(event, obj) {
     switch (event) {
       case 'transfer':
-        console.log(obj);
+        // console.log(obj);
         break;
     }
   };
+
+  browse() {
+    this.nodeAPI.browse('/Upload')
+      .subscribe(
+      dir_ls => {
+        this.dir_ls = dir_ls;
+        console.log(dir_ls);
+      },
+      (err) => {
+        console.error("ERROR: nodeAPI browse");
+        console.error(err);
+      }
+      );
+  }
 
 
 }
