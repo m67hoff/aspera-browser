@@ -55,7 +55,7 @@
         <mat-card-title>
           <span class="title">Aspera Browse</span>
         </mat-card-title>
-        <mat-card-subtitle>from demo.asperasoft.com server </mat-card-subtitle>
+        <mat-card-subtitle>demo.asperasoft.com server </mat-card-subtitle>
       </mat-card-header>
 
       <mat-card-content>
@@ -65,12 +65,30 @@
 
     <div *ngIf="dir_ls">
 
-      <mat-list dense *ngFor="let item of dir_ls.items">
-        <mat-divider></mat-divider>
-        <p mat-line>
-          <b>{{item.path}}</b>
-        </p>
-      </mat-list>
+
+      <mat-card>
+        <mat-table #table [dataSource]="dataSource">
+
+          <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+            <mat-cell *matCellDef="let i"> {{ i.basename }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="size">
+            <mat-header-cell *matHeaderCellDef> Size </mat-header-cell>
+            <mat-cell *matCellDef="let i"> {{ i.size }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="mtime">
+            <mat-header-cell *matHeaderCellDef> M Time </mat-header-cell>
+            <mat-cell *matCellDef="let i"> {{ i.mtime }} </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+      </mat-card>
+
     </div>
 
   </div>
