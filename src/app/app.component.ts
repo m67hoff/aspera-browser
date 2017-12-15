@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SelectionModel } from '@angular/cdk/collections';
 
 import { AsperaNodeApiService, DirList } from './services/aspera-node-api.service';
 import { MatTableDataSource } from '@angular/material';
@@ -12,12 +13,19 @@ declare var AW4: any;
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-
+  
   asperaWeb: any;
-  dir_ls: any;
-  displayedColumns = ['name', 'size', 'mtime'];
-  dataSource = new MatTableDataSource();
+  connectSettings = {
+    allow_dialogs: 'yes'
+  };
 
+  dirList: DirList;
+  
+  displayedColumns = ['select', 'type', 'name', 'size', 'mtime'];
+  dataSource = new MatTableDataSource();
+  selection: SelectionModel<any>;
+
+  browseInProgress = false;
 
   constructor(private nodeAPI: AsperaNodeApiService) { }
 
@@ -42,32 +50,22 @@ export class AppComponent implements OnInit {
     this.asperaWeb.addEventListener('transfer', this.handleTransferEvents);
   }
 
-  downloadFile() {
-    const transferSpec = {
-      paths: [{ 'source': 'aspera-test-dir-large/100MB' }],
-      remote_host: 'demo.asperasoft.com',
-      remote_user: 'aspera',
-      remote_password: 'demoaspera',
-      direction: 'receive',
-      target_rate_kbps: 15000,
-      allow_dialogs: true,
-      resume: 'sparse_checksum'
-    };
-
-    const connectSettings = {
-      allow_dialogs: 'yes'
-    };
-
-    console.log('downloadFile ', transferSpec);
-    this.asperaWeb.startTransfer(transferSpec, connectSettings);
+  handleTransferEvents(event, obj) {
+    switch (event) {
+      case 'transfer':
+        // console.log('transfer: ', obj);
+        break;
+    }
   }
 
   showSelectFileDialog() {
     this.asperaWeb.showSelectFileDialog({ success: (data => this.uploadFiles(data)) });
   }
-
+  showSelectFolderDialog() {
+    this.asperaWeb.showSelectFolderDialog({ success: (data => this.uploadFiles(data)) });
+  }
   uploadFiles(data) {
-    console.log('uploadFiles ', data);
+    console.log('uploadFiles data: ', data);
     const transferSpec = {
       paths: [],
       remote_host: 'demo.asperasoft.com',
@@ -78,42 +76,57 @@ export class AppComponent implements OnInit {
       resume: 'sparse_checksum',
       destination_root: '/Upload'
     };
-
+    if (data.dataTransfer.files === 0) { return; }
     transferSpec.paths = data.dataTransfer.files.map(file => ({ source: file.name }));
 
-    if (transferSpec.paths.length === 0) { return; }
-
-    const connectSettings = {
-      allow_dialogs: 'yes'
-    };
-
-    console.log('uploadFiles transferSpec', transferSpec);
-    this.asperaWeb.startTransfer(transferSpec, connectSettings);
+    console.log('uploadFiles transferSpec: ', transferSpec);
+    this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
   }
 
+  browse(path: string) {
+    this.browseInProgress = true;
+    this.selection = new SelectionModel<any>(true, []);
 
-  handleTransferEvents(event, obj) {
-    switch (event) {
-      case 'transfer':
-        // console.log(obj);
-        break;
-    }
-  }
-
-  browse() {
-    this.nodeAPI.browse('/')
+    this.nodeAPI.browse(path)
       .subscribe(
       (dirList: DirList) => {
-        this.dir_ls = dirList;
+        this.browseInProgress = false;
+        this.dirList = dirList; 
         this.dataSource.data = dirList.items;
-        console.log(dirList);
+        console.log('browse result dirList: ', dirList);
       },
       (err) => {
-        console.error('ERROR: nodeAPI browse');
+        this.browseInProgress = false;
+        console.error(' nodeAPI browse ERROR: ');
         console.error(err);
       }
       );
   }
 
+  download() {
+    // console.log('List selection: ', this.selection);
+    console.log('List selection.selected: ', this.selection.selected);
+
+    const paths = this.selection.selected.map(item => ({ source: item.path }));
+    console.log('download paths: ', paths);
+
+    this.nodeAPI.download_setup(paths)
+      .subscribe(
+      (transferSpecs) => {
+        console.log('download_setup result transferSpecs: ', transferSpecs);
+
+        const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
+        transferSpec['authentication'] = 'token';
+        console.log('download_setup result transferSpec: ', transferSpec);
+
+        this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
+      },
+      (err) => {
+        console.error('nodeAPI download_setup ERROR: ');
+        console.error(err);
+      }
+      );
+
+  }
 
 }

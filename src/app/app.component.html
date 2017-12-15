@@ -17,7 +17,16 @@
     </button>
     <p>Aspera Connect Angular Sample - WebApp</p>
     <span class="app-toolbar-filler"></span>
+    <button mat-icon-button [matMenuTriggerFor]="settings">
+      <mat-icon>settings</mat-icon>
+    </button>
   </mat-toolbar>
+
+  <mat-menu #settings="matMenu">
+    <button mat-menu-item>
+      <mat-icon>settings</mat-icon>Settings
+    </button>
+  </mat-menu>
 
   <div class="app-content">
 
@@ -25,71 +34,85 @@
       <mat-card-header>
         <img src="assets/aspera_icon.png" mat-card-avatar>
         <mat-card-title>
-          <span class="title">Aspera Download</span>
-        </mat-card-title>
-        <mat-card-subtitle>from demo.asperasoft.com server </mat-card-subtitle>
-      </mat-card-header>
-
-      <mat-card-content>
-        <button mat-raised-button color="primary" (click)="downloadFile()">Download 100MB</button>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card>
-      <mat-card-header>
-        <img src="assets/aspera_icon.png" mat-card-avatar>
-        <mat-card-title>
-          <span class="title">Aspera Upload</span>
-        </mat-card-title>
-        <mat-card-subtitle>to demo.asperasoft.com server /Upload</mat-card-subtitle>
-      </mat-card-header>
-
-      <mat-card-content>
-        <button mat-raised-button color="primary" (click)="showSelectFileDialog()">Browse Files to Upload</button>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card>
-      <mat-card-header>
-        <img src="assets/aspera_icon.png" mat-card-avatar>
-        <mat-card-title>
           <span class="title">Aspera Browse</span>
         </mat-card-title>
-        <mat-card-subtitle>demo.asperasoft.com server </mat-card-subtitle>
+        <mat-card-subtitle>demo.asperasoft.com</mat-card-subtitle>
       </mat-card-header>
 
       <mat-card-content>
-        <button mat-raised-button color="primary" (click)="browse()">Browse</button>
+
+        <button mat-raised-button color="primary" (click)="browse('/')">
+          <mat-icon>home</mat-icon>
+          Home
+        </button>
+        <button mat-raised-button color="primary" [disabled]="(dirList && selection.selected.length !== 0) ? false : true" (click)="download()">
+          <mat-icon>file_download</mat-icon>
+          Download
+        </button>
+        <button mat-raised-button color="primary" [disabled]="(dirList) ? false : true" (click)="showSelectFileDialog()">
+          <mat-icon>file_upload</mat-icon>
+          Upload File
+        </button>
+        <button mat-raised-button color="primary" [disabled]="(dirList) ? false : true" (click)="showSelectFolderDialog()">
+          <mat-icon>open_in_browser</mat-icon>
+          Upload Folder
+        </button>
+        <button mat-raised-button color="primary" [disabled]="(dirList && selection.selected.length !== 0) ? false : true" (click)="selection.clear()">
+          <mat-icon>clear</mat-icon>
+          Clear
+        </button>
+        <mat-checkbox checked="true" (click)="0">use Tokenauth</mat-checkbox>
+        <mat-progress-bar mode="indeterminate" *ngIf="browseInProgress"></mat-progress-bar>
+
+        <div *ngIf="dirList">
+          <h3>
+            <mat-icon color="accent" *ngIf="(dirList.self.path.permissions)" >lock_outline</mat-icon>
+            <mat-icon color="blue" >lock_open</mat-icon>
+            Current Dir: {{ dirList.self.path }}
+          </h3>
+
+          <mat-table #table [dataSource]="dataSource">
+
+            <ng-container matColumnDef="select">
+              <mat-header-cell *matHeaderCellDef> {{ selection.selected.length }} </mat-header-cell>
+              <mat-cell *matCellDef="let item">
+                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(item) : null" [checked]="selection.isSelected(item)">
+                </mat-checkbox>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="type">
+              <mat-header-cell *matHeaderCellDef> Type </mat-header-cell>
+              <mat-cell *matCellDef="let item" (click)="(item.type == 'directory') ? browse(item.path) : 0">
+                <mat-icon *ngIf="(item.type == 'directory')" mat-list-icon>folder_open</mat-icon>
+                <mat-icon *ngIf="(item.type == 'file')" mat-list-icon>insert_drive_file</mat-icon>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+              <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+              <mat-cell [ngStyle]="{ color: ( item.type == 'directory' ) ? 'blue' : 'primary' }" *matCellDef="let item" (click)="(item.type == 'directory') ? browse(item.path) : 0">
+                {{ item.basename }}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="size">
+              <mat-header-cell *matHeaderCellDef> Size </mat-header-cell>
+              <mat-cell *matCellDef="let item"> {{ item.size }} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="mtime">
+              <mat-header-cell *matHeaderCellDef> M Time </mat-header-cell>
+              <mat-cell *matCellDef="let item"> {{ item.mtime | date }} </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+          </mat-table>
+        </div>
+
       </mat-card-content>
     </mat-card>
-
-    <div *ngIf="dir_ls">
-
-
-      <mat-card>
-        <mat-table #table [dataSource]="dataSource">
-
-          <ng-container matColumnDef="name">
-            <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
-            <mat-cell *matCellDef="let i"> {{ i.basename }} </mat-cell>
-          </ng-container>
-
-          <ng-container matColumnDef="size">
-            <mat-header-cell *matHeaderCellDef> Size </mat-header-cell>
-            <mat-cell *matCellDef="let i"> {{ i.size }} </mat-cell>
-          </ng-container>
-
-          <ng-container matColumnDef="mtime">
-            <mat-header-cell *matHeaderCellDef> M Time </mat-header-cell>
-            <mat-cell *matCellDef="let i"> {{ i.mtime }} </mat-cell>
-          </ng-container>
-
-          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-        </mat-table>
-      </mat-card>
-
-    </div>
 
   </div>
 </mat-sidenav-container>

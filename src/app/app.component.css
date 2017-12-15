@@ -19,3 +19,6 @@
     margin: 10px;
   }
   
+  .mat-column-select {
+    overflow: initial;
+  }
