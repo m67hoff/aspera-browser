@@ -33,17 +33,18 @@ cf p AsperaConnectAngularSample -m 64M
 cd ..
 ``` 
 
-### Todo
-- size pipe
+### Todo / planned (in order)
 - cred settings 
 - UI colums style
 - Docu
 - node.js rest forward 
 - breadcrumb folder naivi
-- table filter 
 - table sort 
+- table filter 
 - delete Files 
 - New Folder
+- npm package
+- Transfer Management in UI 
 - devops integration (travis / greenkeeper)
 
 ### Changelog
