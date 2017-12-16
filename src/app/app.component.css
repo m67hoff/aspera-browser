@@ -1,27 +1,102 @@
 .app-sidenav {
   padding: 10px;
-  min-width: 300px;
+  min-width: 450px;
+  background-color: #f3f3f3
 }
   
 .app-toolbar-filler {
   flex: 1 1 auto;
 }
-  
-.app-content {
+
+.mat-sidenav mat-card {
+  margin: 10px;
+  padding: 10px;
+}
+
+.mat-sidenav-content mat-card {
+  min-height: 500px;
+  margin: 20px;
   padding: 20px;
 }
- 
-.app-content mat-card {
-  min-height: 400px;
-  margin: 20px;
+.sidenav-icon {
+  font-size: 24px;
+  vertical-align: middle;
+  height: 24px;
+  width: 24px;
+  margin-right: 10px;
 }
-  
-.app-content button {
-  margin: 10px;
+.sidenav-link {
+  color: #3f51b5;
+  font-size: 16px;
 }
-  
+
+.mat-card-avatar {
+  height: 60px;
+  width: 60px;
+}  
+
+.title{
+  font-size:  24px;
+}
+
+.mat-card-subtitle{
+  font-size: 16px;
+}
+
+button {
+  margin: 5px;
+}
+
+.mat-progress-bar {
+  margin-top: 10px;
+}
+
+.path {
+  margin: 5px;
+}
+
+.home-icon {
+  height: 36px;
+  width: 36px;
+  font-size: 36px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.home-txt {
+  font-size: 24px;
+  vertical-align: middle;
+}
+
+.folder-icon {
+  cursor: pointer;
+}
+.folder-txt {
+  color: #3f51b5;
+  cursor: pointer;
+}
+
+.test-icon {
+  font-size: 36px;
+  vertical-align: middle;
+  height: 36px;
+  width: 36px;
+  margin-left: 10px;
+}
+.test-button {
+  vertical-align: middle;
+}
+
 .mat-column-select {
   overflow: initial;
+  max-width: 36px;
+}
+
+.mat-column-type {
+  max-width: 36px;
+}
+.mat-column-size {
+  max-width: 64px;
 }
 
 .full-width {

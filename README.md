@@ -34,7 +34,6 @@ cd ..
 ``` 
 
 ### Todo / planned (in order)
-- UI colums style
 - Docu
 - node.js rest forward 
 - error handling in UI

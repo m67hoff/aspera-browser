@@ -11,8 +11,8 @@
 
   <!-- side nav -->
   <mat-sidenav #sidenav position="end" mode="over" class="app-sidenav">
-    <h3> Settings: </h3>
-    <p>
+    <mat-card>
+      <h3> Settings: </h3>
       <mat-form-field class="full-width">
         <mat-placeholder>
           <mat-icon>link</mat-icon> NodeAPI URL
@@ -20,6 +20,7 @@
         <input matInput #url [(ngModel)]="nodeAPIcred.nodeURL" type="url" required>
       </mat-form-field>
       <br/>
+
       <mat-form-field class="full-width">
         <mat-placeholder>
           <mat-icon>person</mat-icon> User
@@ -27,6 +28,7 @@
         <input matInput #user [(ngModel)]="nodeAPIcred.nodeUser" type="text" required>
       </mat-form-field>
       <br/>
+
       <mat-form-field class="full-width">
         <mat-placeholder>
           <mat-icon>lock</mat-icon> Password
@@ -34,21 +36,24 @@
         <input matInput #password [(ngModel)]="nodeAPIcred.nodePW" [type]="hidePW ? 'password' : 'text'" required>
         <mat-icon matSuffix (click)="hidePW = !hidePW">{{ hidePW ? 'visibility' : 'visibility_off' }}</mat-icon>
       </mat-form-field>
-    </p>
-    <p>
-    <button mat-raised-button (click)="testconnection()">Test Connection</button>
-    <mat-icon color="accent" style="font-size: 36px;" [ngStyle]=" isConnected ? {color: 'green'} : {} ">{{ isConnected ? 'check_circle' : 'error' }}</mat-icon>
-    </p>
-    <h3> Usefull Info: </h3>
-    <mat-nav-list dense>
-      <a mat-list-item target="_blank" href="https://demo.asperasoft.com">
-        <mat-icon>link</mat-icon> Aspera Demoserver </a>
-    </mat-nav-list>
+      <p>
+        <button mat-raised-button class="test-button" (click)="testconnection()">Test Connection</button>
+        <mat-icon color="accent" class="test-icon" [ngStyle]=" isConnected ? {color: 'green'} : {} ">{{ isConnected ? 'check_circle' : 'error' }}</mat-icon>
+      </p>
+    </mat-card>
 
+    <mat-card>
+      <h3> Usefull Info: </h3>
+      <mat-nav-list dense>
+        <a mat-list-item target="_blank" href="https://demo.asperasoft.com">
+          <mat-icon color='primary' class="sidenav-icon">link</mat-icon><span class="sidenav-link">Aspera Demoserver</span> 
+        </a>
+      </mat-nav-list>
+    </mat-card>
   </mat-sidenav>
 
   <!-- main page -->
-  <div class="app-content">
+  <mat-sidenav-content>
     <mat-card>
 
       <!-- header -->
@@ -86,9 +91,9 @@
 
         <!-- result / table -->
         <div *ngIf="dirList">
-          <p>
-            <mat-icon (click)="browse('/')">home</mat-icon>
-            {{ dirList.self.path }}
+          <p class="path">
+            <mat-icon color="primary" class="home-icon" (click)="browse('/')">home</mat-icon>
+            <span class="home-txt">{{ dirList.self.path }}</span>
             <!-- <mat-icon color="accent" *ngIf="(dirList.self.permissions[1].name != 'edit')">lock_outline</mat-icon> -->
             <!-- <mat-icon color="blue"   *ngIf="(dirList.self.permissions[1].name == 'edit')">lock_open</mat-icon> -->
           </p>
@@ -106,14 +111,14 @@
             <ng-container matColumnDef="type">
               <mat-header-cell *matHeaderCellDef> Type </mat-header-cell>
               <mat-cell *matCellDef="let item" (click)="(item.type == 'directory') ? browse(item.path) : 0">
-                <mat-icon *ngIf="(item.type == 'directory')" mat-list-icon>folder</mat-icon>
+                <mat-icon color="primary" class="folder-icon" *ngIf="(item.type == 'directory')" mat-list-icon>folder</mat-icon>
                 <mat-icon *ngIf="(item.type == 'file')" mat-list-icon>insert_drive_file</mat-icon>
               </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="name">
               <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
-              <mat-cell [ngStyle]="{ color: ( item.type == 'directory' ) ? 'blue' : 'primary' }" *matCellDef="let item" (click)="(item.type == 'directory') ? browse(item.path) : 0">
+              <mat-cell [ngClass]="(item.type == 'directory') ? 'folder-txt' : 'file-txt' " *matCellDef="let item" (click)="(item.type == 'directory') ? browse(item.path) : 0">
                 {{ item.basename }}
               </mat-cell>
             </ng-container>
@@ -132,9 +137,8 @@
             <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
           </mat-table>
         </div>
-
       </mat-card-content>
     </mat-card>
-  </div>
+  </mat-sidenav-content>
 
 </mat-sidenav-container>
