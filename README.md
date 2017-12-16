@@ -22,7 +22,7 @@ open your browser on http://localhost:4200/
 (Prereq: as above + cloud foundry cli installed and IBM Bluemix accout )
 
 Run `ng build -aot -prod` to build.  The `dist/` directory contains the static WebApp. 
-To deploy copy everything in `dist/*` directory to public dir on the webserver.
+To deploy, copy everything in `dist/*` directory to public dir on the webserver.
 
 Deployment to IBM Cloud cf-nginx (login to your right Bluemix cf space first):   
 ```
@@ -34,14 +34,15 @@ cd ..
 ``` 
 
 ### Todo / planned (in order)
-- cred settings 
 - UI colums style
 - Docu
 - node.js rest forward 
+- error handling in UI
 - breadcrumb folder naivi
 - table sort 
 - table filter 
 - delete Files 
+- local cred save 
 - New Folder
 - npm package
 - Transfer Management in UI 

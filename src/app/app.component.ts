@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
-
-import { AsperaNodeApiService, DirList } from './services/aspera-node-api.service';
 import { MatTableDataSource } from '@angular/material';
-import { digest } from '@angular/compiler/src/i18n/serializers/xmb';
+import { FormControl, Validators } from '@angular/forms';
+
+// import { digest } from '@angular/compiler/src/i18n/serializers/xmb';
+
+import { AsperaNodeApiService, DirList, NodeAPIcred } from './services/aspera-node-api.service';
 
 declare var AW4: any;
 
@@ -25,7 +27,15 @@ export class AppComponent implements OnInit {
   dataSource = new MatTableDataSource();
   selection: SelectionModel<any>;
 
+  isConnected = false;
   browseInProgress = false;
+  hidePW = true;
+
+  nodeAPIcred: NodeAPIcred = {
+    nodeURL: 'https://demo.asperasoft.com:9092',
+    nodeUser: 'asperaweb',
+    nodePW: 'demoaspera'
+  };
 
   constructor(private nodeAPI: AsperaNodeApiService) { }
 
@@ -58,10 +68,29 @@ export class AppComponent implements OnInit {
     }
   }
 
+  testconnection() {
+    this.nodeAPI.setCred(this.nodeAPIcred);
+    this.browseInProgress = true;
+    this.nodeAPI.info()
+      .subscribe(
+      (info: any) => {
+        this.browseInProgress = false;
+        console.log('info result json: ', info);
+        this.isConnected = true;
+      },
+      (err) => {
+        this.browseInProgress = false;
+        console.error(' nodeAPI info ERROR: ');
+        console.error(err);
+        this.isConnected = false;
+      }
+      );
+  }
+
   browse(path: string) {
     this.browseInProgress = true;
     this.selection = new SelectionModel<any>(true, []);
-    console.log('bdddst: ', this.nodeAPI.nodeAPIcred.nodeUser);
+
     this.nodeAPI.browse(path)
       .subscribe(
       (dirList: DirList) => {

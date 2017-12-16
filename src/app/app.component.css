@@ -1,24 +1,29 @@
 .app-sidenav {
-    padding: 10px;
-    min-width: 200px;
-  }
+  padding: 10px;
+  min-width: 300px;
+}
   
-  .app-toolbar-filler {
-    flex: 1 1 auto;
-  }
+.app-toolbar-filler {
+  flex: 1 1 auto;
+}
   
-  .app-content {
-    padding: 20px;
-  }
+.app-content {
+  padding: 20px;
+}
+ 
+.app-content mat-card {
+  min-height: 400px;
+  margin: 20px;
+}
   
-  .app-content mat-card {
-    margin: 20px;
-  }
+.app-content button {
+  margin: 10px;
+}
   
-  .app-content button {
-    margin: 10px;
-  }
-  
-  .mat-column-select {
-    overflow: initial;
-  }
+.mat-column-select {
+  overflow: initial;
+}
+
+.full-width {
+  width: 90%;
+}

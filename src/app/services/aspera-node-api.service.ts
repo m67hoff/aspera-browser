@@ -8,25 +8,12 @@ export class AsperaNodeApiService {
 
   constructor(private http: HttpClient) {
   }
-  nodeAPIcred_demo = {
+
+  nodeAPIcred: NodeAPIcred = {
     nodeURL: 'https://demo.asperasoft.com:9092',
     nodeUser: 'asperaweb',
     nodePW: 'demoaspera'
   };
-
-  nodeAPIcred_demo_se = {
-    nodeURL: 'https://demo.asperasoft.com:9092',
-    nodeUser: 'asperademo-se',
-    nodePW: 'xxxxx'
-  };
-
-  nodeAPIcred_ES1 = {
-    nodeURL: 'https://192.168.80.101:9092',
-    nodeUser: 'node_faspex',
-    nodePW: 'xxxxx'
-  };
-
-  nodeAPIcred = this.nodeAPIcred_demo;
 
   headers = new HttpHeaders()
     .append('Content-Type', 'application/json')
@@ -35,6 +22,21 @@ export class AsperaNodeApiService {
     .append('Access-Control-Allow-Origin', '*')
     .append('Authorization', 'Basic ' + btoa(this.nodeAPIcred.nodeUser + ':' + this.nodeAPIcred.nodePW));
 
+
+  setCred(nodeAPIcred: NodeAPIcred) {
+    this.nodeAPIcred = nodeAPIcred;
+    this.headers = this.headers.set('Authorization', 'Basic ' + btoa(nodeAPIcred.nodeUser + ':' + nodeAPIcred.nodePW));
+  }
+  getCred() { return this.nodeAPIcred; }
+
+  info(): Observable<Object> {
+    const url = this.nodeAPIcred.nodeURL + '/info';
+    console.log('URL: ', url);
+    // console.log('nodeAPIcred: ', this.nodeAPIcred);
+    // console.log('headers: ', atob(this.headers.get('Authorization').substring(5)));
+    return this.http
+      .get(url, { headers: this.headers });
+  }
 
   browse(path: string): Observable<DirList> {
     const url = this.nodeAPIcred.nodeURL + '/files/browse';
@@ -91,6 +93,15 @@ export class AsperaNodeApiService {
 
 export interface DirList {
   items: Array<Object>;
-  self: Object;
+  self: {
+    path: string
+    permissions: Array<Object>,
+  };
   total_count: number;
+}
+
+export interface NodeAPIcred {
+  nodeURL: string;
+  nodeUser: string;
+  nodePW: string;
 }
