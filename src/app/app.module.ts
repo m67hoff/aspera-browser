@@ -12,12 +12,14 @@ import { MaterialImportModule } from './material-import.module';
 import { AppComponent } from './app.component';
 
 import { AsperaNodeApiService } from './services/aspera-node-api.service';
+import { SizePipe } from './pipes/size.pipe';
 
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    SizePipe
   ],
   imports: [
     BrowserModule,

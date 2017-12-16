@@ -13,14 +13,14 @@ declare var AW4: any;
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  
+
   asperaWeb: any;
   connectSettings = {
     allow_dialogs: 'yes'
   };
 
   dirList: DirList;
-  
+
   displayedColumns = ['select', 'type', 'name', 'size', 'mtime'];
   dataSource = new MatTableDataSource();
   selection: SelectionModel<any>;
@@ -58,40 +58,15 @@ export class AppComponent implements OnInit {
     }
   }
 
-  showSelectFileDialog() {
-    this.asperaWeb.showSelectFileDialog({ success: (data => this.uploadFiles(data)) });
-  }
-  showSelectFolderDialog() {
-    this.asperaWeb.showSelectFolderDialog({ success: (data => this.uploadFiles(data)) });
-  }
-  uploadFiles(data) {
-    console.log('uploadFiles data: ', data);
-    const transferSpec = {
-      paths: [],
-      remote_host: 'demo.asperasoft.com',
-      remote_user: 'aspera',
-      remote_password: 'demoaspera',
-      direction: 'send',
-      target_rate_kbps: 15000,
-      resume: 'sparse_checksum',
-      destination_root: '/Upload'
-    };
-    if (data.dataTransfer.files === 0) { return; }
-    transferSpec.paths = data.dataTransfer.files.map(file => ({ source: file.name }));
-
-    console.log('uploadFiles transferSpec: ', transferSpec);
-    this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
-  }
-
   browse(path: string) {
     this.browseInProgress = true;
     this.selection = new SelectionModel<any>(true, []);
-
+    console.log('bdddst: ', this.nodeAPI.nodeAPIcred.nodeUser);
     this.nodeAPI.browse(path)
       .subscribe(
       (dirList: DirList) => {
         this.browseInProgress = false;
-        this.dirList = dirList; 
+        this.dirList = dirList;
         this.dataSource.data = dirList.items;
         console.log('browse result dirList: ', dirList);
       },
@@ -105,7 +80,6 @@ export class AppComponent implements OnInit {
 
   download() {
     // console.log('List selection: ', this.selection);
-    console.log('List selection.selected: ', this.selection.selected);
 
     const paths = this.selection.selected.map(item => ({ source: item.path }));
     console.log('download paths: ', paths);
@@ -116,13 +90,45 @@ export class AppComponent implements OnInit {
         console.log('download_setup result transferSpecs: ', transferSpecs);
 
         const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
-        transferSpec['authentication'] = 'token';
         console.log('download_setup result transferSpec: ', transferSpec);
+        // transferSpec['authentication'] = 'token';
 
         this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
       },
       (err) => {
         console.error('nodeAPI download_setup ERROR: ');
+        console.error(err);
+      }
+      );
+
+  }
+
+  showSelectFileDialog() {
+    this.asperaWeb.showSelectFileDialog({ success: (data => this.uploadFiles(data)) });
+  }
+  showSelectFolderDialog() {
+    this.asperaWeb.showSelectFolderDialog({ success: (data => this.uploadFiles(data)) });
+  }
+  uploadFiles(data) {
+    // console.log('uploadFiles data: ', data);
+    if (data.dataTransfer.files === 0) { return; }
+
+    const paths = data.dataTransfer.files.map(file => ({ source: file.name }));
+    console.log('uploadFiles paths: ', paths);
+
+    this.nodeAPI.upload_setup(paths, this.dirList.self.path)
+      .subscribe(
+      (transferSpecs) => {
+        console.log('upload_setup result transferSpecs: ', transferSpecs);
+
+        const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
+        console.log('upload_setup result transferSpec: ', transferSpec);
+        // transferSpec['authentication'] = 'token';
+
+        this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
+      },
+      (err) => {
+        console.error('nodeAPI upload_setup ERROR: ');
         console.error(err);
       }
       );

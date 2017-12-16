@@ -24,7 +24,7 @@ open your browser on http://localhost:4200/
 Run `ng build -aot -prod` to build.  The `dist/` directory contains the static WebApp. 
 To deploy copy everything in `dist/*` directory to public dir on the webserver.
 
-Deployment to IBM Cloud cf-ngix (login to your right Bluemix cf space first):   
+Deployment to IBM Cloud cf-nginx (login to your right Bluemix cf space first):   
 ```
 ng build -aot -prod
 cd dist
@@ -34,19 +34,24 @@ cd ..
 ``` 
 
 ### Todo
-- ...
-- upload sample 
-- node API
-- ...
-- nice UI
-- ...
+- size pipe
+- cred settings 
+- UI colums style
+- Docu
+- node.js rest forward 
+- breadcrumb folder naivi
+- table filter 
+- table sort 
+- delete Files 
+- New Folder
 - devops integration (travis / greenkeeper)
 
 ### Changelog
 - 20171206 - first code / simple download 
 - 20171212 - nodeAPI browse sample 
 - 20171214 - upload sample  
+- 20171216 - tokenauth  
 
 ---
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.5.5.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) 

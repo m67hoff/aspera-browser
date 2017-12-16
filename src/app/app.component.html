@@ -36,24 +36,24 @@
         <mat-card-title>
           <span class="title">Aspera Browse</span>
         </mat-card-title>
-        <mat-card-subtitle>demo.asperasoft.com</mat-card-subtitle>
+        <mat-card-subtitle>{{ nodeAPI.nodeAPIcred.nodeUser }} @ {{ nodeAPI.nodeAPIcred.nodeURL }} </mat-card-subtitle>
       </mat-card-header>
 
       <mat-card-content>
 
-        <button mat-raised-button color="primary" (click)="browse('/')">
-          <mat-icon>home</mat-icon>
-          Home
+        <button mat-raised-button color="primary" (click)="(dirList) ? browse(dirList.self.path) : browse('/')">
+          <mat-icon>refresh</mat-icon>
+          Refresh
         </button>
         <button mat-raised-button color="primary" [disabled]="(dirList && selection.selected.length !== 0) ? false : true" (click)="download()">
           <mat-icon>file_download</mat-icon>
           Download
         </button>
-        <button mat-raised-button color="primary" [disabled]="(dirList) ? false : true" (click)="showSelectFileDialog()">
+        <button mat-raised-button color="primary" [disabled]="(dirList && selection.selected.length === 0) ? false : true" (click)="showSelectFileDialog()">
           <mat-icon>file_upload</mat-icon>
           Upload File
         </button>
-        <button mat-raised-button color="primary" [disabled]="(dirList) ? false : true" (click)="showSelectFolderDialog()">
+        <button mat-raised-button color="primary" [disabled]="(dirList && selection.selected.length === 0) ? false : true" (click)="showSelectFolderDialog()">
           <mat-icon>open_in_browser</mat-icon>
           Upload Folder
         </button>
@@ -61,15 +61,15 @@
           <mat-icon>clear</mat-icon>
           Clear
         </button>
-        <mat-checkbox checked="true" (click)="0">use Tokenauth</mat-checkbox>
         <mat-progress-bar mode="indeterminate" *ngIf="browseInProgress"></mat-progress-bar>
 
         <div *ngIf="dirList">
-          <h3>
-            <mat-icon color="accent" *ngIf="(dirList.self.path.permissions)" >lock_outline</mat-icon>
-            <mat-icon color="blue" >lock_open</mat-icon>
-            Current Dir: {{ dirList.self.path }}
-          </h3>
+          <p>
+            <mat-icon (click)="browse('/')">home</mat-icon>
+            {{ dirList.self.path }}
+            <!-- <mat-icon color="accent" *ngIf="(dirList.self.permissions[1].name != 'edit')">lock_outline</mat-icon> -->
+            <!-- <mat-icon color="blue"   *ngIf="(dirList.self.permissions[1].name == 'edit')">lock_open</mat-icon> -->
+          </p>
 
           <mat-table #table [dataSource]="dataSource">
 
@@ -84,7 +84,7 @@
             <ng-container matColumnDef="type">
               <mat-header-cell *matHeaderCellDef> Type </mat-header-cell>
               <mat-cell *matCellDef="let item" (click)="(item.type == 'directory') ? browse(item.path) : 0">
-                <mat-icon *ngIf="(item.type == 'directory')" mat-list-icon>folder_open</mat-icon>
+                <mat-icon *ngIf="(item.type == 'directory')" mat-list-icon>folder</mat-icon>
                 <mat-icon *ngIf="(item.type == 'file')" mat-list-icon>insert_drive_file</mat-icon>
               </mat-cell>
             </ng-container>
@@ -98,12 +98,12 @@
 
             <ng-container matColumnDef="size">
               <mat-header-cell *matHeaderCellDef> Size </mat-header-cell>
-              <mat-cell *matCellDef="let item"> {{ item.size }} </mat-cell>
+              <mat-cell *matCellDef="let item"> {{ item.size | size}} </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="mtime">
               <mat-header-cell *matHeaderCellDef> M Time </mat-header-cell>
-              <mat-cell *matCellDef="let item"> {{ item.mtime | date }} </mat-cell>
+              <mat-cell *matCellDef="let item"> {{ item.mtime | date:'yyyy-MM-dd HH:mm:ss z' }} </mat-cell>
             </ng-container>
 
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
