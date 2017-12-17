@@ -77,6 +77,7 @@ export class AppComponent implements OnInit {
         this.browseInProgress = false;
         console.log('info result json: ', info);
         this.isConnected = true;
+        this.browse('/');
       },
       (err) => {
         this.browseInProgress = false;
