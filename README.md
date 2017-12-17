@@ -10,13 +10,12 @@ See the [Architecture Overview](Architecture.md) for information how it works.
 
 ### See it live:
 My sample is deployed on IBM Cloud:
-http://asperaconnectangularsample.eu-de.mybluemix.net
+http://asperabrowser.mybluemix.net
 
 ### run & test local
 (Prereq: Node.js,npm and angular cli installed)
 
-Run `ng s` to start the Angular Live Development Server,
-open your browser on http://localhost:4200/
+Run `ng s` to start the Angular Live Development Server
 
 ### Build & deploy to IBM Cloud
 (Prereq: as above + cloud foundry cli installed and IBM Bluemix accout )
@@ -29,7 +28,7 @@ Deployment to IBM Cloud cf-nginx (login to your right Bluemix cf space first):
 ng build -aot -prod
 cd dist
 touch Staticfile
-cf p AsperaConnectAngularSample -m 64M
+cf p myAsperaBrowser -m 64M
 cd ..
 ``` 
 
