@@ -13,6 +13,7 @@ import { AppComponent } from './app.component';
 
 import { AsperaNodeApiService } from './services/aspera-node-api.service';
 import { SizePipe } from './pipes/size.pipe';
+import { CredLocalstoreService } from './services/cred-localstore.service';
 
 
 
@@ -29,7 +30,7 @@ import { SizePipe } from './pipes/size.pipe';
     MaterialImportModule,
     BrowserAnimationsModule
   ],
-  providers: [AsperaNodeApiService],
+  providers: [AsperaNodeApiService, CredLocalstoreService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
