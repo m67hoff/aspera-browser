@@ -38,7 +38,8 @@ cd ..
 - delete confirmation
 - error handling in UI
 - table sort 
-- table filter 
+- table filter
+- table paginator 
 - local cred save 
 - npm package
 - Transfer Management in UI 
@@ -50,6 +51,7 @@ cd ..
 - 20171214 - upload sample  
 - 20171216 - tokenauth  
 - 20171217 - UI layout  & settings panel
+- 20171218 - delete file & some docu 
 
 ### Screenshots 
 
