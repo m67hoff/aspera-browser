@@ -1,6 +1,11 @@
-# AsperaConnectAngularSample
+![](img/aspera.png)
+## Aspera Connect -  Angular Sample 
 
 ---
+### component diagram
+ 
+
+
 
 Documentation for the used Aspera APIs:  
 

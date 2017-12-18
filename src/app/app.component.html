@@ -87,6 +87,10 @@
           <mat-icon>clear</mat-icon>
           Clear
         </button>
+        <button mat-raised-button color="accent" [disabled]="(dirList && selection.selected.length !== 0) ? false : true" (click)="delete()">
+          <mat-icon>delete</mat-icon>
+          Delete Files
+        </button>
         <mat-progress-bar mode="indeterminate" *ngIf="browseInProgress"></mat-progress-bar>
 
         <!-- result / table -->

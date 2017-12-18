@@ -18,7 +18,7 @@ http://asperabrowser.mybluemix.net
 Run `ng s` to start the Angular Live Development Server
 
 ### Build & deploy to IBM Cloud
-(Prereq: as above + cloud foundry cli installed and IBM Bluemix accout )
+(Prereq: as above + cloud foundry cli installed and IBM Bluemix account )
 
 Run `ng build -aot -prod` to build.  The `dist/` directory contains the static WebApp. 
 To deploy, copy everything in `dist/*` directory to public dir on the webserver.
@@ -35,13 +35,13 @@ cd ..
 ### Todo / planned (in order)
 - Docu
 - node.js rest forward 
+- breadcrumb folder navi
+- New Folder
+- delete confirmation
 - error handling in UI
-- breadcrumb folder naivi
 - table sort 
 - table filter 
-- delete Files 
 - local cred save 
-- New Folder
 - npm package
 - Transfer Management in UI 
 - devops integration (travis / greenkeeper)
@@ -51,10 +51,11 @@ cd ..
 - 20171212 - nodeAPI browse sample 
 - 20171214 - upload sample  
 - 20171216 - tokenauth  
+- 20171217 - UI layout  & settings panel
 
 ### Screenshots 
 
-##### Browse Directoy:
+##### Browse Directory:
 ![](img/browse.jpg)
 
 ##### Settings panel:

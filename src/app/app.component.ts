@@ -110,7 +110,6 @@ export class AppComponent implements OnInit {
 
   download() {
     // console.log('List selection: ', this.selection);
-
     const paths = this.selection.selected.map(item => ({ source: item.path }));
     console.log('download paths: ', paths);
 
@@ -121,7 +120,6 @@ export class AppComponent implements OnInit {
 
         const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
         console.log('download_setup result transferSpec: ', transferSpec);
-        // transferSpec['authentication'] = 'token';
 
         this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
       },
@@ -130,7 +128,24 @@ export class AppComponent implements OnInit {
         console.error(err);
       }
       );
+  }
 
+  delete() {
+    // console.log('List selection: ', this.selection);
+    const paths = this.selection.selected.map(item => ({ path: item.path }));
+    console.log('delete paths: ', paths);
+
+    this.nodeAPI.delete(paths)
+      .subscribe(
+      (res) => {
+        console.log('delete result : ', res);
+        this.browse(this.dirList.self.path)
+      },
+      (err) => {
+        console.error('nodeAPI delete ERROR: ');
+        console.error(err);
+      }
+      );
   }
 
   showSelectFileDialog() {
@@ -153,7 +168,6 @@ export class AppComponent implements OnInit {
 
         const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
         console.log('upload_setup result transferSpec: ', transferSpec);
-        // transferSpec['authentication'] = 'token';
 
         this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
       },

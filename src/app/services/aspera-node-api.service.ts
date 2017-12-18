@@ -17,9 +17,6 @@ export class AsperaNodeApiService {
 
   headers = new HttpHeaders()
     .append('Content-Type', 'application/json')
-    // .append('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
-    // .append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS')
-    // .append('Access-Control-Allow-Origin', '*')
     .append('Authorization', 'Basic ' + btoa(this.nodeAPIcred.nodeUser + ':' + this.nodeAPIcred.nodePW));
 
 
@@ -89,7 +86,19 @@ export class AsperaNodeApiService {
       .post<any>(url, data, { headers: this.headers });
   }
 
-}
+  delete(paths: Array<Object>): Observable<any> {
+    const url = this.nodeAPIcred.nodeURL + '/files/delete';
+    const data = { paths: paths };
+
+    console.log('URL: ', url);
+    // console.log('headers: ', this.headers);
+    console.log('postdata: ', data);
+
+    return this.http
+      .post<any>(url, data, { headers: this.headers });
+  }
+
+} // class AsperaNodeApiService
 
 export interface DirList {
   items: Array<Object>;
