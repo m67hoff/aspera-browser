@@ -6,6 +6,7 @@ import { FormControl, Validators } from '@angular/forms';
 // import { digest } from '@angular/compiler/src/i18n/serializers/xmb';
 
 import { AsperaNodeApiService, DirList, NodeAPIcred } from './services/aspera-node-api.service';
+import { CredLocalstoreService } from './services/cred-localstore.service';
 
 declare var AW4: any;
 
@@ -21,6 +22,7 @@ export class AppComponent implements OnInit {
     allow_dialogs: 'yes'
   };
 
+  nodeAPIcred: NodeAPIcred ;
   dirList: DirList;
 
   displayedColumns = ['select', 'type', 'name', 'size', 'mtime'];
@@ -31,13 +33,11 @@ export class AppComponent implements OnInit {
   browseInProgress = false;
   hidePW = true;
 
-  nodeAPIcred: NodeAPIcred = {
-    nodeURL: 'https://demo.asperasoft.com:9092',
-    nodeUser: 'asperaweb',
-    nodePW: 'demoaspera'
-  };
 
-  constructor(private nodeAPI: AsperaNodeApiService) { }
+  constructor(private nodeAPI: AsperaNodeApiService, private credStore: CredLocalstoreService) { 
+       this.nodeAPIcred = credStore.getCred();
+       this.nodeAPI.setCred(this.nodeAPIcred);
+  }
 
   ngOnInit() {
     const CONNECT_INSTALLER = '//d3gcli72yxqn2z.cloudfront.net/connect/v4';
@@ -69,6 +69,7 @@ export class AppComponent implements OnInit {
   }
 
   testconnection() {
+    this.credStore.setCred(this.nodeAPIcred);
     this.nodeAPI.setCred(this.nodeAPIcred);
     this.browseInProgress = true;
     this.nodeAPI.info()
