@@ -40,7 +40,7 @@ cd ..
 - table sort 
 - table filter
 - table paginator 
-- local cred save 
+- store different cred 
 - npm package
 - Transfer Management in UI 
 - devops integration (travis / greenkeeper)
