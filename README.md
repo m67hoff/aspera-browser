@@ -52,6 +52,15 @@ cd ..
 - 20171214 - upload sample  
 - 20171216 - tokenauth  
 
+### Screenshots 
+
+##### Browse Directoy:
+![](img/browse.jpg)
+
+##### Settings panel:
+![](img/settings.jpg)
+
+
 ---
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) 
