@@ -1,7 +1,6 @@
 ![](img/aspera.png)
 ## Aspera Connect -  Angular Sample 
 
----
 
 Angular App using Aspera Connect API and Node API, for file and folder upload+download.
 UI using Angular Material components.
@@ -32,8 +31,7 @@ cf p myAsperaBrowser -m 64M
 cd ..
 ``` 
 
-### Todo / planned (in order)
-- Docu
+### Todo / planned 
 - node.js rest forward 
 - breadcrumb folder navi
 - New Folder
