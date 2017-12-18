@@ -22,7 +22,7 @@ export class AppComponent implements OnInit {
     allow_dialogs: 'yes'
   };
 
-  nodeAPIcred: NodeAPIcred ;
+  nodeAPIcred: NodeAPIcred;
   dirList: DirList;
 
   displayedColumns = ['select', 'type', 'name', 'size', 'mtime'];
@@ -34,9 +34,9 @@ export class AppComponent implements OnInit {
   hidePW = true;
 
 
-  constructor(private nodeAPI: AsperaNodeApiService, private credStore: CredLocalstoreService) { 
-       this.nodeAPIcred = credStore.getCred();
-       this.nodeAPI.setCred(this.nodeAPIcred);
+  constructor(private nodeAPI: AsperaNodeApiService, private credStore: CredLocalstoreService) {
+    this.nodeAPIcred = credStore.getCred();
+    this.nodeAPI.setCred(this.nodeAPIcred);
   }
 
   ngOnInit() {
@@ -140,7 +140,7 @@ export class AppComponent implements OnInit {
       .subscribe(
       (res) => {
         console.log('delete result : ', res);
-        this.browse(this.dirList.self.path)
+        this.browse(this.dirList.self.path);
       },
       (err) => {
         console.error('nodeAPI delete ERROR: ');

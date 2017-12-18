@@ -12,7 +12,7 @@ export class CredLocalstoreService {
     let cred: NodeAPIcred;
 
     if (storedCred == null) {
-      // default server 
+      // default server
       cred = {
         nodeURL: 'https://demo.asperasoft.com:9092',
         nodeUser: 'asperaweb',
