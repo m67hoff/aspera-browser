@@ -120,7 +120,7 @@ export class AppComponent implements OnInit {
 
         const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
         console.log('download_setup result transferSpec: ', transferSpec);
-
+        transferSpec['authentication'] = 'token';
         this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
       },
       (err) => {
@@ -168,7 +168,7 @@ export class AppComponent implements OnInit {
 
         const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
         console.log('upload_setup result transferSpec: ', transferSpec);
-
+        transferSpec['authentication'] = 'token';
         this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
       },
       (err) => {
