@@ -17,9 +17,9 @@ export class AsperaNodeApiService {
 
   headers = new HttpHeaders()
     .append('Content-Type', 'application/json')
-    .append('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
-    .append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS')
-    .append('Access-Control-Allow-Origin', '*')
+    // .append('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
+    // .append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS')
+    // .append('Access-Control-Allow-Origin', '*')
     .append('Authorization', 'Basic ' + btoa(this.nodeAPIcred.nodeUser + ':' + this.nodeAPIcred.nodePW));
 
 
