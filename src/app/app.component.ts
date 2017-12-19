@@ -7,6 +7,8 @@ import { FormControl, Validators } from '@angular/forms';
 
 import { AsperaNodeApiService, DirList, NodeAPIcred } from './services/aspera-node-api.service';
 import { CredLocalstoreService } from './services/cred-localstore.service';
+import { $ } from 'protractor';
+import { dirname } from 'path';
 
 declare var AW4: any;
 
@@ -24,6 +26,7 @@ export class AppComponent implements OnInit {
 
   nodeAPIcred: NodeAPIcred;
   dirList: DirList;
+  breadcrumbNav: Array<Object>;
 
   displayedColumns = ['select', 'type', 'name', 'size', 'mtime'];
   dataSource = new MatTableDataSource();
@@ -99,6 +102,7 @@ export class AppComponent implements OnInit {
         this.browseInProgress = false;
         this.dirList = dirList;
         this.dataSource.data = dirList.items;
+        this.breadcrumbNav = this.breadcrumb(dirList.self.path);
         console.log('browse result dirList: ', dirList);
       },
       (err) => {
@@ -178,6 +182,19 @@ export class AppComponent implements OnInit {
       }
       );
 
+  }
+
+  breadcrumb(path: string): Array<Object> {
+    const dirnames = path.split('/');
+    let partPath = '';
+    const list = [];
+
+    for (let i = 1; i < dirnames.length; i++) {
+      partPath += '/' + dirnames[i];
+      list.push({ dirname: dirnames[i], path: partPath });
+    }
+    console.log('dir name path list: ', list);
+    return list;
   }
 
 }

@@ -46,7 +46,8 @@
       <h3> Useful Info: </h3>
       <mat-nav-list dense>
         <a mat-list-item target="_blank" href="https://demo.asperasoft.com">
-          <mat-icon color='primary' class="sidenav-icon">link</mat-icon><span class="sidenav-link">Aspera Demoserver</span> 
+          <mat-icon color='primary' class="sidenav-icon">link</mat-icon>
+          <span class="sidenav-link">Aspera Demoserver</span>
         </a>
       </mat-nav-list>
     </mat-card>
@@ -97,7 +98,10 @@
         <div *ngIf="dirList">
           <p class="path">
             <mat-icon color="primary" class="home-icon" (click)="browse('/')">home</mat-icon>
-            <span class="home-txt">{{ dirList.self.path }}</span>
+            <span *ngFor="let i of breadcrumbNav">
+              <span class="home-slash"> / </span>
+              <span class="home-txt" (click)="browse(i.path)"> {{ i.dirname }} </span>
+            </span>
             <!-- <mat-icon color="accent" *ngIf="(dirList.self.permissions[1].name != 'edit')">lock_outline</mat-icon> -->
             <!-- <mat-icon color="blue"   *ngIf="(dirList.self.permissions[1].name == 'edit')">lock_open</mat-icon> -->
           </p>

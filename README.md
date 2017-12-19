@@ -33,7 +33,6 @@ cd ..
 
 ### Todo / planned 
 - node.js rest forward 
-- breadcrumb folder navi
 - New Folder
 - delete confirmation
 - error handling in UI
@@ -52,6 +51,7 @@ cd ..
 - 20171216 - tokenauth  
 - 20171217 - UI layout  & settings panel
 - 20171218 - delete file & some docu 
+- 20171218 - breadcrumb folder navi
 
 ### Screenshots 
 

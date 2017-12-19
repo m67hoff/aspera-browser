@@ -63,9 +63,16 @@ button {
   cursor: pointer;
 }
 
+.home-slash {
+  font-size: 24px;
+  vertical-align: middle;
+}
+
 .home-txt {
   font-size: 24px;
   vertical-align: middle;
+  color: #3f51b5;
+  cursor: pointer;
 }
 
 .folder-icon {
