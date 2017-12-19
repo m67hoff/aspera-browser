@@ -37,7 +37,7 @@ export class AsperaNodeApiService {
 
   browse(path: string): Observable<DirList> {
     const url = this.nodeAPIcred.nodeURL + '/files/browse';
-    const data = { path: path };
+    const data = { path: path , count: 1000};
 
     console.log('URL: ', url);
     // console.log('headers: ', this.headers);

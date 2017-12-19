@@ -95,56 +95,67 @@
         <mat-progress-bar mode="indeterminate" *ngIf="browseInProgress"></mat-progress-bar>
 
         <!-- result / table -->
-        <div *ngIf="dirList">
-          <p class="path">
-            <mat-icon color="primary" class="home-icon" (click)="browse('/')">home</mat-icon>
-            <span *ngFor="let i of breadcrumbNav">
-              <span class="home-slash"> / </span>
-              <span class="home-txt" (click)="browse(i.path)"> {{ i.dirname }} </span>
-            </span>
-            <!-- <mat-icon color="accent" *ngIf="(dirList.self.permissions[1].name != 'edit')">lock_outline</mat-icon> -->
-            <!-- <mat-icon color="blue"   *ngIf="(dirList.self.permissions[1].name == 'edit')">lock_open</mat-icon> -->
-          </p>
+        <!-- <div *ngIf="dirList"> -->
+        <p class="path">
+          <mat-icon color="primary" class="home-icon" (click)="browse('/')">home</mat-icon>
+          <span *ngFor="let ele of breadcrumbNavs">
+            <span class="home-slash"> / </span>
+            <span class="home-txt" (click)="browse(ele.path)"> {{ ele.dirname }} </span>
+          </span>
+          <!-- <mat-icon color="accent" *ngIf="(dirList.self.permissions[1].name != 'edit')">lock_outline</mat-icon> -->
+          <!-- <mat-icon color="blue"   *ngIf="(dirList.self.permissions[1].name == 'edit')">lock_open</mat-icon> -->
+        </p>
 
-          <mat-table #table [dataSource]="dataSource">
+        <mat-form-field class="filter">
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+        </mat-form-field>
 
-            <ng-container matColumnDef="select">
-              <mat-header-cell *matHeaderCellDef> {{ selection.selected.length }} </mat-header-cell>
-              <mat-cell *matCellDef="let item">
-                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(item) : null" [checked]="selection.isSelected(item)">
-                </mat-checkbox>
-              </mat-cell>
-            </ng-container>
+        <mat-table #table [dataSource]="dataSource" matSort>
 
-            <ng-container matColumnDef="type">
-              <mat-header-cell *matHeaderCellDef> Type </mat-header-cell>
-              <mat-cell *matCellDef="let item" (click)="(item.type == 'directory') ? browse(item.path) : 0">
-                <mat-icon color="primary" class="folder-icon" *ngIf="(item.type == 'directory')" mat-list-icon>folder</mat-icon>
-                <mat-icon *ngIf="(item.type == 'file')" mat-list-icon>insert_drive_file</mat-icon>
-              </mat-cell>
-            </ng-container>
+          <ng-container matColumnDef="select">
+            <mat-header-cell *matHeaderCellDef> {{ selection.selected.length }} </mat-header-cell>
+            <mat-cell *matCellDef="let item">
+              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(item) : null" [checked]="selection.isSelected(item)">
+              </mat-checkbox>
+            </mat-cell>
+          </ng-container>
 
-            <ng-container matColumnDef="name">
-              <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
-              <mat-cell [ngClass]="(item.type == 'directory') ? 'folder-txt' : 'file-txt' " *matCellDef="let item" (click)="(item.type == 'directory') ? browse(item.path) : 0">
-                {{ item.basename }}
-              </mat-cell>
-            </ng-container>
+          <ng-container matColumnDef="type">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Type </mat-header-cell>
+            <mat-cell *matCellDef="let item" (click)="(item.type == 'directory') ? browse(item.path) : 0">
+              <mat-icon color="primary" class="folder-icon" *ngIf="(item.type == 'directory')" mat-list-icon>folder</mat-icon>
+              <mat-icon *ngIf="(item.type == 'file')" mat-list-icon>insert_drive_file</mat-icon>
+            </mat-cell>
+          </ng-container>
 
-            <ng-container matColumnDef="size">
-              <mat-header-cell *matHeaderCellDef> Size </mat-header-cell>
-              <mat-cell *matCellDef="let item"> {{ item.size | size }} </mat-cell>
-            </ng-container>
+          <ng-container matColumnDef="basename">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+            <mat-cell [ngClass]="(item.type == 'directory') ? 'folder-txt' : 'file-txt' " *matCellDef="let item" (click)="(item.type == 'directory') ? browse(item.path) : 0">
+              {{ item.basename }}
+            </mat-cell>
+          </ng-container>
 
-            <ng-container matColumnDef="mtime">
-              <mat-header-cell *matHeaderCellDef> M Time </mat-header-cell>
-              <mat-cell *matCellDef="let item"> {{ item.mtime | date:'yyyy-MM-dd HH:mm:ss z' }} </mat-cell>
-            </ng-container>
+          <ng-container matColumnDef="size">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Size </mat-header-cell>
+            <mat-cell *matCellDef="let item">
+              <span *ngIf="(item.type == 'directory')"> </span>
+              <span *ngIf="(item.type == 'file')"> {{ item.size | size }}</span>
+            </mat-cell>
+          </ng-container>
 
-            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-          </mat-table>
-        </div>
+          <ng-container matColumnDef="mtime">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> M Time </mat-header-cell>
+            <mat-cell *matCellDef="let item"> {{ item.mtime | date:'yyyy-MM-dd HH:mm:ss z' }} </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+
+        <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[20, 30, 50, 100]">
+        </mat-paginator>
+
+        <!-- </div> -->
       </mat-card-content>
     </mat-card>
   </mat-sidenav-content>

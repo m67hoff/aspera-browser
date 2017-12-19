@@ -1,23 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
-import { MatTableDataSource } from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { FormControl, Validators } from '@angular/forms';
-
-// import { digest } from '@angular/compiler/src/i18n/serializers/xmb';
 
 import { AsperaNodeApiService, DirList, NodeAPIcred } from './services/aspera-node-api.service';
 import { CredLocalstoreService } from './services/cred-localstore.service';
-import { $ } from 'protractor';
-import { dirname } from 'path';
+
 
 declare var AW4: any;
+
+interface breadcrumbNav { dirname: string, path: string };
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
 
   asperaWeb: any;
   connectSettings = {
@@ -26,9 +25,9 @@ export class AppComponent implements OnInit {
 
   nodeAPIcred: NodeAPIcred;
   dirList: DirList;
-  breadcrumbNav: Array<Object>;
+  breadcrumbNavs: Array<breadcrumbNav>;
 
-  displayedColumns = ['select', 'type', 'name', 'size', 'mtime'];
+  displayedColumns = ['select', 'type', 'basename', 'size', 'mtime'];
   dataSource = new MatTableDataSource();
   selection: SelectionModel<any>;
 
@@ -40,6 +39,8 @@ export class AppComponent implements OnInit {
   constructor(private nodeAPI: AsperaNodeApiService, private credStore: CredLocalstoreService) {
     this.nodeAPIcred = credStore.getCred();
     this.nodeAPI.setCred(this.nodeAPIcred);
+    // this.dataSource.data = [{ path: "", basename: "", type: "file", size: 0, mtime: "0" }];
+    this.selection = new SelectionModel<any>(true, []);
   }
 
   ngOnInit() {
@@ -71,6 +72,20 @@ export class AppComponent implements OnInit {
     }
   }
 
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim();
+    filterValue = filterValue.toLowerCase();
+    this.dataSource.filter = filterValue;
+  }
+
   testconnection() {
     this.credStore.setCred(this.nodeAPIcred);
     this.nodeAPI.setCred(this.nodeAPIcred);
@@ -100,9 +115,10 @@ export class AppComponent implements OnInit {
       .subscribe(
       (dirList: DirList) => {
         this.browseInProgress = false;
+        this.isConnected = true;
         this.dirList = dirList;
         this.dataSource.data = dirList.items;
-        this.breadcrumbNav = this.breadcrumb(dirList.self.path);
+        this.breadcrumbNavs = this.breadcrumb(dirList.self.path);
         console.log('browse result dirList: ', dirList);
       },
       (err) => {
@@ -184,7 +200,7 @@ export class AppComponent implements OnInit {
 
   }
 
-  breadcrumb(path: string): Array<Object> {
+  breadcrumb(path: string): Array<breadcrumbNav> {
     const dirnames = path.split('/');
     let partPath = '';
     const list = [];
@@ -193,7 +209,7 @@ export class AppComponent implements OnInit {
       partPath += '/' + dirnames[i];
       list.push({ dirname: dirnames[i], path: partPath });
     }
-    console.log('dir name path list: ', list);
+    // console.log('dir name path list: ', list);
     return list;
   }
 

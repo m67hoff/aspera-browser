@@ -36,9 +36,6 @@ cd ..
 - New Folder
 - delete confirmation
 - error handling in UI
-- table sort 
-- table filter
-- table paginator 
 - store different cred 
 - npm package
 - Transfer Management in UI 
@@ -52,6 +49,7 @@ cd ..
 - 20171217 - UI layout  & settings panel
 - 20171218 - delete file & some docu 
 - 20171218 - breadcrumb folder navi
+- 20171219 - table sort filter paginator 
 
 ### Screenshots 
 
