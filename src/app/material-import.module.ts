@@ -7,6 +7,7 @@ import {
     MatCardModule,
     MatInputModule,
     MatCheckboxModule,
+    MatRadioModule,
     MatListModule,
     MatProgressBarModule,
     MatTabsModule,
@@ -21,22 +22,23 @@ import { CdkTableModule } from '@angular/cdk/table';
 
 @NgModule({
     imports: [
-    MatSidenavModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-    MatCardModule,
-    MatInputModule,
-    MatCheckboxModule,
-    MatListModule,
-    MatProgressBarModule,
-    MatTabsModule,
-    MatDialogModule,
-    MatPaginatorModule,
-    MatSortModule,
+        MatSidenavModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatIconModule,
+        MatCardModule,
+        MatInputModule,
+        MatCheckboxModule,
+        MatRadioModule,
+        MatListModule,
+        MatProgressBarModule,
+        MatTabsModule,
+        MatDialogModule,
+        MatPaginatorModule,
+        MatSortModule,
 
-    MatTableModule,
-    CdkTableModule,
+        MatTableModule,
+        CdkTableModule,
     ],
 
     exports: [
@@ -47,13 +49,14 @@ import { CdkTableModule } from '@angular/cdk/table';
         MatCardModule,
         MatInputModule,
         MatCheckboxModule,
+        MatRadioModule,
         MatListModule,
         MatProgressBarModule,
         MatTabsModule,
         MatDialogModule,
         MatPaginatorModule,
         MatSortModule,
-    
+
         MatTableModule,
         CdkTableModule,
     ]

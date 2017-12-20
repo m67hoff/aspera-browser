@@ -50,6 +50,7 @@ cd ..
 - 20171218 - delete file & some docu 
 - 20171218 - breadcrumb folder navi
 - 20171219 - table sort filter paginator 
+- 20171220 - tokenauth / pw toggle 
 
 ### Screenshots 
 

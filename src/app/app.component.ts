@@ -9,7 +9,7 @@ import { CredLocalstoreService } from './services/cred-localstore.service';
 
 declare var AW4: any;
 
-interface breadcrumbNav { dirname: string, path: string };
+interface BreadcrumbNav { dirname: string; path: string; }
 
 @Component({
   selector: 'app-root',
@@ -25,21 +25,23 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   nodeAPIcred: NodeAPIcred;
   dirList: DirList;
-  breadcrumbNavs: Array<breadcrumbNav>;
+  breadcrumbNavs: Array<BreadcrumbNav>;
 
   displayedColumns = ['select', 'type', 'basename', 'size', 'mtime'];
   dataSource = new MatTableDataSource();
   selection: SelectionModel<any>;
 
   isConnected = false;
+  useTokenAuth = true;
   browseInProgress = false;
   hidePW = true;
 
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(private nodeAPI: AsperaNodeApiService, private credStore: CredLocalstoreService) {
     this.nodeAPIcred = credStore.getCred();
     this.nodeAPI.setCred(this.nodeAPIcred);
-    // this.dataSource.data = [{ path: "", basename: "", type: "file", size: 0, mtime: "0" }];
     this.selection = new SelectionModel<any>(true, []);
   }
 
@@ -71,9 +73,6 @@ export class AppComponent implements OnInit, AfterViewInit {
         break;
     }
   }
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -137,11 +136,12 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.nodeAPI.download_setup(paths)
       .subscribe(
       (transferSpecs) => {
-        console.log('download_setup result transferSpecs: ', transferSpecs);
+        // console.log('download_setup result transferSpecs: ', transferSpecs);
 
         const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
+        if (this.useTokenAuth) { transferSpec['authentication'] = 'token'; }
+
         console.log('download_setup result transferSpec: ', transferSpec);
-        transferSpec['authentication'] = 'token';
         this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
       },
       (err) => {
@@ -185,11 +185,11 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.nodeAPI.upload_setup(paths, this.dirList.self.path)
       .subscribe(
       (transferSpecs) => {
-        console.log('upload_setup result transferSpecs: ', transferSpecs);
-
+        // console.log('upload_setup result transferSpecs: ', transferSpecs);
         const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
+        if (this.useTokenAuth) { transferSpec['authentication'] = 'token'; }
+
         console.log('upload_setup result transferSpec: ', transferSpec);
-        transferSpec['authentication'] = 'token';
         this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
       },
       (err) => {
@@ -200,7 +200,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   }
 
-  breadcrumb(path: string): Array<breadcrumbNav> {
+  breadcrumb(path: string): Array<BreadcrumbNav> {
     const dirnames = path.split('/');
     let partPath = '';
     const list = [];

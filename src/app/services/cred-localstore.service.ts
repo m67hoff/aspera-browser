@@ -21,19 +21,19 @@ export class CredLocalstoreService {
     } else {
       cred = {
         nodeURL: storedCred.nodeURL,
-        nodeUser: atob(storedCred.nodeUser),
+        nodeUser: storedCred.nodeUser,
         nodePW: atob(storedCred.nodePW)
       };
     }
 
-    console.log('getCred json: ', cred);
+    // console.log('getCred json: ', cred);
     return cred;
   }
 
   setCred(cred: NodeAPIcred) {
     const storedCred = {
       nodeURL: cred.nodeURL,
-      nodeUser: btoa(cred.nodeUser),
+      nodeUser: cred.nodeUser,
       nodePW: btoa(cred.nodePW)
     };
     console.log('setCred json: ', storedCred);

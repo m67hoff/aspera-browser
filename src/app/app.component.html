@@ -36,8 +36,14 @@
         <input matInput #password [(ngModel)]="nodeAPIcred.nodePW" [type]="hidePW ? 'password' : 'text'" required>
         <mat-icon matSuffix (click)="hidePW = !hidePW">{{ hidePW ? 'visibility' : 'visibility_off' }}</mat-icon>
       </mat-form-field>
+
+      <mat-radio-group [(ngModel)]="useTokenAuth">
+        <mat-radio-button checked=true  [value]="true">Token authorization</mat-radio-button>
+        <mat-radio-button [value]="false">ask Password</mat-radio-button>
+      </mat-radio-group>
+      
       <p>
-        <button mat-raised-button class="test-button" (click)="testconnection()">Test Connection</button>
+        <button mat-raised-button class="test-button" (click)="testconnection()">Test Connection & Save</button>
         <mat-icon color="accent" class="test-icon" [ngStyle]=" isConnected ? {color: 'green'} : {} ">{{ isConnected ? 'check_circle' : 'error' }}</mat-icon>
       </p>
     </mat-card>
