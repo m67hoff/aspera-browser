@@ -2,9 +2,13 @@ import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { FormControl, Validators } from '@angular/forms';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+
 
 import { AsperaNodeApiService, DirList, NodeAPIcred } from './services/aspera-node-api.service';
 import { CredLocalstoreService } from './services/cred-localstore.service';
+import { CreateDirDialogComponent } from './dialog/create-dir-dialog.component';
+import { DeleteConfDialogComponent } from './dialog/delete-conf-dialog.component';
 
 
 declare var AW4: any;
@@ -39,7 +43,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private nodeAPI: AsperaNodeApiService, private credStore: CredLocalstoreService) {
+  constructor(private nodeAPI: AsperaNodeApiService, private credStore: CredLocalstoreService, public dialog: MatDialog) {
     this.nodeAPIcred = credStore.getCred();
     this.nodeAPI.setCred(this.nodeAPIcred);
     this.selection = new SelectionModel<any>(true, []);
@@ -86,6 +90,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   testconnection() {
+    this.nodeAPIcred.nodeURL = this.nodeAPIcred.nodeURL.trim();
+    this.nodeAPIcred.nodeUser = this.nodeAPIcred.nodeUser.trim();
+    this.nodeAPIcred.nodePW = this.nodeAPIcred.nodePW.trim();
     this.credStore.setCred(this.nodeAPIcred);
     this.nodeAPI.setCred(this.nodeAPIcred);
     this.browseInProgress = true;
@@ -151,6 +158,19 @@ export class AppComponent implements OnInit, AfterViewInit {
       );
   }
 
+  deleteDialog() {
+    const paths = this.selection.selected.map(item => ({ path: item.path }));
+    const dialogRef =
+      this.dialog.open(DeleteConfDialogComponent, { width: '250px', data: { nr: paths.length } });
+
+    dialogRef.afterClosed()
+      .subscribe(
+      res => {
+        console.log('Delete Dialog: ', res);
+        if (res) { this.delete(); }
+      }
+      );
+  }
   delete() {
     // console.log('List selection: ', this.selection);
     const paths = this.selection.selected.map(item => ({ path: item.path }));
@@ -164,6 +184,39 @@ export class AppComponent implements OnInit, AfterViewInit {
       },
       (err) => {
         console.error('nodeAPI delete ERROR: ');
+        console.error(err);
+      }
+      );
+  }
+
+  createDirDialog() {
+    let dirname = '';
+    const dialogRef =
+      this.dialog.open(CreateDirDialogComponent, { width: '250px', data: { name: dirname } });
+
+    dialogRef.afterClosed()
+      .subscribe(
+      res => {
+        // console.log('New Folder Dialog name: ', dirname);
+        if (res) { dirname = res.trim(); }
+        if (dirname !== '') { this.createDir(dirname); }
+      }
+      );
+  }
+  createDir(name: string) {
+    // console.log('List selection: ', this.selection);
+
+    const newDirPath = this.dirList.self.path + '/' + name;
+    console.log('create Dir path: ', newDirPath);
+
+    this.nodeAPI.createDir(newDirPath)
+      .subscribe(
+      (res) => {
+        console.log('create Dir result : ', res);
+        this.browse(newDirPath);
+      },
+      (err) => {
+        console.error('nodeAPI create ERROR: ');
         console.error(err);
       }
       );

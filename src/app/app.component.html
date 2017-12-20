@@ -94,7 +94,11 @@
           <mat-icon>clear</mat-icon>
           Clear
         </button>
-        <button mat-raised-button color="accent" [disabled]="(dirList && selection.selected.length !== 0) ? false : true" (click)="delete()">
+        <button mat-raised-button color="primary" [disabled]="(dirList && selection.selected.length === 0) ? false : true" (click)="createDirDialog()">
+          <mat-icon>folder</mat-icon>
+          New Dir 
+        </button>
+        <button mat-raised-button color="accent" [disabled]="(dirList && selection.selected.length !== 0) ? false : true" (click)="deleteDialog()">
           <mat-icon>delete</mat-icon>
           Delete Files
         </button>

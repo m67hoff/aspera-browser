@@ -14,13 +14,17 @@ import { AppComponent } from './app.component';
 import { AsperaNodeApiService } from './services/aspera-node-api.service';
 import { SizePipe } from './pipes/size.pipe';
 import { CredLocalstoreService } from './services/cred-localstore.service';
+import { CreateDirDialogComponent } from './dialog/create-dir-dialog.component';
+import { DeleteConfDialogComponent } from './dialog/delete-conf-dialog.component';
 
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    SizePipe
+    SizePipe,
+    CreateDirDialogComponent,
+    DeleteConfDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -30,6 +34,7 @@ import { CredLocalstoreService } from './services/cred-localstore.service';
     MaterialImportModule,
     BrowserAnimationsModule
   ],
+  entryComponents: [CreateDirDialogComponent, DeleteConfDialogComponent],
   providers: [AsperaNodeApiService, CredLocalstoreService],
   bootstrap: [AppComponent]
 })

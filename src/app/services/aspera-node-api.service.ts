@@ -37,7 +37,7 @@ export class AsperaNodeApiService {
 
   browse(path: string): Observable<DirList> {
     const url = this.nodeAPIcred.nodeURL + '/files/browse';
-    const data = { path: path , count: 1000};
+    const data = { path: path, count: 1000 };
 
     console.log('URL: ', url);
     // console.log('headers: ', this.headers);
@@ -89,6 +89,22 @@ export class AsperaNodeApiService {
   delete(paths: Array<Object>): Observable<any> {
     const url = this.nodeAPIcred.nodeURL + '/files/delete';
     const data = { paths: paths };
+
+    console.log('URL: ', url);
+    // console.log('headers: ', this.headers);
+    console.log('postdata: ', data);
+
+    return this.http
+      .post<any>(url, data, { headers: this.headers });
+  }
+
+  createDir(path: string): Observable<any> {
+    const url = this.nodeAPIcred.nodeURL + '/files/create';
+    const data = {
+      paths: [
+        { path: path, type: 'directory' }
+      ]
+    };
 
     console.log('URL: ', url);
     // console.log('headers: ', this.headers);

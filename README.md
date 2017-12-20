@@ -33,8 +33,6 @@ cd ..
 
 ### Todo / planned 
 - node.js rest forward 
-- New Folder
-- delete confirmation
 - error handling in UI
 - store different cred 
 - npm package
@@ -42,7 +40,7 @@ cd ..
 - devops integration (travis / greenkeeper)
 
 ### Changelog
-- 20171206 - first code / simple download 
+- 20171206 - first simple download 
 - 20171212 - nodeAPI browse sample 
 - 20171214 - upload sample  
 - 20171216 - tokenauth  
@@ -50,7 +48,7 @@ cd ..
 - 20171218 - delete file & some docu 
 - 20171218 - breadcrumb folder navi
 - 20171219 - table sort filter paginator 
-- 20171220 - tokenauth / pw toggle 
+- 20171220 - tokenauth toggle / New Folder / delete confirmation
 
 ### Screenshots 
 
