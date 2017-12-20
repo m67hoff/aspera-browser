@@ -159,9 +159,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   deleteDialog() {
-    const paths = this.selection.selected.map(item => ({ path: item.path }));
     const dialogRef =
-      this.dialog.open(DeleteConfDialogComponent, { width: '250px', data: { nr: paths.length } });
+      this.dialog.open(DeleteConfDialogComponent, { width: '250px', data: { nr: this.selection.selected.length } });
 
     dialogRef.afterClosed()
       .subscribe(
