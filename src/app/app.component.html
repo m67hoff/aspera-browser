@@ -13,33 +13,38 @@
   <mat-sidenav #sidenav position="end" mode="over" class="app-sidenav">
     <mat-card>
       <h3> Node API Settings: </h3>
-      <mat-form-field class="full-width">
-        <mat-placeholder>
-          <mat-icon>link</mat-icon> NodeAPI URL
-        </mat-placeholder>
-        <input matInput #url [(ngModel)]="nodeAPIcred.nodeURL" type="url" required>
-      </mat-form-field>
-      <br/>
+      <form #settings="ngForm">
 
-      <mat-form-field class="full-width">
-        <mat-placeholder>
-          <mat-icon>person</mat-icon> User
-        </mat-placeholder>
-        <input matInput #user [(ngModel)]="nodeAPIcred.nodeUser" type="text" required>
-      </mat-form-field>
-      <br/>
+        <mat-form-field class="full-width">
+          <mat-placeholder>
+            <mat-icon>link</mat-icon> NodeAPI URL
+          </mat-placeholder>
+          <input matInput #url name="url" [(ngModel)]="nodeAPIcred.nodeURL" type="url" required>
+        </mat-form-field>
+        <br/>
 
-      <mat-form-field class="full-width">
-        <mat-placeholder>
-          <mat-icon>lock</mat-icon> Password
-        </mat-placeholder>
-        <input matInput #password [(ngModel)]="nodeAPIcred.nodePW" [type]="hidePW ? 'password' : 'text'" required>
-        <mat-icon matSuffix (click)="hidePW = !hidePW">{{ hidePW ? 'visibility' : 'visibility_off' }}</mat-icon>
-      </mat-form-field>
-      <p>
-        <button mat-raised-button class="test-button" (click)="testconnection()">Test Connection & Save</button>
-        <mat-icon color="accent" class="test-icon" [ngStyle]=" isConnected ? {color: 'green'} : {} ">{{ isConnected ? 'check_circle' : 'error' }}</mat-icon>
-      </p>
+        <mat-form-field class="full-width">
+          <mat-placeholder>
+            <mat-icon>person</mat-icon> User
+          </mat-placeholder>
+          <input matInput #user name="user" [(ngModel)]="nodeAPIcred.nodeUser" type="text" required>
+        </mat-form-field>
+        <br/>
+
+        <mat-form-field class="full-width">
+          <mat-placeholder>
+            <mat-icon>lock</mat-icon> Password
+          </mat-placeholder>
+          <input matInput #password name="password" [(ngModel)]="nodeAPIcred.nodePW" [type]="hidePW ? 'password' : 'text'" required>
+          <mat-icon matSuffix (click)="hidePW = !hidePW">{{ hidePW ? 'visibility' : 'visibility_off' }}</mat-icon>
+        </mat-form-field>
+        <p>
+          <button mat-raised-button class="test-button" (click)="testconnection()" [disabled]="!settings.valid || !settings.dirty">
+            Apply & Save
+          </button>
+          <mat-icon color="accent" class="test-icon" [ngStyle]=" isConnected ? {color: 'green'} : {} ">{{ isConnected ? 'check_circle' : 'error' }}</mat-icon>
+        </p>
+      </form>
     </mat-card>
 
     <mat-card>

@@ -49,6 +49,7 @@ cd ..
 - 20171218 - breadcrumb folder navi
 - 20171219 - table sort filter paginator 
 - 20171220 - tokenauth toggle / New Folder / delete confirmation
+- 20171227 - settings changed validation
 
 ### Screenshots 
 
