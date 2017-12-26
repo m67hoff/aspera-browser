@@ -12,7 +12,7 @@
   <!-- side nav -->
   <mat-sidenav #sidenav position="end" mode="over" class="app-sidenav">
     <mat-card>
-      <h3> Settings: </h3>
+      <h3> Node API Settings: </h3>
       <mat-form-field class="full-width">
         <mat-placeholder>
           <mat-icon>link</mat-icon> NodeAPI URL
@@ -36,16 +36,19 @@
         <input matInput #password [(ngModel)]="nodeAPIcred.nodePW" [type]="hidePW ? 'password' : 'text'" required>
         <mat-icon matSuffix (click)="hidePW = !hidePW">{{ hidePW ? 'visibility' : 'visibility_off' }}</mat-icon>
       </mat-form-field>
-
-      <mat-radio-group [(ngModel)]="useTokenAuth">
-        <mat-radio-button checked=true  [value]="true">Token authorization</mat-radio-button>
-        <mat-radio-button [value]="false">ask Password</mat-radio-button>
-      </mat-radio-group>
-      
       <p>
         <button mat-raised-button class="test-button" (click)="testconnection()">Test Connection & Save</button>
         <mat-icon color="accent" class="test-icon" [ngStyle]=" isConnected ? {color: 'green'} : {} ">{{ isConnected ? 'check_circle' : 'error' }}</mat-icon>
       </p>
+    </mat-card>
+
+    <mat-card>
+      <h3> Connect Client: </h3>
+      <mat-radio-group [(ngModel)]="useTokenAuth">
+        <mat-radio-button checked=true [value]="true">use connect ssh-key</mat-radio-button>
+        <br>
+        <mat-radio-button [value]="false">ask Password</mat-radio-button>
+      </mat-radio-group>
     </mat-card>
 
     <mat-card>
@@ -96,7 +99,7 @@
         </button>
         <button mat-raised-button color="primary" [disabled]="(dirList && selection.selected.length === 0) ? false : true" (click)="createDirDialog()">
           <mat-icon>folder</mat-icon>
-          New Dir 
+          New Dir
         </button>
         <button mat-raised-button color="accent" [disabled]="(dirList && selection.selected.length !== 0) ? false : true" (click)="deleteDialog()">
           <mat-icon>delete</mat-icon>
@@ -162,7 +165,7 @@
           <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
         </mat-table>
 
-        <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[20, 30, 50, 100]">
+        <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10, 20, 30, 50, 100]">
         </mat-paginator>
 
         <!-- </div> -->

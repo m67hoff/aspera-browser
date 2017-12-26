@@ -14,7 +14,7 @@
 }
 
 .mat-sidenav-content mat-card {
-  min-height: 500px;
+  min-height: 600px;
   margin: 20px;
   padding: 20px;
 }
@@ -32,7 +32,7 @@
 }
 
 .mat-radio-button {
-  margin-right: 5px;
+  margin: 5px;
 }
 
 .mat-card-avatar {
@@ -114,6 +114,10 @@ button {
 
 .test-button {
   vertical-align: middle;
+}
+
+.mat-header-row, .mat-row {
+  min-height: 32px;
 }
 
 .mat-column-select {
