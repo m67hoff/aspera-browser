@@ -34,9 +34,9 @@ cd ..
 ### Todo / planned 
 - node.js rest forward 
 - error handling in UI
-- store different cred 
-- npm package
 - Transfer Management in UI 
+- npm package
+- store different cred 
 - devops integration (travis / greenkeeper)
 
 ### Changelog
@@ -50,6 +50,7 @@ cd ..
 - 20171219 - table sort filter paginator 
 - 20171220 - tokenauth toggle / New Folder / delete confirmation
 - 20171227 - settings changed validation
+- 20171231 - update angular / deploy as node.js
 
 ### Screenshots 
 
