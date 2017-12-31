@@ -1,0 +1,4 @@
+applications:
+- name: AsperaBrowser
+  host: AsperaBrowser
+  memory: 256M
