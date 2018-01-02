@@ -23,8 +23,8 @@ const options = {
         res.setHeader('Access-Control-Allow-Origin', '*');
     }
 };
-app.use(express.static(__dirname + '/public', options));
-// console.log(__dirname + '/public');
+app.use(express.static(__dirname + '/webclient', options));
+// console.log(__dirname + '/webclient');
 
 app.get('/info', (req, res) => {
     console.log('info headers:', json2s(req.headers));
