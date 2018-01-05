@@ -11,8 +11,8 @@ const app = express();
 const bodyParser = require('body-parser')
 app.use(bodyParser.json());
 
-function json2s(obj) { return JSON.stringify(obj, null, 2); } // format JSON payload for log
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'; // accept untrusted certificates 
+function json2s(obj) { return JSON.stringify(obj, null, 2); }  // format JSON payload for log
 
 // start server on the specified port and binding host
 app.listen(appEnv.port, appEnv.bind, function() {
