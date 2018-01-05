@@ -15,8 +15,9 @@ export class AsperaNodeApiService {
     nodePW: 'demoaspera'
   };
   
-  private directAPIconnect = false;  // angular http client connect direct to NodeAPI or use node.js middle server 
-  private nodeURL = this.directAPIconnect ? this.nodeAPIcred.nodeURL : '';
+  // private APIconnectProxy = 'direct';  // angular http client connect direct to NodeAPI or use node.js middle server 
+  private APIconnectProxy = 'http://localhost:6002';  // angular http client connect direct to NodeAPI or use node.js middle server 
+  private nodeURL = this.APIconnectProxy !== 'direct' ? this.APIconnectProxy : this.nodeAPIcred.nodeURL;
 
   private headers = new HttpHeaders()
     .append('Content-Type', 'application/json')
@@ -26,7 +27,7 @@ export class AsperaNodeApiService {
 
   setCred(nodeAPIcred: NodeAPIcred) {
     this.nodeAPIcred = nodeAPIcred;
-    this.nodeURL = this.directAPIconnect ? nodeAPIcred.nodeURL : '';
+    this.nodeURL = this.APIconnectProxy !== 'direct' ? this.APIconnectProxy : this.nodeAPIcred.nodeURL;
     this.headers = this.headers.set('nodeURL', nodeAPIcred.nodeURL);
     this.headers = this.headers.set('Authorization', 'Basic ' + btoa(nodeAPIcred.nodeUser + ':' + nodeAPIcred.nodePW));
   }
