@@ -32,11 +32,11 @@ cd ..
 ``` 
 
 ### Todo / planned 
-- node.js rest forward 
-- error handling in UI
+- error handling in UI / error handling in node.js
+- configuration with config files 
 - Transfer Management in UI 
 - npm package
-- store different cred 
+- store different cred / advanced settings 
 - devops integration (travis / greenkeeper)
 
 ### Changelog
@@ -51,6 +51,8 @@ cd ..
 - 20171220 - tokenauth toggle / New Folder / delete confirmation
 - 20171227 - settings changed validation
 - 20171231 - update angular / deploy as node.js
+- 20180105 - node.js middleware (first & simple version)
+
 
 ### Screenshots 
 

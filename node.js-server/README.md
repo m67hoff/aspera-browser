@@ -19,8 +19,8 @@ To deploy, copy everything in `dist/*` directory to public dir.
 
 Deployment to IBM Cloud Foundry Node.js Buildpack (login to your right Bluemix cf space first):   
 ```
-ng build -aot -prod
-mv dist node.js-server/public 
+ng build -prod
+mv dist node.js-server/webclient 
 cd node.js-server
 cf push 
 cd ..

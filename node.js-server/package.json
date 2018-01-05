@@ -2,12 +2,13 @@
 	"name": "AsperaBrowser",
 	"version": "0.0.1",
 	"scripts": {
-		"start": "node app.js",
-		"live": "nodemon app.js"
+		"start": "node server.js",
+		"live": "nodemon server.js"
 	},
 	"dependencies": {
 		"cfenv": "^1.0.4",
 		"express": "^4.16.2",
+		"body-parser": "^1.18.2",
 		"request": "^2.83.0"
 	},
 	"repository": {},
@@ -15,6 +16,6 @@
 		"node": "8.x"
 	},
 	"devDependencies": {
-		"nodemon": "^1.14.6"
+		"nodemon": "^1.14.7"
 	}
 }
