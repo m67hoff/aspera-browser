@@ -8,26 +8,32 @@ export class AsperaNodeApiService {
 
   constructor(private http: HttpClient) {
   }
-
-  nodeAPIcred: NodeAPIcred = {
+  
+  private nodeAPIcred: NodeAPIcred = {
     nodeURL: 'https://demo.asperasoft.com:9092',
     nodeUser: 'asperaweb',
     nodePW: 'demoaspera'
   };
+  
+  private directAPIconnect = false;  // angular http client connect direct to NodeAPI or use node.js middle server 
+  private nodeURL = this.directAPIconnect ? this.nodeAPIcred.nodeURL : '';
 
-  headers = new HttpHeaders()
+  private headers = new HttpHeaders()
     .append('Content-Type', 'application/json')
+    .append('nodeURL', this.nodeAPIcred.nodeURL)
     .append('Authorization', 'Basic ' + btoa(this.nodeAPIcred.nodeUser + ':' + this.nodeAPIcred.nodePW));
 
 
   setCred(nodeAPIcred: NodeAPIcred) {
     this.nodeAPIcred = nodeAPIcred;
+    this.nodeURL = this.directAPIconnect ? nodeAPIcred.nodeURL : '';
+    this.headers = this.headers.set('nodeURL', nodeAPIcred.nodeURL);
     this.headers = this.headers.set('Authorization', 'Basic ' + btoa(nodeAPIcred.nodeUser + ':' + nodeAPIcred.nodePW));
   }
   getCred() { return this.nodeAPIcred; }
 
   info(): Observable<Object> {
-    const url = this.nodeAPIcred.nodeURL + '/info';
+    const url = this.nodeURL + '/info';
     console.log('URL: ', url);
     // console.log('nodeAPIcred: ', this.nodeAPIcred);
     // console.log('headers: ', atob(this.headers.get('Authorization').substring(5)));
@@ -36,7 +42,7 @@ export class AsperaNodeApiService {
   }
 
   browse(path: string): Observable<DirList> {
-    const url = this.nodeAPIcred.nodeURL + '/files/browse';
+    const url = this.nodeURL + '/files/browse';
     const data = { path: path, count: 1000 };
 
     console.log('URL: ', url);
@@ -48,7 +54,7 @@ export class AsperaNodeApiService {
   }
 
   download_setup(paths: Array<Object>): Observable<any> {
-    const url = this.nodeAPIcred.nodeURL + '/files/download_setup';
+    const url = this.nodeURL + '/files/download_setup';
     const data = {
       transfer_requests:
         [
@@ -65,7 +71,7 @@ export class AsperaNodeApiService {
   }
 
   upload_setup(paths: Array<Object>, destination: string): Observable<any> {
-    const url = this.nodeAPIcred.nodeURL + '/files/upload_setup';
+    const url = this.nodeURL + '/files/upload_setup';
     const data = {
       transfer_requests:
         [
@@ -87,7 +93,7 @@ export class AsperaNodeApiService {
   }
 
   delete(paths: Array<Object>): Observable<any> {
-    const url = this.nodeAPIcred.nodeURL + '/files/delete';
+    const url = this.nodeURL + '/files/delete';
     const data = { paths: paths };
 
     console.log('URL: ', url);
@@ -99,7 +105,7 @@ export class AsperaNodeApiService {
   }
 
   createDir(path: string): Observable<any> {
-    const url = this.nodeAPIcred.nodeURL + '/files/create';
+    const url = this.nodeURL + '/files/create';
     const data = {
       paths: [
         { path: path, type: 'directory' }
