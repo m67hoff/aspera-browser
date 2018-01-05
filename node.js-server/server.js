@@ -1,53 +1,60 @@
-"use strict";
+'use strict';
 
 const cfenv = require('cfenv');
 const appEnv = cfenv.getAppEnv();
 
-const request = require("request");
+const nodeRequest = require('request');
 
-const express = require("express");
+const express = require('express');
 const app = express();
 
-// Globals
+const bodyParser = require('body-parser')
+app.use(bodyParser.json());
+
 function json2s(obj) { return JSON.stringify(obj, null, 2); } // format JSON payload for log
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 // start server on the specified port and binding host
 app.listen(appEnv.port, appEnv.bind, function() {
-    console.log('server starting on ' + appEnv.url);
+  console.log('server starting on ' + appEnv.url);
 });
 
-// serve static files out of ./public
-const options = {
-    setHeaders: (res, path, stat) => {
-        res.setHeader('Access-Control-Allow-Origin', '*');
-    }
+// serve static files / angular web client 
+const staticOptions = {
+  setHeaders: (res, path, stat) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+  }
 };
-app.use(express.static(__dirname + '/webclient', options));
-// console.log(__dirname + '/webclient');
+app.use(express.static(__dirname + '/webclient', staticOptions));
 
-app.get('/info', (req, res) => {
-    console.log('info headers:', json2s(req.headers));
+// listen on supported nodeAPI REST endpoints 
+app.get('/info', makeNodeRequest);
+app.post('/files/browse', makeNodeRequest);
+app.post('/files/download_setup', makeNodeRequest);
+app.post('/files/upload_setup', makeNodeRequest);
+app.post('/files/delete', makeNodeRequest);
+app.post('/files/create', makeNodeRequest);
 
-    request.get('https://demo.asperasoft.com:9092/info',
-        { 'auth': { 'user': 'asperaweb', 'pass': 'demoaspera' } },
-        (error, response, body) => {
-            console.log('request.get error:', error);
-            console.log('request.get statusCode:', response && response.statusCode);
-            // console.log('request.get body:', json2s(JSON.parse(body)));
-            // this.res.send(JSON.parse(body));
-        }
-    );
+function makeNodeRequest(localReq, localRes) {
+  const options = {};
+  options.url = localReq.headers.nodeurl + localReq.path;
+  console.log('\n--> makeNodeRequest : ', options.url);
+  options.method = localReq.method;
+  options.json = localReq.body;
+  options.headers = localReq.headers;
+  // console.log('makeNodeRequest options:\n', json2s(options));
 
-    // res.setHeader('Content-Type', 'application/json');
-    res.status(200)
-        .json({ status: 'OK' });
-});
+  nodeRequest(options, (error, remoteRes, remoteBody) => {
+    if (error) {
+      console.log('remoteNodeRequest error:', error);
+      localRes.status(500)
+        .json({ internal_error: 'Error requesting remote server: ' + error });
+    } else {
+      console.log('remoteNodeRequest statusCode:', remoteRes.statusCode);
+      // console.log('remoteNodeRequest body:', json2s(remoteBody));
+      localRes.status(remoteRes.statusCode)
+        .json(remoteBody);
+    }
+  });
 
-app.post('/files/:call', (req, res) => {
-    var call = req.params.call;
-    console.log('files:', call);
-
-    res.status(200)
-        .json({ filesAPI: call });
-});
+} 
