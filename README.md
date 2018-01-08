@@ -24,7 +24,7 @@ To deploy, copy everything in `dist/*` directory to public dir on the webserver.
 
 Deployment to IBM Cloud cf-nginx (login to your right Bluemix cf space first):   
 ```
-ng build -aot -prod
+ng build -prod
 cd dist
 touch Staticfile
 cf p myAsperaBrowser -m 64M
@@ -52,6 +52,7 @@ cd ..
 - 20171227 - settings changed validation
 - 20171231 - update angular / deploy as node.js
 - 20180105 - node.js middleware (first & simple version)
+- 20180108 - some simple error handling
 
 
 ### Screenshots 

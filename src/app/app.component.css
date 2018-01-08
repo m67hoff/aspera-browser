@@ -52,8 +52,19 @@ button {
   margin: 5px;
 }
 
-.mat-progress-bar {
+.progressInfo {
+  margin-left: 5px;
   margin-top: 10px;
+}
+
+.mat-progress-bar {
+
+}
+
+.status {
+  color: #ff4081;
+  font-size: 10px;
+	font-weight: 700;
 }
 
 .path {
