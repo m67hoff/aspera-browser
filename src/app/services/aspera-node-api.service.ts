@@ -8,15 +8,15 @@ export class AsperaNodeApiService {
 
   constructor(private http: HttpClient) {
   }
-  
+
   private nodeAPIcred: NodeAPIcred = {
     nodeURL: 'https://demo.asperasoft.com:9092',
     nodeUser: 'asperaweb',
     nodePW: 'demoaspera'
   };
-  
-  // private APIconnectProxy = 'direct';  // angular http client connect direct to NodeAPI or use node.js middle server 
-  private APIconnectProxy = 'http://localhost:6002';  // angular http client connect direct to NodeAPI or use node.js middle server 
+
+  // private APIconnectProxy = 'direct';  // angular http client connect direct to NodeAPI or use node.js middle server
+  private APIconnectProxy = 'http://localhost:6002';  // angular http client connect direct to NodeAPI or use node.js middle server
   private nodeURL = this.APIconnectProxy !== 'direct' ? this.APIconnectProxy : this.nodeAPIcred.nodeURL;
 
   private headers = new HttpHeaders()

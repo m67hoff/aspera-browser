@@ -35,8 +35,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource();
   selection: SelectionModel<any>;
 
+  HTTPerror: Object = undefined;
   isConnected = false;
-  useTokenAuth = true;
+  useTokenAuth = false;
   browseInProgress = false;
   hidePW = true;
 
@@ -100,14 +101,15 @@ export class AppComponent implements OnInit, AfterViewInit {
       .subscribe(
       (info: any) => {
         this.browseInProgress = false;
+        this.HTTPerror = undefined;
         console.log('info result json: ', info);
         this.isConnected = true;
         this.browse('/');
       },
       (err) => {
         this.browseInProgress = false;
-        console.error(' nodeAPI info ERROR: ');
-        console.error(err);
+        this.HTTPerror = err;
+        console.error(' nodeAPI info ERROR: ', err);
         this.isConnected = false;
       }
       );
@@ -121,6 +123,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       .subscribe(
       (dirList: DirList) => {
         this.browseInProgress = false;
+        this.HTTPerror = undefined;
         this.isConnected = true;
         this.dirList = dirList;
         this.dataSource.data = dirList.items;
@@ -129,8 +132,8 @@ export class AppComponent implements OnInit, AfterViewInit {
       },
       (err) => {
         this.browseInProgress = false;
-        console.error(' nodeAPI browse ERROR: ');
-        console.error(err);
+        this.HTTPerror = err;
+        console.error(' nodeAPI browse ERROR: ', err);
       }
       );
   }
@@ -144,7 +147,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       .subscribe(
       (transferSpecs) => {
         // console.log('download_setup result transferSpecs: ', transferSpecs);
-
+        this.HTTPerror = undefined;
         const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
         if (this.useTokenAuth) { transferSpec['authentication'] = 'token'; }
 
@@ -152,8 +155,8 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
       },
       (err) => {
-        console.error('nodeAPI download_setup ERROR: ');
-        console.error(err);
+        this.HTTPerror = err;
+        console.error('nodeAPI download_setup ERROR: ', err);
       }
       );
   }
@@ -178,12 +181,13 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.nodeAPI.delete(paths)
       .subscribe(
       (res) => {
+        this.HTTPerror = undefined;
         console.log('delete result : ', res);
         this.browse(this.dirList.self.path);
       },
       (err) => {
-        console.error('nodeAPI delete ERROR: ');
-        console.error(err);
+        this.HTTPerror = err;
+        console.error('nodeAPI delete ERROR: ', err);
       }
       );
   }
@@ -211,12 +215,13 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.nodeAPI.createDir(newDirPath)
       .subscribe(
       (res) => {
+        this.HTTPerror = undefined;
         console.log('create Dir result : ', res);
         this.browse(newDirPath);
       },
       (err) => {
-        console.error('nodeAPI create ERROR: ');
-        console.error(err);
+        this.HTTPerror = err;
+        console.error('nodeAPI create ERROR: ', err);
       }
       );
   }
@@ -238,6 +243,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       .subscribe(
       (transferSpecs) => {
         // console.log('upload_setup result transferSpecs: ', transferSpecs);
+        this.HTTPerror = undefined;
         const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
         if (this.useTokenAuth) { transferSpec['authentication'] = 'token'; }
 
@@ -245,8 +251,8 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
       },
       (err) => {
-        console.error('nodeAPI upload_setup ERROR: ');
-        console.error(err);
+        this.HTTPerror = err;
+        console.error('nodeAPI upload_setup ERROR: ', err);
       }
       );
 

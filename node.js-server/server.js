@@ -47,8 +47,18 @@ function makeNodeRequest(localReq, localRes) {
   nodeRequest(options, (error, remoteRes, remoteBody) => {
     if (error) {
       console.log('remoteNodeRequest error:', error);
-      localRes.status(500)
-        .json({ internal_error: 'Error requesting remote server: ' + error });
+      switch (error.code) {
+        case 'ECONNREFUSED':
+          localRes.status(403)
+          break;
+        case 'ENOTFOUND':
+          localRes.status(404)
+          break;
+        default:
+          localRes.status(500)
+      }
+      localRes.json(error);
+
     } else {
       console.log('remoteNodeRequest statusCode:', remoteRes.statusCode);
       // console.log('remoteNodeRequest body:', json2s(remoteBody));
