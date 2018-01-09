@@ -20,12 +20,19 @@ app.listen(appEnv.port, appEnv.bind, function() {
 });
 
 // serve static files / angular web client 
-const staticOptions = {
-  setHeaders: (res, path, stat) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-  }
-};
-app.use(express.static(__dirname + '/webclient', staticOptions));
+app.use(express.static(__dirname + '/webclient'));
+
+// enable CORS with preflight
+const origin = 'http://localhost:4200';
+app.options('*',(req,res) => {
+  res.set({
+    'Access-Control-Allow-Credentials': 'true',
+    'Access-Control-Allow-Origin': origin,
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Authorization, Content-Type, nodeURL'
+  });
+  res.sendStatus(200);
+});
 
 // listen on supported nodeAPI REST endpoints 
 app.get('/info', makeNodeRequest);
@@ -45,6 +52,11 @@ function makeNodeRequest(localReq, localRes) {
   // console.log('makeNodeRequest options:\n', json2s(options));
 
   nodeRequest(options, (error, remoteRes, remoteBody) => {
+    localRes.set({
+      'Access-Control-Allow-Credentials': 'true',
+      'Access-Control-Allow-Origin': origin,
+    });
+
     if (error) {
       console.log('remoteNodeRequest error:', error);
       switch (error.code) {
