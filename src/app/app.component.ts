@@ -48,6 +48,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   constructor(private nodeAPI: AsperaNodeApiService, private credStore: CredLocalstoreService, public dialog: MatDialog) {
     this.nodeAPIcred = credStore.getCred();
     this.nodeAPI.setCred(this.nodeAPIcred);
+    this.nodeAPI.setAPIconnectProxy('http://localhost:6002');
     this.selection = new SelectionModel<any>(true, []);
   }
 
