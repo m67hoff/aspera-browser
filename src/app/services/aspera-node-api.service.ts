@@ -13,7 +13,8 @@ export class AsperaNodeApiService {
   private _nodeAPIcred: NodeAPIcred = {
     nodeURL: 'https://demo.asperasoft.com:9092',
     nodeUser: 'asperaweb',
-    nodePW: 'demoaspera'
+    nodePW: 'demoaspera',
+    useTokenAuth: false
   };
 
   private _APIconnectProxy = 'direct';  // angular http client connect to middle server or direct
@@ -149,4 +150,5 @@ export interface NodeAPIcred {
   nodeURL: string;
   nodeUser: string;
   nodePW: string;
+  useTokenAuth: boolean;
 }

@@ -31,6 +31,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   nodeAPIcred: NodeAPIcred;
   dirList: DirList;
   breadcrumbNavs: Array<BreadcrumbNav>;
+  useTokenAuth: boolean;
 
   displayedColumns = ['select', 'type', 'basename', 'size', 'mtime'];
   dataSource = new MatTableDataSource();
@@ -38,7 +39,6 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   HTTPerror: HttpErrorResponse = undefined;
   isConnected = false;
-  useTokenAuth = false;
   browseInProgress = false;
   hidePW = true;
 
@@ -47,6 +47,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   constructor(private nodeAPI: AsperaNodeApiService, private credStore: CredLocalstoreService, public dialog: MatDialog) {
     this.nodeAPIcred = credStore.getCred();
+    this.useTokenAuth = this.nodeAPIcred.useTokenAuth;
     this.nodeAPI.setCred(this.nodeAPIcred);
     this.nodeAPI.setAPIconnectProxy('http://localhost:6002');
     this.selection = new SelectionModel<any>(true, []);
@@ -96,6 +97,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.nodeAPIcred.nodeURL = this.nodeAPIcred.nodeURL.trim();
     this.nodeAPIcred.nodeUser = this.nodeAPIcred.nodeUser.trim();
     this.nodeAPIcred.nodePW = this.nodeAPIcred.nodePW.trim();
+    this.nodeAPIcred.useTokenAuth = this.useTokenAuth; 
     this.credStore.setCred(this.nodeAPIcred);
     this.nodeAPI.setCred(this.nodeAPIcred);
     this.browseInProgress = true;
