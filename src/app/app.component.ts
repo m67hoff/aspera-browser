@@ -3,6 +3,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { HttpErrorResponse } from '@angular/common/http/src/response';
 
 
 import { AsperaNodeApiService, DirList, NodeAPIcred } from './services/aspera-node-api.service';
@@ -35,7 +36,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource();
   selection: SelectionModel<any>;
 
-  HTTPerror: Object = undefined;
+  HTTPerror: HttpErrorResponse = undefined;
   isConnected = false;
   useTokenAuth = false;
   browseInProgress = false;
