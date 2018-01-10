@@ -38,6 +38,13 @@
           <input matInput #password name="password" [(ngModel)]="nodeAPIcred.nodePW" [type]="hidePW ? 'password' : 'text'" required>
           <mat-icon matSuffix (click)="hidePW = !hidePW">{{ hidePW ? 'visibility' : 'visibility_off' }}</mat-icon>
         </mat-form-field>
+        Connect Client:
+        <br>
+        <mat-radio-group name="token" [(ngModel)]="nodeAPIcred.useTokenAuth">
+          <mat-radio-button checked=true [value]="true">ssh-key</mat-radio-button>
+          <mat-radio-button [value]="false">password</mat-radio-button>
+        </mat-radio-group>
+
         <p>
           <button mat-raised-button class="test-button" (click)="testconnection()" [disabled]="!settings.valid || !settings.dirty">
             Apply & Save
@@ -46,15 +53,6 @@
           <span class="status" *ngIf="HTTPerror">Error: {{ HTTPerror.status }} - {{ HTTPerror.statusText }} - {{ HTTPerror.error?.code }}</span>
         </p>
       </form>
-    </mat-card>
-
-    <mat-card>
-      <h3> Connect Client: </h3>
-      <mat-radio-group [(ngModel)]="useTokenAuth">
-        <mat-radio-button checked=true [value]="true">use connect ssh-key</mat-radio-button>
-        <br>
-        <mat-radio-button [value]="false">ask Password</mat-radio-button>
-      </mat-radio-group>
     </mat-card>
 
     <mat-card>
