@@ -16,13 +16,15 @@ export class CredLocalstoreService {
       cred = {
         nodeURL: 'https://demo.asperasoft.com:9092',
         nodeUser: 'asperaweb',
-        nodePW: 'demoaspera'
+        nodePW: 'demoaspera',
+        useTokenAuth: false
       };
     } else {
       cred = {
         nodeURL: storedCred.nodeURL,
         nodeUser: storedCred.nodeUser,
-        nodePW: atob(storedCred.nodePW)
+        nodePW: atob(storedCred.nodePW),
+        useTokenAuth: storedCred.useTokenAuth
       };
     }
 
@@ -34,7 +36,8 @@ export class CredLocalstoreService {
     const storedCred = {
       nodeURL: cred.nodeURL,
       nodeUser: cred.nodeUser,
-      nodePW: btoa(cred.nodePW)
+      nodePW: btoa(cred.nodePW),
+      useTokenAuth: cred.useTokenAuth
     };
     console.log('setCred json: ', storedCred);
     localStorage.setItem('nodeAPIcred', JSON.stringify(storedCred));

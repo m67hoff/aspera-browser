@@ -17,6 +17,7 @@ import { CredLocalstoreService } from './services/cred-localstore.service';
 import { CreateDirDialogComponent } from './dialog/create-dir-dialog.component';
 import { DeleteConfDialogComponent } from './dialog/delete-conf-dialog.component';
 
+import { LoggerService } from './services/logger.service';
 
 
 @NgModule({
@@ -35,7 +36,7 @@ import { DeleteConfDialogComponent } from './dialog/delete-conf-dialog.component
     BrowserAnimationsModule
   ],
   entryComponents: [CreateDirDialogComponent, DeleteConfDialogComponent],
-  providers: [AsperaNodeApiService, CredLocalstoreService],
+  providers: [AsperaNodeApiService, CredLocalstoreService, LoggerService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

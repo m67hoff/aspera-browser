@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar } from '@angular/material';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { HttpErrorResponse } from '@angular/common/http/src/response';
 
 
 import { AsperaNodeApiService, DirList, NodeAPIcred } from './services/aspera-node-api.service';
@@ -10,6 +11,7 @@ import { CredLocalstoreService } from './services/cred-localstore.service';
 import { CreateDirDialogComponent } from './dialog/create-dir-dialog.component';
 import { DeleteConfDialogComponent } from './dialog/delete-conf-dialog.component';
 
+import { LoggerService, LogLevel } from './services/logger.service';
 
 declare var AW4: any;
 
@@ -35,19 +37,28 @@ export class AppComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource();
   selection: SelectionModel<any>;
 
-  HTTPerror: Object = undefined;
+  HTTPerror: HttpErrorResponse = undefined;
+
   isConnected = false;
-  useTokenAuth = false;
   browseInProgress = false;
   hidePW = true;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private nodeAPI: AsperaNodeApiService, private credStore: CredLocalstoreService, public dialog: MatDialog) {
+  constructor(
+    private nodeAPI: AsperaNodeApiService,
+    private credStore: CredLocalstoreService,
+    public dialog: MatDialog,
+    private _snackBar: MatSnackBar,
+    private log: LoggerService
+  ) {
     this.nodeAPIcred = credStore.getCred();
     this.nodeAPI.setCred(this.nodeAPIcred);
+    // this.nodeAPI.setAPIconnectProxy('http://localhost:6002');
+    this.nodeAPI.setAPIconnectProxy(''); // use node.js server as middleware
     this.selection = new SelectionModel<any>(true, []);
+    log.setLogLevel(LogLevel.INFO);
   }
 
   ngOnInit() {
@@ -74,7 +85,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   handleTransferEvents(event, obj) {
     switch (event) {
       case 'transfer':
-        // console.log('transfer: ', obj);
+        // this.log.info('transfer: ', obj);
         break;
     }
   }
@@ -96,29 +107,30 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.nodeAPIcred.nodePW = this.nodeAPIcred.nodePW.trim();
     this.credStore.setCred(this.nodeAPIcred);
     this.nodeAPI.setCred(this.nodeAPIcred);
+    
     this.browseInProgress = true;
     this.nodeAPI.info()
       .subscribe(
       (info: any) => {
         this.browseInProgress = false;
         this.HTTPerror = undefined;
-        console.log('info result json: ', info);
+        this.log.info('get info result json: ', info);
         this.isConnected = true;
         this.browse('/');
       },
       (err) => {
         this.browseInProgress = false;
         this.HTTPerror = err;
-        console.error(' nodeAPI info ERROR: ', err);
+        this.log.error(' nodeAPI info ERROR: ', err);
         this.isConnected = false;
       }
       );
   }
 
   browse(path: string) {
-    this.browseInProgress = true;
     this.selection = new SelectionModel<any>(true, []);
-
+    
+    this.browseInProgress = true;
     this.nodeAPI.browse(path)
       .subscribe(
       (dirList: DirList) => {
@@ -128,35 +140,36 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.dirList = dirList;
         this.dataSource.data = dirList.items;
         this.breadcrumbNavs = this.breadcrumb(dirList.self.path);
-        console.log('browse result dirList: ', dirList);
+        this.log.info('browse result dirList: ', dirList);
       },
       (err) => {
         this.browseInProgress = false;
         this.HTTPerror = err;
-        console.error(' nodeAPI browse ERROR: ', err);
+        this.log.error(' nodeAPI browse ERROR: ', err);
       }
       );
   }
 
   download() {
-    // console.log('List selection: ', this.selection);
+    this.log.debug('List selection: ', this.selection);
     const paths = this.selection.selected.map(item => ({ source: item.path }));
-    console.log('download paths: ', paths);
+    this.log.info('download paths: ', paths);
 
     this.nodeAPI.download_setup(paths)
       .subscribe(
       (transferSpecs) => {
-        // console.log('download_setup result transferSpecs: ', transferSpecs);
+        this.log.debug('download_setup result transferSpecs: ', transferSpecs);
         this.HTTPerror = undefined;
         const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
-        if (this.useTokenAuth) { transferSpec['authentication'] = 'token'; }
+        if (this.nodeAPIcred.useTokenAuth) { transferSpec['authentication'] = 'token'; }
 
-        console.log('download_setup result transferSpec: ', transferSpec);
+        this.log.info('download_setup result transferSpec: ', transferSpec);
         this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
+        this.showConnectSnackBar();
       },
       (err) => {
         this.HTTPerror = err;
-        console.error('nodeAPI download_setup ERROR: ', err);
+        this.log.error('nodeAPI download_setup ERROR: ', err);
       }
       );
   }
@@ -168,26 +181,26 @@ export class AppComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed()
       .subscribe(
       res => {
-        console.log('Delete Dialog: ', res);
+        this.log.info('Delete Dialog: ', res);
         if (res) { this.delete(); }
       }
       );
   }
   delete() {
-    // console.log('List selection: ', this.selection);
+    this.log.debug('List selection: ', this.selection);
     const paths = this.selection.selected.map(item => ({ path: item.path }));
-    console.log('delete paths: ', paths);
+    this.log.info('delete paths: ', paths);
 
     this.nodeAPI.delete(paths)
       .subscribe(
       (res) => {
         this.HTTPerror = undefined;
-        console.log('delete result : ', res);
+        this.log.info('delete result : ', res);
         this.browse(this.dirList.self.path);
       },
       (err) => {
         this.HTTPerror = err;
-        console.error('nodeAPI delete ERROR: ', err);
+        this.log.error('nodeAPI delete ERROR: ', err);
       }
       );
   }
@@ -200,28 +213,26 @@ export class AppComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed()
       .subscribe(
       res => {
-        // console.log('New Folder Dialog name: ', dirname);
+        this.log.debug('New Folder Dialog name: ', dirname);
         if (res) { dirname = res.trim(); }
         if (dirname !== '') { this.createDir(dirname); }
       }
       );
   }
   createDir(name: string) {
-    // console.log('List selection: ', this.selection);
-
     const newDirPath = this.dirList.self.path + '/' + name;
-    console.log('create Dir path: ', newDirPath);
+    this.log.info('create Dir path: ', newDirPath);
 
     this.nodeAPI.createDir(newDirPath)
       .subscribe(
       (res) => {
         this.HTTPerror = undefined;
-        console.log('create Dir result : ', res);
+        this.log.info('create Dir result : ', res);
         this.browse(newDirPath);
       },
       (err) => {
         this.HTTPerror = err;
-        console.error('nodeAPI create ERROR: ', err);
+        this.log.error('nodeAPI create ERROR: ', err);
       }
       );
   }
@@ -233,26 +244,27 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.asperaWeb.showSelectFolderDialog({ success: (data => this.uploadFiles(data)) });
   }
   uploadFiles(data) {
-    // console.log('uploadFiles data: ', data);
-    if (data.dataTransfer.files === 0) { return; }
+    this.log.debug('uploadFiles data: ', data);
+    if (data.dataTransfer.files.length === 0) { return; }
 
     const paths = data.dataTransfer.files.map(file => ({ source: file.name }));
-    console.log('uploadFiles paths: ', paths);
+    this.log.info('uploadFiles paths: ', paths);
 
     this.nodeAPI.upload_setup(paths, this.dirList.self.path)
       .subscribe(
       (transferSpecs) => {
-        // console.log('upload_setup result transferSpecs: ', transferSpecs);
+        this.log.debug('upload_setup result transferSpecs: ', transferSpecs);
         this.HTTPerror = undefined;
         const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
-        if (this.useTokenAuth) { transferSpec['authentication'] = 'token'; }
+        if (this.nodeAPIcred.useTokenAuth) { transferSpec['authentication'] = 'token'; }
 
-        console.log('upload_setup result transferSpec: ', transferSpec);
+        this.log.info('upload_setup result transferSpec: ', transferSpec);
         this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
+        this.showConnectSnackBar();
       },
       (err) => {
         this.HTTPerror = err;
-        console.error('nodeAPI upload_setup ERROR: ', err);
+        this.log.error('nodeAPI upload_setup ERROR: ', err);
       }
       );
 
@@ -267,8 +279,12 @@ export class AppComponent implements OnInit, AfterViewInit {
       partPath += '/' + dirnames[i];
       list.push({ dirname: dirnames[i], path: partPath });
     }
-    // console.log('dir name path list: ', list);
+    this.log.debug('dir name path list: ', list);
     return list;
+  }
+
+  showConnectSnackBar() {
+    this._snackBar.open('Aspera Connect started', '' , { duration: 3000 });
   }
 
 }

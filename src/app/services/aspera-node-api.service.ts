@@ -3,60 +3,78 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
+import { LoggerService } from './logger.service';
+
 @Injectable()
 export class AsperaNodeApiService {
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private log: LoggerService
+  ) {
+    this._setProp();
   }
 
-  private nodeAPIcred: NodeAPIcred = {
+  private _nodeAPIcred: NodeAPIcred = {
     nodeURL: 'https://demo.asperasoft.com:9092',
     nodeUser: 'asperaweb',
-    nodePW: 'demoaspera'
+    nodePW: 'demoaspera',
+    useTokenAuth: false
   };
 
-  // private APIconnectProxy = 'direct';  // angular http client connect direct to NodeAPI 
-  // private APIconnectProxy = 'http://localhost:6002';  // angular http client connect to local node.js middle server
-  private APIconnectProxy = '';  // angular http client connect node.js middle server
-  private nodeURL = this.APIconnectProxy !== 'direct' ? this.APIconnectProxy : this.nodeAPIcred.nodeURL;
+  private _APIconnectProxy = 'direct';  // angular http client connect to middle server or direct
+  private _nodeURL: string;
 
-  private headers = new HttpHeaders()
-    .append('Content-Type', 'application/json')
-    .append('nodeURL', this.nodeAPIcred.nodeURL)
-    .append('Authorization', 'Basic ' + btoa(this.nodeAPIcred.nodeUser + ':' + this.nodeAPIcred.nodePW));
+  private _headers = new HttpHeaders()
+    .append('Content-Type', 'application/json');
 
+  private _setProp() {
+    this._headers = this._headers.set('Authorization', 'Basic ' + btoa(this._nodeAPIcred.nodeUser + ':' + this._nodeAPIcred.nodePW));
 
-  setCred(nodeAPIcred: NodeAPIcred) {
-    this.nodeAPIcred = nodeAPIcred;
-    this.nodeURL = this.APIconnectProxy !== 'direct' ? this.APIconnectProxy : this.nodeAPIcred.nodeURL;
-    this.headers = this.headers.set('nodeURL', nodeAPIcred.nodeURL);
-    this.headers = this.headers.set('Authorization', 'Basic ' + btoa(nodeAPIcred.nodeUser + ':' + nodeAPIcred.nodePW));
+    if (this._APIconnectProxy === 'direct') {
+      this._nodeURL = this._nodeAPIcred.nodeURL;
+      this._headers = this._headers.delete('nodeURL');
+    } else {
+      this._nodeURL = this._APIconnectProxy;
+      this._headers = this._headers.set('nodeURL', this._nodeAPIcred.nodeURL);
+    }
   }
-  getCred() { return this.nodeAPIcred; }
+
+  getAPIconnectProxy() { return this._APIconnectProxy; }
+  setAPIconnectProxy(p: string) {
+    this._APIconnectProxy = p; //  '' | 'direct' | 'http://...'
+    this._setProp();
+  }
+
+  getCred() { return this._nodeAPIcred; }
+  setCred(nodeAPIcred: NodeAPIcred) {
+    this._nodeAPIcred = nodeAPIcred;
+    this._setProp();
+  }
 
   info(): Observable<Object> {
-    const url = this.nodeURL + '/info';
-    console.log('URL: ', url);
-    // console.log('nodeAPIcred: ', this.nodeAPIcred);
-    // console.log('headers: ', atob(this.headers.get('Authorization').substring(5)));
+    const url = this._nodeURL + '/info';
+    this.log.info('URL: ', url);
+    this.log.debug('nodeAPIcred: ', this._nodeAPIcred);
+    this.log.debug('headers: ', atob(this._headers.get('Authorization').substring(5)));
     return this.http
-      .get(url, { headers: this.headers });
+      .get(url, { headers: this._headers });
   }
 
   browse(path: string): Observable<DirList> {
-    const url = this.nodeURL + '/files/browse';
+    const url = this._nodeURL + '/files/browse';
     const data = { path: path, count: 1000 };
 
-    console.log('URL: ', url);
-    // console.log('headers: ', this.headers);
-    console.log('postdata: ', data);
+    this.log.info('URL: ', url);
+    this.log.debug('headers: ', this._headers);
+    this.log.info('postdata: ', data);
 
     return this.http
-      .post<DirList>(url, data, { headers: this.headers });
+      .post<DirList>(url, data, { headers: this._headers });
   }
 
   download_setup(paths: Array<Object>): Observable<any> {
-    const url = this.nodeURL + '/files/download_setup';
+    const url = this._nodeURL + '/files/download_setup';
     const data = {
       transfer_requests:
         [
@@ -64,16 +82,16 @@ export class AsperaNodeApiService {
         ]
     };
 
-    console.log('URL: ', url);
-    // console.log('headers: ', this.headers);
-    console.log('postdata: ', data);
+    this.log.info('URL: ', url);
+    this.log.debug('headers: ', this._headers);
+    this.log.info('postdata: ', data);
 
     return this.http
-      .post<any>(url, data, { headers: this.headers });
+      .post<any>(url, data, { headers: this._headers });
   }
 
   upload_setup(paths: Array<Object>, destination: string): Observable<any> {
-    const url = this.nodeURL + '/files/upload_setup';
+    const url = this._nodeURL + '/files/upload_setup';
     const data = {
       transfer_requests:
         [
@@ -86,40 +104,40 @@ export class AsperaNodeApiService {
         ]
     };
 
-    console.log('URL: ', url);
-    // console.log('headers: ', this.headers);
-    console.log('postdata: ', data);
+    this.log.info('URL: ', url);
+    this.log.debug('headers: ', this._headers);
+    this.log.info('postdata: ', data);
 
     return this.http
-      .post<any>(url, data, { headers: this.headers });
+      .post<any>(url, data, { headers: this._headers });
   }
 
   delete(paths: Array<Object>): Observable<any> {
-    const url = this.nodeURL + '/files/delete';
+    const url = this._nodeURL + '/files/delete';
     const data = { paths: paths };
 
-    console.log('URL: ', url);
-    // console.log('headers: ', this.headers);
-    console.log('postdata: ', data);
+    this.log.info('URL: ', url);
+    this.log.debug('headers: ', this._headers);
+    this.log.info('postdata: ', data);
 
     return this.http
-      .post<any>(url, data, { headers: this.headers });
+      .post<any>(url, data, { headers: this._headers });
   }
 
   createDir(path: string): Observable<any> {
-    const url = this.nodeURL + '/files/create';
+    const url = this._nodeURL + '/files/create';
     const data = {
       paths: [
         { path: path, type: 'directory' }
       ]
     };
 
-    console.log('URL: ', url);
-    // console.log('headers: ', this.headers);
-    console.log('postdata: ', data);
+    this.log.info('URL: ', url);
+    this.log.debug('headers: ', this._headers);
+    this.log.info('postdata: ', data);
 
     return this.http
-      .post<any>(url, data, { headers: this.headers });
+      .post<any>(url, data, { headers: this._headers });
   }
 
 } // class AsperaNodeApiService
@@ -137,4 +155,5 @@ export interface NodeAPIcred {
   nodeURL: string;
   nodeUser: string;
   nodePW: string;
+  useTokenAuth: boolean;
 }
