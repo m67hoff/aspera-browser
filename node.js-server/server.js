@@ -24,7 +24,7 @@ app.use(express.static(__dirname + '/webclient'));
 
 // enable CORS with preflight
 const origin = 'http://localhost:4200';
-app.options('*',(req,res) => {
+app.options('*', (req, res) => {
   res.set({
     'Access-Control-Allow-Credentials': 'true',
     'Access-Control-Allow-Origin': origin,
@@ -62,6 +62,9 @@ function makeNodeRequest(localReq, localRes) {
       switch (error.code) {
         case 'ECONNREFUSED':
           localRes.status(403)
+          break;
+        case 'ETIMEDOUT':
+          localRes.status(504)
           break;
         case 'ENOTFOUND':
           localRes.status(404)
