@@ -40,7 +40,7 @@
         </mat-form-field>
         Connect Client:
         <br>
-        <mat-radio-group name="token" [(ngModel)]="useTokenAuth">
+        <mat-radio-group name="token" [(ngModel)]="nodeAPIcred.useTokenAuth">
           <mat-radio-button checked=true [value]="true">ssh-key</mat-radio-button>
           <mat-radio-button [value]="false">password</mat-radio-button>
         </mat-radio-group>

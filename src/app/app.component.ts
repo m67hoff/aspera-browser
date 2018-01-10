@@ -32,13 +32,13 @@ export class AppComponent implements OnInit, AfterViewInit {
   nodeAPIcred: NodeAPIcred;
   dirList: DirList;
   breadcrumbNavs: Array<BreadcrumbNav>;
-  useTokenAuth: boolean;
 
   displayedColumns = ['select', 'type', 'basename', 'size', 'mtime'];
   dataSource = new MatTableDataSource();
   selection: SelectionModel<any>;
 
   HTTPerror: HttpErrorResponse = undefined;
+
   isConnected = false;
   browseInProgress = false;
   hidePW = true;
@@ -54,9 +54,9 @@ export class AppComponent implements OnInit, AfterViewInit {
     private log: LoggerService
   ) {
     this.nodeAPIcred = credStore.getCred();
-    this.useTokenAuth = this.nodeAPIcred.useTokenAuth;
     this.nodeAPI.setCred(this.nodeAPIcred);
-    this.nodeAPI.setAPIconnectProxy('http://localhost:6002');
+    // this.nodeAPI.setAPIconnectProxy('http://localhost:6002');
+    this.nodeAPI.setAPIconnectProxy(''); // use node.js server as middleware
     this.selection = new SelectionModel<any>(true, []);
     log.setLogLevel(LogLevel.INFO);
   }
@@ -105,9 +105,9 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.nodeAPIcred.nodeURL = this.nodeAPIcred.nodeURL.trim();
     this.nodeAPIcred.nodeUser = this.nodeAPIcred.nodeUser.trim();
     this.nodeAPIcred.nodePW = this.nodeAPIcred.nodePW.trim();
-    this.nodeAPIcred.useTokenAuth = this.useTokenAuth;
     this.credStore.setCred(this.nodeAPIcred);
     this.nodeAPI.setCred(this.nodeAPIcred);
+    
     this.browseInProgress = true;
     this.nodeAPI.info()
       .subscribe(
@@ -128,9 +128,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   browse(path: string) {
-    this.browseInProgress = true;
     this.selection = new SelectionModel<any>(true, []);
-
+    
+    this.browseInProgress = true;
     this.nodeAPI.browse(path)
       .subscribe(
       (dirList: DirList) => {
@@ -161,7 +161,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.log.debug('download_setup result transferSpecs: ', transferSpecs);
         this.HTTPerror = undefined;
         const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
-        if (this.useTokenAuth) { transferSpec['authentication'] = 'token'; }
+        if (this.nodeAPIcred.useTokenAuth) { transferSpec['authentication'] = 'token'; }
 
         this.log.info('download_setup result transferSpec: ', transferSpec);
         this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
@@ -256,7 +256,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.log.debug('upload_setup result transferSpecs: ', transferSpecs);
         this.HTTPerror = undefined;
         const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
-        if (this.useTokenAuth) { transferSpec['authentication'] = 'token'; }
+        if (this.nodeAPIcred.useTokenAuth) { transferSpec['authentication'] = 'token'; }
 
         this.log.info('upload_setup result transferSpec: ', transferSpec);
         this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
