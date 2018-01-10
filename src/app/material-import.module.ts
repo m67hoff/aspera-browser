@@ -14,6 +14,7 @@ import {
     MatDialogModule,
     MatPaginatorModule,
     MatSortModule,
+    MatSnackBarModule,
 
 } from '@angular/material';
 
@@ -34,6 +35,7 @@ import { CdkTableModule } from '@angular/cdk/table';
         MatProgressBarModule,
         MatTabsModule,
         MatDialogModule,
+        MatSnackBarModule,
         MatPaginatorModule,
         MatSortModule,
 
@@ -54,6 +56,7 @@ import { CdkTableModule } from '@angular/cdk/table';
         MatProgressBarModule,
         MatTabsModule,
         MatDialogModule,
+        MatSnackBarModule,
         MatPaginatorModule,
         MatSortModule,
 

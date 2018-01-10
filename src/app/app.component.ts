@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar } from '@angular/material';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { HttpErrorResponse } from '@angular/common/http/src/response';
@@ -50,6 +50,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private nodeAPI: AsperaNodeApiService,
     private credStore: CredLocalstoreService,
     public dialog: MatDialog,
+    private _snackBar: MatSnackBar,
     private log: LoggerService
   ) {
     this.nodeAPIcred = credStore.getCred();
@@ -164,6 +165,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
         this.log.info('download_setup result transferSpec: ', transferSpec);
         this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
+        this.showConnectSnackBar();
       },
       (err) => {
         this.HTTPerror = err;
@@ -243,7 +245,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
   uploadFiles(data) {
     this.log.debug('uploadFiles data: ', data);
-    if (data.dataTransfer.files === 0) { return; }
+    if (data.dataTransfer.files.length === 0) { return; }
 
     const paths = data.dataTransfer.files.map(file => ({ source: file.name }));
     this.log.info('uploadFiles paths: ', paths);
@@ -258,6 +260,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
         this.log.info('upload_setup result transferSpec: ', transferSpec);
         this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
+        this.showConnectSnackBar();
       },
       (err) => {
         this.HTTPerror = err;
@@ -278,6 +281,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
     this.log.debug('dir name path list: ', list);
     return list;
+  }
+
+  showConnectSnackBar() {
+    this._snackBar.open('Aspera Connect started', '' , { duration: 3000 });
   }
 
 }
