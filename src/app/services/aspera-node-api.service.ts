@@ -15,7 +15,12 @@ export class AsperaNodeApiService {
     this.loadCred();
   }
 
-  private _nodeAPIcred: NodeAPIcred;
+  private _nodeAPIcred: NodeAPIcred = {
+    nodeURL: 'https://demo.asperasoft.com:9092',
+    nodeUser: 'asperaweb',
+    nodePW: 'demoaspera',
+    useTokenAuth: false
+  };
 
   private _APIconnectProxy = 'direct';  // angular http client connect to middle server or direct
   private _nodeURL: string;
@@ -55,15 +60,7 @@ export class AsperaNodeApiService {
   loadCred(): NodeAPIcred {
     const storedCred = JSON.parse(localStorage.getItem('nodeAPIcred'));
     this.log.debug('loadCred json: ', storedCred);
-    if (storedCred == null) {
-      // default server
-      this._nodeAPIcred = {
-        nodeURL: 'https://demo.asperasoft.com:9092',
-        nodeUser: 'asperaweb',
-        nodePW: 'demoaspera',
-        useTokenAuth: false
-      };
-    } else {
+    if (storedCred != null) {
       this._nodeAPIcred = {
         nodeURL: storedCred.nodeURL,
         nodeUser: storedCred.nodeUser,
