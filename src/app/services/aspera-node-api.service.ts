@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
 
-import { HttpClient, HttpHeaders } from '@angular/common/http'; 
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
+
+import { LoggerService } from './logger.service';
 
 @Injectable()
 export class AsperaNodeApiService {
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private log: LoggerService
+  ) {
     this._setProp();
   }
 
@@ -21,12 +26,12 @@ export class AsperaNodeApiService {
   private _nodeURL: string;
 
   private _headers = new HttpHeaders()
-    .append('Content-Type', 'application/json')
+    .append('Content-Type', 'application/json');
 
   private _setProp() {
     this._headers = this._headers.set('Authorization', 'Basic ' + btoa(this._nodeAPIcred.nodeUser + ':' + this._nodeAPIcred.nodePW));
 
-    if (this._APIconnectProxy == 'direct') {
+    if (this._APIconnectProxy === 'direct') {
       this._nodeURL = this._nodeAPIcred.nodeURL;
       this._headers = this._headers.delete('nodeURL');
     } else {
@@ -37,7 +42,7 @@ export class AsperaNodeApiService {
 
   getAPIconnectProxy() { return this._APIconnectProxy; }
   setAPIconnectProxy(p: string) {
-    this._APIconnectProxy = p; //  '' | 'direct' | 'http://...'  
+    this._APIconnectProxy = p; //  '' | 'direct' | 'http://...'
     this._setProp();
   }
 
@@ -49,9 +54,9 @@ export class AsperaNodeApiService {
 
   info(): Observable<Object> {
     const url = this._nodeURL + '/info';
-    console.log('URL: ', url);
-    // console.log('nodeAPIcred: ', this.nodeAPIcred);
-    // console.log('headers: ', atob(this.headers.get('Authorization').substring(5)));
+    this.log.info('URL: ', url);
+    this.log.debug('nodeAPIcred: ', this._nodeAPIcred);
+    this.log.debug('headers: ', atob(this._headers.get('Authorization').substring(5)));
     return this.http
       .get(url, { headers: this._headers });
   }
@@ -60,9 +65,9 @@ export class AsperaNodeApiService {
     const url = this._nodeURL + '/files/browse';
     const data = { path: path, count: 1000 };
 
-    console.log('URL: ', url);
-    // console.log('headers: ', this.headers);
-    console.log('postdata: ', data);
+    this.log.info('URL: ', url);
+    this.log.debug('headers: ', this._headers);
+    this.log.info('postdata: ', data);
 
     return this.http
       .post<DirList>(url, data, { headers: this._headers });
@@ -77,9 +82,9 @@ export class AsperaNodeApiService {
         ]
     };
 
-    console.log('URL: ', url);
-    // console.log('headers: ', this.headers);
-    console.log('postdata: ', data);
+    this.log.info('URL: ', url);
+    this.log.debug('headers: ', this._headers);
+    this.log.info('postdata: ', data);
 
     return this.http
       .post<any>(url, data, { headers: this._headers });
@@ -99,9 +104,9 @@ export class AsperaNodeApiService {
         ]
     };
 
-    console.log('URL: ', url);
-    // console.log('headers: ', this.headers);
-    console.log('postdata: ', data);
+    this.log.info('URL: ', url);
+    this.log.debug('headers: ', this._headers);
+    this.log.info('postdata: ', data);
 
     return this.http
       .post<any>(url, data, { headers: this._headers });
@@ -111,9 +116,9 @@ export class AsperaNodeApiService {
     const url = this._nodeURL + '/files/delete';
     const data = { paths: paths };
 
-    console.log('URL: ', url);
-    // console.log('headers: ', this.headers);
-    console.log('postdata: ', data);
+    this.log.info('URL: ', url);
+    this.log.debug('headers: ', this._headers);
+    this.log.info('postdata: ', data);
 
     return this.http
       .post<any>(url, data, { headers: this._headers });
@@ -127,9 +132,9 @@ export class AsperaNodeApiService {
       ]
     };
 
-    console.log('URL: ', url);
-    // console.log('headers: ', this.headers);
-    console.log('postdata: ', data);
+    this.log.info('URL: ', url);
+    this.log.debug('headers: ', this._headers);
+    this.log.info('postdata: ', data);
 
     return this.http
       .post<any>(url, data, { headers: this._headers });

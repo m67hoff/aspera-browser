@@ -37,7 +37,7 @@ export class CredLocalstoreService {
       nodeURL: cred.nodeURL,
       nodeUser: cred.nodeUser,
       nodePW: btoa(cred.nodePW),
-      useTokenAuth: cred.useTokenAuth      
+      useTokenAuth: cred.useTokenAuth
     };
     console.log('setCred json: ', storedCred);
     localStorage.setItem('nodeAPIcred', JSON.stringify(storedCred));
