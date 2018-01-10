@@ -7,7 +7,6 @@ import { HttpErrorResponse } from '@angular/common/http/src/response';
 
 
 import { AsperaNodeApiService, DirList, NodeAPIcred } from './services/aspera-node-api.service';
-import { CredLocalstoreService } from './services/cred-localstore.service';
 import { CreateDirDialogComponent } from './dialog/create-dir-dialog.component';
 import { DeleteConfDialogComponent } from './dialog/delete-conf-dialog.component';
 
@@ -47,18 +46,16 @@ export class AppComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-    private nodeAPI: AsperaNodeApiService,
-    private credStore: CredLocalstoreService,
+    private log: LoggerService,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar,
-    private log: LoggerService
+    private nodeAPI: AsperaNodeApiService
   ) {
-    this.nodeAPIcred = credStore.getCred();
-    this.nodeAPI.setCred(this.nodeAPIcred);
-    // this.nodeAPI.setAPIconnectProxy('http://localhost:6002');
-    this.nodeAPI.setAPIconnectProxy(''); // use node.js server as middleware
+    log.setLogLevel(LogLevel.DEBUG);
+    this.nodeAPIcred = nodeAPI.getCred();
+    this.nodeAPI.setAPIconnectProxy('http://localhost:6002');
+    // this.nodeAPI.setAPIconnectProxy(''); // use node.js server as middleware
     this.selection = new SelectionModel<any>(true, []);
-    log.setLogLevel(LogLevel.INFO);
   }
 
   ngOnInit() {
@@ -102,12 +99,12 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   testconnection() {
+    this.log.debug('--> action test');    
     this.nodeAPIcred.nodeURL = this.nodeAPIcred.nodeURL.trim();
     this.nodeAPIcred.nodeUser = this.nodeAPIcred.nodeUser.trim();
     this.nodeAPIcred.nodePW = this.nodeAPIcred.nodePW.trim();
-    this.credStore.setCred(this.nodeAPIcred);
-    this.nodeAPI.setCred(this.nodeAPIcred);
-    
+    this.nodeAPI.saveCred(this.nodeAPIcred);
+
     this.browseInProgress = true;
     this.nodeAPI.info()
       .subscribe(
@@ -127,9 +124,10 @@ export class AppComponent implements OnInit, AfterViewInit {
       );
   }
 
-  browse(path: string) {
+  browse(path: string) {    
+    this.log.debug('--> action browse');    
     this.selection = new SelectionModel<any>(true, []);
-    
+
     this.browseInProgress = true;
     this.nodeAPI.browse(path)
       .subscribe(
@@ -151,6 +149,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   download() {
+    this.log.debug('--> action download');        
     this.log.debug('List selection: ', this.selection);
     const paths = this.selection.selected.map(item => ({ source: item.path }));
     this.log.info('download paths: ', paths);
@@ -187,6 +186,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       );
   }
   delete() {
+    this.log.debug('--> action delete');            
     this.log.debug('List selection: ', this.selection);
     const paths = this.selection.selected.map(item => ({ path: item.path }));
     this.log.info('delete paths: ', paths);
@@ -220,6 +220,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       );
   }
   createDir(name: string) {
+    this.log.debug('--> action create');                
     const newDirPath = this.dirList.self.path + '/' + name;
     this.log.info('create Dir path: ', newDirPath);
 
@@ -244,6 +245,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.asperaWeb.showSelectFolderDialog({ success: (data => this.uploadFiles(data)) });
   }
   uploadFiles(data) {
+    this.log.debug('--> action upload');                
     this.log.debug('uploadFiles data: ', data);
     if (data.dataTransfer.files.length === 0) { return; }
 
@@ -284,7 +286,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   showConnectSnackBar() {
-    this._snackBar.open('Aspera Connect started', '' , { duration: 3000 });
+    this._snackBar.open('Aspera Connect started', '', { duration: 3000 });
   }
 
 }

@@ -13,7 +13,6 @@ import { AppComponent } from './app.component';
 
 import { AsperaNodeApiService } from './services/aspera-node-api.service';
 import { SizePipe } from './pipes/size.pipe';
-import { CredLocalstoreService } from './services/cred-localstore.service';
 import { CreateDirDialogComponent } from './dialog/create-dir-dialog.component';
 import { DeleteConfDialogComponent } from './dialog/delete-conf-dialog.component';
 
@@ -36,7 +35,7 @@ import { LoggerService } from './services/logger.service';
     BrowserAnimationsModule
   ],
   entryComponents: [CreateDirDialogComponent, DeleteConfDialogComponent],
-  providers: [AsperaNodeApiService, CredLocalstoreService, LoggerService],
+  providers: [AsperaNodeApiService, LoggerService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
