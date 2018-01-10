@@ -58,7 +58,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.nodeAPI.setCred(this.nodeAPIcred);
     this.nodeAPI.setAPIconnectProxy('http://localhost:6002');
     this.selection = new SelectionModel<any>(true, []);
-    log.setLogLevel(LogLevel.DEBUG);
+    log.setLogLevel(LogLevel.INFO);
   }
 
   ngOnInit() {
