@@ -32,11 +32,9 @@ cd ..
 ``` 
 
 ### Todo / planned 
-- error handling in UI / error handling in node.js
 - configuration with config files 
 - Transfer Management in UI 
 - npm package
-- store different cred / advanced settings 
 - devops integration (travis / greenkeeper)
 
 ### Changelog
