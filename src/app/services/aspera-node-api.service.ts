@@ -38,14 +38,14 @@ export class AsperaNodeApiService {
       this._nodeURL = this._APIconnectProxy;
       this._headers = this._headers.set('nodeURL', this._nodeAPIcred.nodeURL);
     }
-    this.log.debug('_setProp header Auth: ', this._headers.getAll('Authorization'));        
-    this.log.debug('_setProp header nodeURL: ', this._headers.getAll('nodeURL'));        
-    this.log.debug('_setProp _nodeURL: ', this._nodeURL);        
+    this.log.debug('_setProp header Auth: ', this._headers.getAll('Authorization'));
+    this.log.debug('_setProp header nodeURL: ', this._headers.getAll('nodeURL'));
+    this.log.debug('_setProp _nodeURL: ', this._nodeURL);
   }
 
   getAPIconnectProxy() { return this._APIconnectProxy; }
   setAPIconnectProxy(p: string) {
-    this.log.debug('setAPIconnectProxy: ', p);    
+    this.log.debug('setAPIconnectProxy: ', p);
     this._APIconnectProxy = p; //  '' | 'direct' | 'http://...'
     this._setProp();
   }
@@ -74,7 +74,7 @@ export class AsperaNodeApiService {
   }
 
   saveCred(cred?: NodeAPIcred) {
-    if (cred != undefined) { this.setCred(cred); }
+    if (cred !== undefined) { this.setCred(cred); }
     const storedCred = {
       nodeURL: this._nodeAPIcred.nodeURL,
       nodeUser: this._nodeAPIcred.nodeUser,
