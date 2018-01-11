@@ -11,6 +11,7 @@ import { CreateDirDialogComponent } from './dialog/create-dir-dialog.component';
 import { DeleteConfDialogComponent } from './dialog/delete-conf-dialog.component';
 
 import { LoggerService, LogLevel } from './services/logger.service';
+import { Config } from './config/config.module';
 
 declare var AW4: any;
 
@@ -47,14 +48,13 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   constructor(
     private log: LoggerService,
+    private config: Config,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar,
     private nodeAPI: AsperaNodeApiService
   ) {
-    log.setLogLevel(LogLevel.DEBUG);
+    nodeAPI.setAPIconnectProxy(config.APICONNECTPROXY);
     this.nodeAPIcred = nodeAPI.getCred();
-    this.nodeAPI.setAPIconnectProxy('http://localhost:6002');
-    // this.nodeAPI.setAPIconnectProxy(''); // use node.js server as middleware
     this.selection = new SelectionModel<any>(true, []);
   }
 
@@ -99,7 +99,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   testconnection() {
-    this.log.debug('--> action test');    
+    this.log.debug('--> action test');
     this.nodeAPIcred.nodeURL = this.nodeAPIcred.nodeURL.trim();
     this.nodeAPIcred.nodeUser = this.nodeAPIcred.nodeUser.trim();
     this.nodeAPIcred.nodePW = this.nodeAPIcred.nodePW.trim();
@@ -124,8 +124,8 @@ export class AppComponent implements OnInit, AfterViewInit {
       );
   }
 
-  browse(path: string) {    
-    this.log.debug('--> action browse');    
+  browse(path: string) {
+    this.log.debug('--> action browse');
     this.selection = new SelectionModel<any>(true, []);
 
     this.browseInProgress = true;
@@ -149,7 +149,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   download() {
-    this.log.debug('--> action download');        
+    this.log.debug('--> action download');
     this.log.debug('List selection: ', this.selection);
     const paths = this.selection.selected.map(item => ({ source: item.path }));
     this.log.info('download paths: ', paths);
@@ -186,7 +186,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       );
   }
   delete() {
-    this.log.debug('--> action delete');            
+    this.log.debug('--> action delete');
     this.log.debug('List selection: ', this.selection);
     const paths = this.selection.selected.map(item => ({ path: item.path }));
     this.log.info('delete paths: ', paths);
@@ -220,7 +220,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       );
   }
   createDir(name: string) {
-    this.log.debug('--> action create');                
+    this.log.debug('--> action create');
     const newDirPath = this.dirList.self.path + '/' + name;
     this.log.info('create Dir path: ', newDirPath);
 
@@ -245,7 +245,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.asperaWeb.showSelectFolderDialog({ success: (data => this.uploadFiles(data)) });
   }
   uploadFiles(data) {
-    this.log.debug('--> action upload');                
+    this.log.debug('--> action upload');
     this.log.debug('uploadFiles data: ', data);
     if (data.dataTransfer.files.length === 0) { return; }
 

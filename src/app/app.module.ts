@@ -17,6 +17,7 @@ import { CreateDirDialogComponent } from './dialog/create-dir-dialog.component';
 import { DeleteConfDialogComponent } from './dialog/delete-conf-dialog.component';
 
 import { LoggerService } from './services/logger.service';
+import { ConfigModule } from './config/config.module';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { LoggerService } from './services/logger.service';
     ReactiveFormsModule,
     HttpClientModule,
     MaterialImportModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ConfigModule
   ],
   entryComponents: [CreateDirDialogComponent, DeleteConfDialogComponent],
   providers: [AsperaNodeApiService, LoggerService],

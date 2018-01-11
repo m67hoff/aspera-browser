@@ -15,13 +15,15 @@
       <h3> Node API Settings: </h3>
       <form #settings="ngForm">
 
-        <mat-form-field class="full-width">
-          <mat-placeholder>
-            <mat-icon>link</mat-icon> NodeAPI URL
-          </mat-placeholder>
-          <input matInput #url name="url" [(ngModel)]="nodeAPIcred.nodeURL" type="url" required>
-        </mat-form-field>
-        <br/>
+        <div *ngIf="config.ASKURL">
+          <mat-form-field class="full-width">
+            <mat-placeholder>
+              <mat-icon>link</mat-icon> NodeAPI URL
+            </mat-placeholder>
+            <input matInput #url name="url" [(ngModel)]="nodeAPIcred.nodeURL" type="url" required>
+          </mat-form-field>
+          <br/>
+        </div>
 
         <mat-form-field class="full-width">
           <mat-placeholder>
@@ -38,12 +40,15 @@
           <input matInput #password name="password" [(ngModel)]="nodeAPIcred.nodePW" [type]="hidePW ? 'password' : 'text'" required>
           <mat-icon matSuffix (click)="hidePW = !hidePW">{{ hidePW ? 'visibility' : 'visibility_off' }}</mat-icon>
         </mat-form-field>
+
+        <div *ngIf="config.ASKCONNECT">
         Connect Client:
         <br>
         <mat-radio-group name="token" [(ngModel)]="nodeAPIcred.useTokenAuth">
           <mat-radio-button checked=true [value]="true">ssh-key</mat-radio-button>
           <mat-radio-button [value]="false">password</mat-radio-button>
         </mat-radio-group>
+        </div>
 
         <p>
           <button mat-raised-button class="test-button" (click)="testconnection()" [disabled]="!settings.valid || !settings.dirty">

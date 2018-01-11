@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Config } from '../config/config.module';
 
 const noop = (): any => undefined;
 
@@ -8,6 +9,12 @@ export enum LogLevel {
 
 @Injectable()
 export class LoggerService {
+
+  constructor(
+    private config: Config
+  ) {
+    this._curLogLevel = config.LOGLEVEL;
+  }
 
   private _curLogLevel = LogLevel.WARN;
 
