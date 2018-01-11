@@ -1,14 +1,13 @@
-import { Injectable } from '@angular/core';
+import { NgModule, Injectable } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Config } from '../config/config.module';
+
+import { LogLevel } from './loglevels'
 
 const noop = (): any => undefined;
 
-export enum LogLevel {
-  OFF, ERROR, WARN, INFO, DEBUG
-}
-
 @Injectable()
-export class LoggerService {
+export class Logger {
 
   constructor(
     private config: Config
@@ -56,3 +55,12 @@ export class LoggerService {
     }
   }
 }
+
+@NgModule({
+  imports: [
+    CommonModule
+  ],
+  declarations: [],
+  providers: [Logger],
+})
+export class LoggerModule { }

@@ -16,8 +16,8 @@ import { SizePipe } from './pipes/size.pipe';
 import { CreateDirDialogComponent } from './dialog/create-dir-dialog.component';
 import { DeleteConfDialogComponent } from './dialog/delete-conf-dialog.component';
 
-import { LoggerService } from './services/logger.service';
 import { ConfigModule } from './config/config.module';
+import { LoggerModule } from './logger/logger.module';
 
 
 @NgModule({
@@ -34,10 +34,11 @@ import { ConfigModule } from './config/config.module';
     HttpClientModule,
     MaterialImportModule,
     BrowserAnimationsModule,
-    ConfigModule
+    ConfigModule,
+    LoggerModule
   ],
   entryComponents: [CreateDirDialogComponent, DeleteConfDialogComponent],
-  providers: [AsperaNodeApiService, LoggerService],
+  providers: [AsperaNodeApiService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

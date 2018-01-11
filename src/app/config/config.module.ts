@@ -1,7 +1,7 @@
 import { NgModule, Injectable } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { LogLevel } from '../services/logger.service'
+import { LogLevel } from '../logger/loglevels'
 
 
 @Injectable()

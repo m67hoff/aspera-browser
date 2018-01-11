@@ -10,7 +10,7 @@ import { AsperaNodeApiService, DirList, NodeAPIcred } from './services/aspera-no
 import { CreateDirDialogComponent } from './dialog/create-dir-dialog.component';
 import { DeleteConfDialogComponent } from './dialog/delete-conf-dialog.component';
 
-import { LoggerService, LogLevel } from './services/logger.service';
+import { Logger } from './logger/logger.module';
 import { Config } from './config/config.module';
 
 declare var AW4: any;
@@ -47,7 +47,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-    private log: LoggerService,
+    private log: Logger,
     private config: Config,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar,

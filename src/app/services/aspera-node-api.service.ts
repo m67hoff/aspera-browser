@@ -3,14 +3,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
-import { LoggerService } from './logger.service';
+import { Logger } from '../logger/logger.module';
 
 @Injectable()
 export class AsperaNodeApiService {
 
   constructor(
     private http: HttpClient,
-    private log: LoggerService
+    private log: Logger
   ) {
     this.loadCred();
   }
