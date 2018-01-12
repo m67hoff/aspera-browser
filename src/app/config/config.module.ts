@@ -2,7 +2,7 @@ import { NgModule, Injectable, APP_INITIALIZER } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
-const CONFIGFILE = 'assets/config.json';
+const CONFIGFILE = 'assets/clientconfig.json';
 
 @Injectable()
 export class Config {
