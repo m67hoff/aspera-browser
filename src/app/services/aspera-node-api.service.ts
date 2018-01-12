@@ -61,17 +61,18 @@ export class AsperaNodeApiService {
   }
 
   loadCred(): NodeAPIcred {
-    const storedCred = JSON.parse(localStorage.getItem('nodeAPIcred'));
-    this.log.debug('loadCred json: ', storedCred);
+    let storedCred: any;
+    try {
+      storedCred = JSON.parse(localStorage.getItem('nodeAPIcred'));
+    } catch (e) { console.error('error loading localstorage "nodeAPIcred" error: ', e); }
+    this.log.debug('loadCred localstorage json: ', storedCred);
     if (storedCred != null) {
-      this._nodeAPIcred = {
-        nodeURL: storedCred.nodeURL,
-        nodeUser: storedCred.nodeUser,
-        nodePW: atob(storedCred.nodePW),
-        useTokenAuth: storedCred.useTokenAuth
-      };
+      if (storedCred.nodeURL) { this._nodeAPIcred.nodeURL = storedCred.nodeURL; }
+      if (storedCred.nodeUser) { this._nodeAPIcred.nodeUser = storedCred.nodeUser; }
+      if (storedCred.nodePW) { this._nodeAPIcred.nodePW = atob(storedCred.nodePW); }
+      if (storedCred.useTokenAuth) { this._nodeAPIcred.useTokenAuth = storedCred.useTokenAuth; }
     }
-    this.log.debug('loadCred json: ', this._nodeAPIcred);
+    this.log.debug('loadCred loaded json: ', this._nodeAPIcred);
     this._setProp();
     return this._nodeAPIcred;
   }
