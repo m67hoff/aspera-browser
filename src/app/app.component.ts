@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar } from '@angular/material';
 import { FormControl, Validators } from '@angular/forms';
@@ -56,6 +56,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     nodeAPI.setAPIconnectProxy(config.APICONNECTPROXY);
     this.nodeAPIcred = nodeAPI.getCred();
     this.selection = new SelectionModel<any>(true, []);
+    log.info('config object: ', config);
   }
 
   ngOnInit() {

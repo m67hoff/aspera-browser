@@ -1,0 +1,15 @@
+{
+    "app": {
+        "LOGLEVEL": "INFO",
+        "APICONNECTPROXY": "",
+        "ASKURL": true,
+        "ASKCONNECT": true
+    },
+    "config": {
+        "enableLocalClientConfig": true,
+        "localClientConfigKeys": [
+            "LOGLEVEL",
+            "APICONNECTPROXY"
+        ]
+    }
+}
