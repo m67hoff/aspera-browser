@@ -1,5 +1,6 @@
 'use strict';
 
+const fs = require('fs')
 const cfenv = require('cfenv');
 const appEnv = cfenv.getAppEnv();
 const log = require('npmlog');
@@ -7,15 +8,28 @@ const nodeRequest = require('request');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser')
-app.use(bodyParser.json());
 
+// set environment
+const CONFIG = './serverconfig.json'
 const LOGOUTPUT = process.stdout
+
+function json2s(obj) { return JSON.stringify(obj, null, 2); }  // format JSON payload for log
+
+// read in the config file and set log.level
+function setConf () {
+  var c = JSON.parse(fs.readFileSync(CONFIG))
+  log.level = c.LOGLEVEL
+  log.warn('log  ', 'Read Config & update \nSet LOGLEVEL to %j', c.LOGLEVEL)
+  log.verbose('conf ', json2s(c))
+  return c
+}
+
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'; // accept untrusted certificates
 log.stream = LOGOUTPUT;
-log.level = 'info';
+var config = setConf()
 
-function json2s(obj) { return JSON.stringify(obj, null, 2); }  // format JSON payload for log
+app.use(bodyParser.json());
 
 // start server on the specified port and binding host
 app.listen(appEnv.port, appEnv.bind, function() {
