@@ -1,3 +1,6 @@
 {
-    "LOGLEVEL": "info"
+    "LOGLEVEL": "info",
+    "FIX_NODEAPI_URL": "",
+    "ENABLE_CORS": true,
+    "CORS_ORIGIN": "http://localhost:4200"
 }
