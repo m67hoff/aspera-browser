@@ -13,7 +13,10 @@ const bodyParser = require('body-parser')
 const CONFIG = './serverconfig.json'
 const LOGOUTPUT = process.stdout
 
-function json2s(obj) { return JSON.stringify(obj, null, 2); }  // format JSON payload for log
+function json2s(obj) { return JSON.stringify(obj, null, 2) }  // format JSON payload for log
+function btoa(str) { return new Buffer(str).toString('base64') } // like Browser btoa
+function atob(b64) { return new Buffer.from(b64, 'base64').toString() } // like Browser atob
+
 
 // read in the config file and set log.level
 function setConf() {
@@ -65,12 +68,16 @@ app.post('/files/create', makeNodeRequest);
 
 function makeNodeRequest(localReq, localRes) {
   const options = {};
-  options.url = ( config.FIX_NODEAPI_URL !== '') ? config.FIX_NODEAPI_URL : localReq.headers.nodeurl;
+  options.url = (config.FIX_NODEAPI_URL !== '') ? config.FIX_NODEAPI_URL : localReq.headers.nodeurl;
   options.url += localReq.path;
   log.http('makeNodeRequest', options.url);
   options.method = localReq.method;
   options.json = localReq.body;
   options.headers = localReq.headers;
+  if (config.FIX_NODEAPI_USER !== '') {
+    log.verbose('makeNodeRequest', 'set authorization from config -> User: %s Password: %s', config.FIX_NODEAPI_USER, config.FIX_NODEAPI_PASS)
+    options.headers.authorization = 'Basic ' + btoa(config.FIX_NODEAPI_USER + ':' + config.FIX_NODEAPI_PASS)
+  }
   log.verbose('makeNodeRequest', 'options:\n', json2s(options));
 
   nodeRequest(options, (error, remoteRes, remoteBody) => {
