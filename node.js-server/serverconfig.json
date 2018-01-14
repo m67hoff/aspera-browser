@@ -1,8 +1,8 @@
 {
     "LOGLEVEL": "info",
-    "FIX_NODEAPI_URL": "",
-    "FIX_NODEAPI_USER": "",
-    "FIX_NODEAPI_PASS": "",
+    "FIXED_NODEAPI_URL": "",
+    "FIXED_NODEAPI_USER": "",
+    "FIXED_NODEAPI_PASS": "",
     "ENABLE_CORS": true,
     "CORS_ORIGIN": "http://localhost:4200"
 }
