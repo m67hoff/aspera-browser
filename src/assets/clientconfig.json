@@ -1,6 +1,6 @@
 {
     "app": {
-        "logLevel": "INFO",
+        "logLevel": "WARN",
         "apiConnectProxy": "",
         "isFixedURL": false,
         "fixedURL": "https://demo.asperasoft.com:9092",

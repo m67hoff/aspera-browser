@@ -1,5 +1,5 @@
 {
-    "LOGLEVEL": "info",
+    "LOGLEVEL": "warn",
     "FIXED_NODEAPI_URL": "",
     "FIXED_NODEAPI_USER": "",
     "FIXED_NODEAPI_PASS": "",
