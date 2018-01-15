@@ -32,11 +32,9 @@ cd ..
 ``` 
 
 ### Todo / planned 
-- error handling in UI / error handling in node.js
-- configuration with config files 
-- Transfer Management in UI 
 - npm package
-- store different cred / advanced settings 
+- Docs & more Docs
+- Transfer Management in UI 
 - devops integration (travis / greenkeeper)
 
 ### Changelog
@@ -53,7 +51,7 @@ cd ..
 - 20171231 - update angular / deploy as node.js
 - 20180105 - node.js middleware (first & simple version)
 - 20180108 - some simple error handling
-
+- 20180115 - simple config files 
 
 ### Screenshots 
 

@@ -1,21 +1,31 @@
-import { Injectable } from '@angular/core';
+import { NgModule, Injectable } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Config } from '../config/config.module';
+
+import { LogLevel } from './loglevels';
 
 const noop = (): any => undefined;
 
-export enum LogLevel {
-  OFF, ERROR, WARN, INFO, DEBUG
-}
-
 @Injectable()
-export class LoggerService {
+export class Logger {
 
-  private _curLogLevel = LogLevel.WARN;
+  private _curLogLevel: LogLevel;
+
+  constructor(
+    private config: Config
+  ) {
+    const level = +LogLevel[config.logLevel];
+    this._curLogLevel = (level) ? level : LogLevel.WARN;
+    this.log('LogLevel: ', LogLevel[this._curLogLevel]);
+  }
 
   getLogLevel() { return this._curLogLevel; }
   setLogLevel(level: LogLevel) {
     this._curLogLevel = level;
     this.info('new LogLevel: ', LogLevel[level]);
   }
+
+  get log() { return console.log.bind(console); }
 
   get error() {
     if (this._curLogLevel >= LogLevel.ERROR) {
@@ -49,3 +59,12 @@ export class LoggerService {
     }
   }
 }
+
+@NgModule({
+  imports: [
+    CommonModule
+  ],
+  declarations: [],
+  providers: [Logger],
+})
+export class LoggerModule { }
