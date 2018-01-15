@@ -14,7 +14,7 @@ export class Logger {
   constructor(
     private config: Config
   ) {
-    const level = +LogLevel[config.LOGLEVEL];
+    const level = +LogLevel[config.logLevel];
     this._curLogLevel = (level) ? level : LogLevel.WARN;
     this.log('LogLevel: ', LogLevel[this._curLogLevel]);
   }
