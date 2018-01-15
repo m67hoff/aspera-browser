@@ -29,7 +29,9 @@ export class AppComponent implements OnInit, AfterViewInit {
     allow_dialogs: 'yes'
   };
 
-  nodeAPIcred: NodeAPIcred;
+  config: { [key: string]: any };
+
+  uiCred: NodeAPIcred;
   dirList: DirList;
   breadcrumbNavs: Array<BreadcrumbNav>;
 
@@ -48,20 +50,64 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   constructor(
     private log: Logger,
-    private config: Config,
+    private configFile: Config,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar,
     private nodeAPI: AsperaNodeApiService
   ) {
-    nodeAPI.setAPIconnectProxy(config.APICONNECTPROXY);
-    this.nodeAPIcred = nodeAPI.getCred();
+    this._setConfig(configFile);
+    nodeAPI.setAPIconnectProxy(this.config.apiConnectProxy);
+    nodeAPI.setCred(this.config.defaultCred);
+    if (this.config.enableCredLocalStorage) {
+      this.uiCred = nodeAPI.loadCred();
+      if (this.config.isFixedURL) {this.uiCred.nodeURL = this.config.fixedURL; }
+      if (this.config.isFixedConnectAuth) {this.uiCred.useTokenAuth = this.config.fixedConnectAuth; }
+      this.nodeAPI.saveCred(this.uiCred);
+    } else {
+      this.uiCred = nodeAPI.getCred();
+    }
+
     this.selection = new SelectionModel<any>(true, []);
-    log.info('config object: ', config);
   }
 
+  private _setConfig(c: Config) {
+    // config file settings duplicate for supported keys & defaults
+    this.config = {
+      'apiConnectProxy': '',
+      'isFixedURL': false,
+      'fixedURL': '',
+      'isFixedConnectAuth': false,
+      'fixedConnectAuth': false,
+      'enableCredLocalStorage': true,
+      'defaultCred': {
+        'nodeURL': 'https://demo.asperasoft.com:9092',
+        'nodeUser': 'asperaweb',
+        'nodePW': 'demoaspera',
+        'useTokenAuth': false
+      },
+      'connectInstaller': '//d3gcli72yxqn2z.cloudfront.net/connect/v4'
+    };
+    // some type checking
+    this.log.debug('config File & Storage: ', c);
+    if (typeof c.apiConnectProxy === 'string') { this.config.apiConnectProxy = c.apiConnectProxy; }
+    if (typeof c.isFixedURL === 'boolean') { this.config.isFixedURL = c.isFixedURL; }
+    if (typeof c.fixedURL === 'string') { this.config.fixedURL = c.fixedURL; }
+    if (typeof c.isFixedConnectAuth === 'boolean') { this.config.isFixedConnectAuth = c.isFixedConnectAuth; }
+    if (typeof c.fixedConnectAuth === 'boolean') { this.config.fixedConnectAuth = c.fixedConnectAuth; }
+    if (typeof c.enableCredLocalStorage === 'boolean') { this.config.enableCredLocalStorage = c.enableCredLocalStorage; }
+    if (typeof c.defaultCred === 'object') {
+      if (typeof c.defaultCred.nodeURL === 'string') { this.config.defaultCred.nodeURL = c.defaultCred.nodeURL; }
+      if (typeof c.defaultCred.nodeUser === 'string') { this.config.defaultCred.nodeUser = c.defaultCred.nodeUser; }
+      if (typeof c.defaultCred.nodePW === 'string') { this.config.defaultCred.nodePW = c.defaultCred.nodePW; }
+      if (typeof c.defaultCred.useTokenAuth === 'boolean') { this.config.defaultCred.useTokenAuth = c.defaultCred.useTokenAuth; }
+    }
+    if (typeof c.connectInstaller === 'string') { this.config.connectInstaller = c.connectInstaller; }
+    this.log.info('App config: ', this.config);
+  }
+
+
   ngOnInit() {
-    const CONNECT_INSTALLER = '//d3gcli72yxqn2z.cloudfront.net/connect/v4';
-    const asperaInstaller = new AW4.ConnectInstaller({ sdkLocation: CONNECT_INSTALLER });
+    const asperaInstaller = new AW4.ConnectInstaller({ sdkLocation: this.config.connectInstaller });
     const statusEventListener = function (eventType, data) {
       if (eventType === AW4.Connect.EVENT.STATUS && data === AW4.Connect.STATUS.INITIALIZING) {
         asperaInstaller.showLaunching();
@@ -74,7 +120,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       }
     };
 
-    this.asperaWeb = new AW4.Connect({ sdkLocation: CONNECT_INSTALLER, minVersion: '3.6.0' });
+    this.asperaWeb = new AW4.Connect({ sdkLocation: this.config.connectInstaller, minVersion: '3.7.0' });
     this.asperaWeb.addEventListener(AW4.Connect.EVENT.STATUS, statusEventListener);
     this.asperaWeb.initSession();
     this.asperaWeb.addEventListener('transfer', this.handleTransferEvents);
@@ -101,10 +147,10 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   testconnection() {
     this.log.debug('--> action test');
-    this.nodeAPIcred.nodeURL = this.nodeAPIcred.nodeURL.trim();
-    this.nodeAPIcred.nodeUser = this.nodeAPIcred.nodeUser.trim();
-    this.nodeAPIcred.nodePW = this.nodeAPIcred.nodePW.trim();
-    this.nodeAPI.saveCred(this.nodeAPIcred);
+    this.uiCred.nodeURL = this.uiCred.nodeURL.trim();
+    this.uiCred.nodeUser = this.uiCred.nodeUser.trim();
+    this.uiCred.nodePW = this.uiCred.nodePW.trim();
+    (this.config.enableCredLocalStorage) ? this.nodeAPI.saveCred(this.uiCred) : this.nodeAPI.setCred(this.uiCred);
 
     this.browseInProgress = true;
     this.nodeAPI.info()
@@ -161,7 +207,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.log.debug('download_setup result transferSpecs: ', transferSpecs);
         this.HTTPerror = undefined;
         const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
-        if (this.nodeAPIcred.useTokenAuth) { transferSpec['authentication'] = 'token'; }
+        if (this.uiCred.useTokenAuth) { transferSpec['authentication'] = 'token'; }
 
         this.log.info('download_setup result transferSpec: ', transferSpec);
         this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
@@ -259,7 +305,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.log.debug('upload_setup result transferSpecs: ', transferSpecs);
         this.HTTPerror = undefined;
         const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
-        if (this.nodeAPIcred.useTokenAuth) { transferSpec['authentication'] = 'token'; }
+        if (this.uiCred.useTokenAuth) { transferSpec['authentication'] = 'token'; }
 
         this.log.info('upload_setup result transferSpec: ', transferSpec);
         this.asperaWeb.startTransfer(transferSpec, this.connectSettings);

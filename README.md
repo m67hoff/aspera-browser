@@ -32,9 +32,9 @@ cd ..
 ``` 
 
 ### Todo / planned 
-- Transfer Management in UI 
 - npm package
 - Docs & more Docs
+- Transfer Management in UI 
 - devops integration (travis / greenkeeper)
 
 ### Changelog

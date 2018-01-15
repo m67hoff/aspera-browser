@@ -4,8 +4,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
 import { Logger } from '../logger/logger.module';
-import { Config } from '../config/config.module';
-
 
 @Injectable()
 export class AsperaNodeApiService {
@@ -13,10 +11,7 @@ export class AsperaNodeApiService {
   constructor(
     private http: HttpClient,
     private log: Logger,
-    private config: Config,
-  ) {
-    this.loadCred();
-  }
+  ) { }
 
   private _nodeAPIcred: NodeAPIcred = {
     nodeURL: 'https://demo.asperasoft.com:9092',
