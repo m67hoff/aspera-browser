@@ -3,17 +3,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
-import { LoggerService } from './logger.service';
+import { Logger } from '../logger/logger.module';
 
 @Injectable()
 export class AsperaNodeApiService {
 
   constructor(
     private http: HttpClient,
-    private log: LoggerService
-  ) {
-    this._setProp();
-  }
+    private log: Logger,
+  ) { }
 
   private _nodeAPIcred: NodeAPIcred = {
     nodeURL: 'https://demo.asperasoft.com:9092',
@@ -38,18 +36,52 @@ export class AsperaNodeApiService {
       this._nodeURL = this._APIconnectProxy;
       this._headers = this._headers.set('nodeURL', this._nodeAPIcred.nodeURL);
     }
+    this.log.debug('_setProp header Auth: ', this._headers.getAll('Authorization'));
+    this.log.debug('_setProp header nodeURL: ', this._headers.getAll('nodeURL'));
+    this.log.debug('_setProp _nodeURL: ', this._nodeURL);
   }
 
   getAPIconnectProxy() { return this._APIconnectProxy; }
   setAPIconnectProxy(p: string) {
+    this.log.debug('setAPIconnectProxy: ', p);
     this._APIconnectProxy = p; //  '' | 'direct' | 'http://...'
     this._setProp();
   }
 
-  getCred() { return this._nodeAPIcred; }
-  setCred(nodeAPIcred: NodeAPIcred) {
-    this._nodeAPIcred = nodeAPIcred;
+  getCred(): NodeAPIcred { return this._nodeAPIcred; }
+  setCred(cred: NodeAPIcred) {
+    this.log.debug('setCred json: ', cred);
+    this._nodeAPIcred = cred;
     this._setProp();
+  }
+
+  loadCred(): NodeAPIcred {
+    let storedCred: any;
+    try {
+      storedCred = JSON.parse(localStorage.getItem('nodeAPIcred'));
+    } catch (e) { console.error('error loading localstorage "nodeAPIcred" error: ', e); }
+    this.log.debug('loadCred localstorage json: ', storedCred);
+    if (storedCred != null) {
+      if (storedCred.nodeURL) { this._nodeAPIcred.nodeURL = storedCred.nodeURL; }
+      if (storedCred.nodeUser) { this._nodeAPIcred.nodeUser = storedCred.nodeUser; }
+      if (storedCred.nodePW) { this._nodeAPIcred.nodePW = atob(storedCred.nodePW); }
+      if (storedCred.useTokenAuth) { this._nodeAPIcred.useTokenAuth = storedCred.useTokenAuth; }
+    }
+    this.log.debug('loadCred loaded json: ', this._nodeAPIcred);
+    this._setProp();
+    return this._nodeAPIcred;
+  }
+
+  saveCred(cred?: NodeAPIcred) {
+    if (cred !== undefined) { this.setCred(cred); }
+    const storedCred = {
+      nodeURL: this._nodeAPIcred.nodeURL,
+      nodeUser: this._nodeAPIcred.nodeUser,
+      nodePW: btoa(this._nodeAPIcred.nodePW),
+      useTokenAuth: this._nodeAPIcred.useTokenAuth
+    };
+    this.log.info('saveCred json: ', storedCred);
+    localStorage.setItem('nodeAPIcred', JSON.stringify(storedCred));
   }
 
   info(): Observable<Object> {

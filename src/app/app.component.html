@@ -15,19 +15,21 @@
       <h3> Node API Settings: </h3>
       <form #settings="ngForm">
 
-        <mat-form-field class="full-width">
-          <mat-placeholder>
-            <mat-icon>link</mat-icon> NodeAPI URL
-          </mat-placeholder>
-          <input matInput #url name="url" [(ngModel)]="nodeAPIcred.nodeURL" type="url" required>
-        </mat-form-field>
-        <br/>
+        <div *ngIf="! config.isFixedURL">
+          <mat-form-field class="full-width">
+            <mat-placeholder>
+              <mat-icon>link</mat-icon> NodeAPI URL
+            </mat-placeholder>
+            <input matInput #url name="url" [(ngModel)]="uiCred.nodeURL" type="url" required>
+          </mat-form-field>
+          <br/>
+        </div>
 
         <mat-form-field class="full-width">
           <mat-placeholder>
             <mat-icon>person</mat-icon> User
           </mat-placeholder>
-          <input matInput #user name="user" [(ngModel)]="nodeAPIcred.nodeUser" type="text" required>
+          <input matInput #user name="user" [(ngModel)]="uiCred.nodeUser" type="text" required>
         </mat-form-field>
         <br/>
 
@@ -35,15 +37,18 @@
           <mat-placeholder>
             <mat-icon>lock</mat-icon> Password
           </mat-placeholder>
-          <input matInput #password name="password" [(ngModel)]="nodeAPIcred.nodePW" [type]="hidePW ? 'password' : 'text'" required>
+          <input matInput #password name="password" [(ngModel)]="uiCred.nodePW" [type]="hidePW ? 'password' : 'text'" required>
           <mat-icon matSuffix (click)="hidePW = !hidePW">{{ hidePW ? 'visibility' : 'visibility_off' }}</mat-icon>
         </mat-form-field>
-        Connect Client:
-        <br>
-        <mat-radio-group name="token" [(ngModel)]="nodeAPIcred.useTokenAuth">
-          <mat-radio-button checked=true [value]="true">ssh-key</mat-radio-button>
-          <mat-radio-button [value]="false">password</mat-radio-button>
-        </mat-radio-group>
+
+        <div *ngIf="! config.isFixedConnectAuth">
+          Connect Client:
+          <br>
+          <mat-radio-group name="token" [(ngModel)]="uiCred.useTokenAuth">
+            <mat-radio-button checked=true [value]="true">ssh-key</mat-radio-button>
+            <mat-radio-button [value]="false">password</mat-radio-button>
+          </mat-radio-group>
+        </div>
 
         <p>
           <button mat-raised-button class="test-button" (click)="testconnection()" [disabled]="!settings.valid || !settings.dirty">
@@ -76,7 +81,7 @@
         <mat-card-title>
           <span class="title">Aspera Browser</span>
         </mat-card-title>
-        <mat-card-subtitle>{{ nodeAPIcred.nodeUser }} @ {{ nodeAPIcred.nodeURL }} </mat-card-subtitle>
+        <mat-card-subtitle>{{ uiCred.nodeUser }} @ {{ uiCred.nodeURL }} </mat-card-subtitle>
       </mat-card-header>
 
       <!-- buttons / status -->
