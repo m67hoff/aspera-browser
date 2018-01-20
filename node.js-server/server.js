@@ -1,8 +1,6 @@
 'use strict'
 
 const fs = require('fs')
-const cfenv = require('cfenv')
-const appEnv = cfenv.getAppEnv()
 const log = require('npmlog')
 const nodeRequest = require('request')
 const express = require('express')
@@ -20,6 +18,7 @@ var FIXED_NODEAPI_USER = ''
 var FIXED_NODEAPI_PASS = ''
 var ENABLE_CORS = false
 var CORS_ORIGIN = 'http://localhost:4200'
+var PORT = 8080
 
 function json2s(obj) { return JSON.stringify(obj, null, 2) }  // format JSON payload for log
 function btoa(str) { return Buffer.from(str).toString('base64') } // like Browser btoa
@@ -36,6 +35,7 @@ function loadConf() {
   if (c.FIXED_NODEAPI_PASS) { FIXED_NODEAPI_PASS = c.FIXED_NODEAPI_PASS }
   if (c.ENABLE_CORS) { ENABLE_CORS = c.ENABLE_CORS }
   if (c.CORS_ORIGIN) { CORS_ORIGIN = c.CORS_ORIGIN }
+  if (c.PORT) { PORT = c.PORT }
   return c
 }
 
@@ -47,8 +47,9 @@ loadConf()
 app.use(bodyParser.json())
 
 // start server on the specified port and binding host
-app.listen(appEnv.port, appEnv.bind, function() {
-  log.http('express', 'server starting on ' + appEnv.url)
+if ( process.env.VCAP_APP_PORT ) {port = process.env.VCAP_APP_PORT}
+app.listen(PORT, function() {
+  log.http('express', 'server starting on ' + PORT)
 })
 
 // serve static files / angular web client

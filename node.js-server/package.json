@@ -7,7 +7,6 @@
 	},
 	"dependencies": {
 		"body-parser": "^1.18.2",
-		"cfenv": "^1.0.4",
 		"express": "^4.16.2",
 		"npmlog": "^4.1.2",
 		"request": "^2.83.0"

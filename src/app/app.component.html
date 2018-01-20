@@ -55,7 +55,7 @@
             Apply & Save
           </button>
           <mat-icon color="accent" class="test-icon" [ngStyle]=" isConnected ? {color: 'green'} : {} ">{{ isConnected ? 'check_circle' : 'error' }}</mat-icon>
-          <span class="status" *ngIf="HTTPerror">Error: {{ HTTPerror.status }} - {{ HTTPerror.statusText }} - {{ HTTPerror.error?.code }}</span>
+          <span class="status" *ngIf="HTTPerror">Error: {{ HTTPerror.status }} - {{ HTTPerror.statusText }} - {{ HTTPerror.message }} - {{ HTTPerror.error?.code }} - {{ HTTPerror.error?.host }}</span>
         </p>
       </form>
     </mat-card>
@@ -116,7 +116,7 @@
         </button>
         <div class="progressInfo">
           <mat-progress-bar mode="indeterminate" *ngIf="browseInProgress"></mat-progress-bar>
-          <span class="status" *ngIf="HTTPerror">Error: {{ HTTPerror.status }} - {{ HTTPerror.statusText }} - {{ HTTPerror.error?.code }}</span>
+          <span class="status" *ngIf="HTTPerror">Error: {{ HTTPerror.status }} - {{ HTTPerror.statusText }} - {{ HTTPerror.message }} - {{ HTTPerror.error?.code }} - {{ HTTPerror.error?.host }}</span>
         </div>
         <!-- result / table -->
         <p class="path">
