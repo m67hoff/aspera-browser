@@ -1,7 +1,13 @@
 {
-  "name": "aspera-connect-angular-sample",
-  "version": "0.0.0",
-  "license": "MIT",
+  "name": "AsperaBrowser",
+  "version": "0.0.1",
+  "description": "small Angular App and node.js server for Aspera file transfer",
+  "author": "mhoff@de.ibm.com",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/m67hoff/aspera-browser"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
