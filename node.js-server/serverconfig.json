@@ -1,5 +1,10 @@
 {
+<<<<<<< HEAD
     "LOGLEVEL": "warn",
+=======
+    "LOGLEVEL": "info",
+    "PORT": 8888,
+>>>>>>> master
     "FIXED_NODEAPI_URL": "",
     "FIXED_NODEAPI_USER": "",
     "FIXED_NODEAPI_PASS": "",

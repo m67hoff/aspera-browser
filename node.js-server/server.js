@@ -1,8 +1,7 @@
 'use strict'
 
 const fs = require('fs')
-const cfenv = require('cfenv')
-const appEnv = cfenv.getAppEnv()
+const path = require('path')
 const log = require('npmlog')
 const nodeRequest = require('request')
 const express = require('express')
@@ -20,13 +19,14 @@ var FIXED_NODEAPI_USER = ''
 var FIXED_NODEAPI_PASS = ''
 var ENABLE_CORS = false
 var CORS_ORIGIN = 'http://localhost:4200'
+var PORT = 8080
 
-function json2s(obj) { return JSON.stringify(obj, null, 2) }  // format JSON payload for log
-function btoa(str) { return Buffer.from(str).toString('base64') } // like Browser btoa
-function atob(b64) { return Buffer.from(b64, 'base64').toString() } // like Browser atob
+function json2s (obj) { return JSON.stringify(obj, null, 2) }  // format JSON payload for log
+function btoa (str) { return Buffer.from(str).toString('base64') } // like Browser btoa
+function atob (b64) { return Buffer.from(b64, 'base64').toString() } // like Browser atob
 
 // read in the config file and set log.level
-function loadConf() {
+function loadConf () {
   var c = JSON.parse(fs.readFileSync(CONFIG))
   if (c.LOGLEVEL) { log.level = c.LOGLEVEL }
   log.warn('log  ', 'Read Config - Set LOGLEVEL to %j', c.LOGLEVEL)
@@ -36,6 +36,7 @@ function loadConf() {
   if (c.FIXED_NODEAPI_PASS) { FIXED_NODEAPI_PASS = c.FIXED_NODEAPI_PASS }
   if (c.ENABLE_CORS) { ENABLE_CORS = c.ENABLE_CORS }
   if (c.CORS_ORIGIN) { CORS_ORIGIN = c.CORS_ORIGIN }
+  if (c.PORT) { PORT = c.PORT }
   return c
 }
 
@@ -47,12 +48,13 @@ loadConf()
 app.use(bodyParser.json())
 
 // start server on the specified port and binding host
-app.listen(appEnv.port, appEnv.bind, function() {
-  log.http('express', 'server starting on ' + appEnv.url)
+if (process.env.VCAP_APP_PORT) { PORT = process.env.VCAP_APP_PORT }
+app.listen(PORT, function () {
+  log.http('express', 'server starting on ' + PORT)
 })
 
 // serve static files / angular web client
-app.use(express.static(__dirname + '/webclient'))
+app.use(express.static(path.join(__dirname, '/webclient')))
 
 // enable CORS with preflight
 if (ENABLE_CORS) {
@@ -78,7 +80,7 @@ app.post('/files/upload_setup', makeNodeRequest)
 app.post('/files/delete', makeNodeRequest)
 app.post('/files/create', makeNodeRequest)
 
-function makeNodeRequest(localReq, localRes) {
+function makeNodeRequest (localReq, localRes) {
   const options = {}
   options.url = localReq.headers.nodeurl
   if (FIXED_NODEAPI_URL !== '') {

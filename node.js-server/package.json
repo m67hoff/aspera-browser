@@ -1,13 +1,23 @@
 {
 	"name": "AsperaBrowser",
 	"version": "0.0.1",
+	"description": "small Angular App and node.js server for Aspera file transfer",
+	"author": "mhoff@de.ibm.com",
+	"license": "Apache-2.0",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/m67hoff/aspera-browser"
+	},
+	"main": "server.js",
+	"bin": {
+		"asbrowser": "./server.js"
+	},
 	"scripts": {
 		"start": "node server.js",
 		"live": "nodemon server.js"
 	},
 	"dependencies": {
 		"body-parser": "^1.18.2",
-		"cfenv": "^1.0.4",
 		"express": "^4.16.2",
 		"npmlog": "^4.1.2",
 		"request": "^2.83.0"
