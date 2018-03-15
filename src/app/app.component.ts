@@ -122,7 +122,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.asperaWeb = new AW4.Connect({ sdkLocation: this.config.connectInstaller, minVersion: '3.7.0' });
     this.asperaWeb.addEventListener(AW4.Connect.EVENT.STATUS, statusEventListener);
-    this.asperaWeb.initSession();
+    this.log.info('Connect init App_ID: ', this.asperaWeb.initSession() );
     this.asperaWeb.addEventListener('transfer', this.handleTransferEvents);
   }
 
