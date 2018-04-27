@@ -18,9 +18,9 @@
 	},
 	"dependencies": {
 		"body-parser": "^1.18.2",
-		"express": "^4.16.2",
+		"express": "^4.16.3",
 		"npmlog": "^4.1.2",
-		"request": "^2.83.0"
+		"request": "^2.85.0"
 	},
 	"engines": {
 		"node": "8.x"
