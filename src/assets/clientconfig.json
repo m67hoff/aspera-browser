@@ -1,7 +1,12 @@
 {
     "app": {
+<<<<<<< HEAD
         "logLevel": "WARN",
         "apiConnectProxy": "",
+=======
+        "logLevel": "INFO",
+        "apiConnectProxy": "http://localhost:8888",
+>>>>>>> master
         "isFixedURL": false,
         "fixedURL": "https://demo.asperasoft.com:9092",
         "isFixedConnectAuth": false,

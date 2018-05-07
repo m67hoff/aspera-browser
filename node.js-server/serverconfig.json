@@ -4,6 +4,6 @@
     "FIXED_NODEAPI_URL": "",
     "FIXED_NODEAPI_USER": "",
     "FIXED_NODEAPI_PASS": "",
-    "ENABLE_CORS": false,
+    "ENABLE_CORS": true,
     "CORS_ORIGIN": "http://localhost:4200"
 }
