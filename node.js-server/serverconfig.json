@@ -1,9 +1,9 @@
 {
     "LOGLEVEL": "warn",
-    "PORT": 8888,
+    "PORT": 8080,
     "FIXED_NODEAPI_URL": "",
     "FIXED_NODEAPI_USER": "",
     "FIXED_NODEAPI_PASS": "",
-    "ENABLE_CORS": true,
-    "CORS_ORIGIN": "http://localhost:4200"
+    "ENABLE_CORS": false,
+    "CORS_ORIGIN": ""
 }
