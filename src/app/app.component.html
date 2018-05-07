@@ -29,7 +29,7 @@
           <mat-placeholder>
             <mat-icon>person</mat-icon> User
           </mat-placeholder>
-          <input matInput #user name="user" [(ngModel)]="uiCred.nodeUser" type="text" required>
+          <input matInput #user autocomplete="username" name="user" [(ngModel)]="uiCred.nodeUser" type="text" required>
         </mat-form-field>
         <br/>
 
@@ -37,7 +37,7 @@
           <mat-placeholder>
             <mat-icon>lock</mat-icon> Password
           </mat-placeholder>
-          <input matInput #password name="password" [(ngModel)]="uiCred.nodePW" [type]="hidePW ? 'password' : 'text'" required>
+          <input matInput #password autocomplete="current-password" name="password" [(ngModel)]="uiCred.nodePW" [type]="hidePW ? 'password' : 'text'" required>
           <mat-icon matSuffix (click)="hidePW = !hidePW">{{ hidePW ? 'visibility' : 'visibility_off' }}</mat-icon>
         </mat-form-field>
 
