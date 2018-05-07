@@ -1,6 +1,6 @@
 import { AppPage } from './app.po';
 
-describe('aspera-connect-angular-sample App', () => {
+describe('aspera-browser App', () => {
   let page: AppPage;
 
   beforeEach(() => {

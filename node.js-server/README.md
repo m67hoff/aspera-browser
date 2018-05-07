@@ -13,7 +13,7 @@ http://asperabrowser.mybluemix.net
 ### Build & deploy to IBM Cloud
 (Prereq:  Node.js,npm, angular-cli, cloud-foundry-cli installed and IBM Bluemix account )
 
-Start from the base dir for the client App aspera-connect-angular-sample  
+Start from the base dir for the client App aspera-browser  
 Run `ng build -aot -prod` to build.  The `dist/` directory contains the static WebApp. 
 To deploy, copy everything in `dist/*` directory to public dir.
 
