@@ -13,6 +13,8 @@ import { DeleteConfDialogComponent } from './dialog/delete-conf-dialog.component
 import { Logger } from './logger/logger.module';
 import { Config } from './config/config.module';
 
+import { environment } from '../environments/environment';
+
 declare var AW4: any;
 
 interface BreadcrumbNav { dirname: string; path: string; }
@@ -23,6 +25,11 @@ interface BreadcrumbNav { dirname: string; path: string; }
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, AfterViewInit {
+  
+  version_footer: string = 
+    environment.package.name + 
+    " v" + environment.package.version + 
+    ((environment.production) ? "prod" : "dev") 
 
   asperaWeb: any;
   connectSettings = {
