@@ -1,35 +1,22 @@
-![](img/aspera.png)
-## Aspera Connect -  Angular Sample 
-
+![](doc/img/aspera.png)
+## AsperaBrowser -  Angular Sample App to Aspera Connect & Node API  
 
 Angular App using Aspera Connect API and Node API, for file and folder upload+download.
 UI using Angular Material components.
 
-See the [Architecture Overview](Architecture.md) for information how it works. 
+See the [Architecture Overview](doc/Architecture.md) for information how it works. 
 
 ### See it live:
 My sample is deployed on IBM Cloud:
 http://asperabrowser.mybluemix.net
+(This sample is preconfigured with a login to the Aspera Demoserver. Just click refresh to login)
 
-### run & test local
-(Prereq: Node.js,npm and angular cli installed)
+### node.js server / use it on you own system
+Normally the AsperaBrowser is provided by a node.js web server. See the [node.js-server directory](node.js-server) to use/install it on your own system.
 
-Run `ng s` to start the Angular Live Development Server
-
-### Build & deploy to IBM Cloud
-(Prereq: as above + cloud foundry cli installed and IBM Bluemix account )
-
-Run `ng build -aot -prod` to build.  The `dist/` directory contains the static WebApp. 
-To deploy, copy everything in `dist/*` directory to public dir on the webserver.
-
-Deployment to IBM Cloud cf-nginx (login to your right Bluemix cf space first):   
-```
-ng build -prod
-cd dist
-touch Staticfile
-cf p myAsperaBrowser -m 64M
-cd ..
-``` 
+### Build the AsperaBrowser Angular
+This directory contains the sources for the Angular App. It can be deployed as a static SPA (see [Installation Guide](doc/Installation_Guide.md))
+To build the AsperaBrowser Angular App run `npm build`.  This will create a new build in the `node.js-server/webclient/` directory that contains the static WebApp.   
 
 ### Todo / planned 
 - npm package
@@ -52,14 +39,15 @@ cd ..
 - 20180105 - node.js middleware (first & simple version)
 - 20180108 - some simple error handling
 - 20180115 - simple config files 
+- 20180508 - version footer & docu 
 
 ### Screenshots 
 
 ##### Browse Directory:
-![](img/browse.jpg)
+![](doc/img/browse.jpg)
 
 ##### Settings panel:
-![](img/settings.jpg)
+![](doc/img/settings.jpg)
 
 
 ---

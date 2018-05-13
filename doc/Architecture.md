@@ -1,5 +1,5 @@
 ![](img/aspera.png)
-## Aspera Connect -  Angular Sample 
+## Aspera Browser -  Architecture  
 
 ### component diagram
 ![](img/components.jpg) 
