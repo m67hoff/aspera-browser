@@ -1,27 +1,29 @@
-## node.js Server App for Aspera Connect -  Angular Sample 
+![](../doc/img/aspera.png)
+## AsperaBrowser -  node.js Server 
 
-This is a small node.js server runtime to forward REST calls from the Angular app to NodeAPI on the specified transfer server.
-It also provides all static files (from folder "public") for the Angular client side app. 
-(The Rest-call forward is needed to avoid the CORS and SSL exception form the browser.)
+This is a small node.js server to run AsperaBrowser.
 
-See the [Architecture Overview](../Architecture.md) for information how it works. 
+It provides all static files (from folder "webclient") for the AsperaBrowser. And also works as simple "REST proxy" for the Aspera NodeAPI, to forward REST calls from the Angular WebApp to the NodeAPI on the specified transfer server. 
+(The Rest-call forward is needed to avoid the CORS and SSL exception form the Web-browser.)
 
 ### See it live:
 My sample is deployed on IBM Cloud:
 http://asperabrowser.mybluemix.net
+(This sample is preconfigured with a login to the Aspera Demoserver. Just click refresh to login)
 
-### Build & deploy to IBM Cloud
-(Prereq:  Node.js,npm, angular-cli, cloud-foundry-cli installed and IBM Bluemix account )
+### Install and run it on you own Server
 
-Start from the base dir for the client App aspera-browser  
-Run `ng build -aot -prod` to build.  The `dist/` directory contains the static WebApp. 
-To deploy, copy everything in `dist/*` directory to public dir.
+AsperaBrowser can run on the same system as the Aspera Highspeed Transfer Server or on a separate system with https access to the NodeAPI of the Transfer Server.  
 
-Deployment to IBM Cloud Foundry Node.js Buildpack (login to your right Bluemix cf space first):   
-```
-ng build -prod
-mv dist node.js-server/webclient 
-cd node.js-server
-cf push 
-cd ..
-``` 
+The easiest way to install AsperaBrowser is to use the npm module.
+
+Install it with `npm i -g xxxx`
+
+Than:    
+xx
+
+xx
+
+
+More ways to install and run AsperaBrowser are explained in the 
+[Installation Guide](../doc/Installation_Guide.md) 

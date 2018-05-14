@@ -17,6 +17,7 @@
   min-height: 600px;
   margin: 20px;
   padding: 20px;
+  margin-bottom: 10px;
 }
 
 .sidenav-icon {
@@ -146,4 +147,9 @@ button {
 
 .full-width {
   width: 90%;
+}
+.version-footer {
+  margin-left: 20px;
+  color: #BBB;
+  font-size: small;
 }
