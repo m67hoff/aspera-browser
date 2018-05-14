@@ -9,11 +9,11 @@ My sample is deployed on IBM Cloud:
 http://asperabrowser.mybluemix.net
 (This sample is preconfigured with a login to the Aspera Demoserver. Just click refresh to login)
 
-### node.js server / use it on you own system
-Normally the AsperaBrowser is provided by a node.js web server. See the [node.js-server directory](node.js-server) to use/install it on your own system.
+### use it on you own system / node.js server
+Normally AsperaBrowser is provided by a node.js web server. See the [node.js-server directory](node.js-server) to use/install it on your own system.
 
 ### Build the AsperaBrowser Angular
-This directory contains the sources for the Angular App. It can be deployed as a static SPA (see [Installation Guide](doc/Installation_Guide.md))
+This directory contains the sources for the Angular App. It can be deployed as static SPA (see [Installation Guide](doc/Installation_Guide.md))
 To build the AsperaBrowser Angular App run `npm build`.  This will create a new build in the `node.js-server/webclient/` directory that contains the static WebApp.   
 
 [Architecture Overview](doc/Architecture.md) provides information on the application components and the used APIs. 
