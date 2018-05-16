@@ -1,5 +1,5 @@
 {
-	"name": "AsperaBrowser",
+	"name": "asperabrowser",
 	"version": "0.0.1",
 	"description": "small Angular App and node.js server for Aspera file transfer",
 	"author": "mhoff@de.ibm.com",
