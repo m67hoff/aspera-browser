@@ -13,9 +13,9 @@ const helmet = require('helmet')
 // set defaults
 const LOGOUTPUT = process.stdout
 
-const DEFAULTCLIENTCONFIG = path.join(__dirname, './webclient/clientconfig.json')
-const CLIENTCONFIG = './clientconfig.json'
-const DEFAULTSERVERCONFIG = path.join(__dirname, './serverconfig.json')
+const DEFAULT_WEBAPPCONFIG = path.join(__dirname, './webapp/webappconfig.json')
+const WEBAPPCONFIG = './webappconfig.json'
+const DEFAULT_SERVERCONFIG = path.join(__dirname, './serverconfig.json')
 const SERVERCONFIG = './serverconfig.json'
 
 // duplicate config file settings 
@@ -29,7 +29,7 @@ var PORT = 8080
 
 // read in the config file and set log.level
 function loadConf() {
-  var c = JSON.parse(readConfig(SERVERCONFIG, DEFAULTSERVERCONFIG))
+  var c = JSON.parse(readConfig(SERVERCONFIG, DEFAULT_SERVERCONFIG))
   if (c.LOGLEVEL) { log.level = c.LOGLEVEL }
   log.notice('log  ', 'Read Config - Set LOGLEVEL to %j', c.LOGLEVEL)
   log.verbose('conf ', json2s(c))
@@ -89,16 +89,16 @@ app.get(getEndpoints, makeNodeRequest)
 app.post(postEndpoints, makeNodeRequest)
 
 // provide webapp configfile (default or custom)
-var webappconfig = JSON.parse(readConfig(CLIENTCONFIG, DEFAULTCLIENTCONFIG))
-app.get(['/config','/clientconfig.json'], (req, res) => {
+var webappconfig = JSON.parse(readConfig(WEBAPPCONFIG, DEFAULT_WEBAPPCONFIG))
+app.get(['/config','/webappconfig.json'], (req, res) => {
   log.http('express', 'Request ' + req.method + ' ' + req.originalUrl)
   log.verbose('express', 'webapp config:\n', json2s(webappconfig))
   res.send(webappconfig)
 })
 
 // serve static files / angular web client
-log.http('express', 'static_file_path:', path.join(__dirname, '/webclient'))
-app.use(express.static(path.join(__dirname, '/webclient')))
+log.http('express', 'static_file_path:', path.join(__dirname, '/webapp'))
+app.use(express.static(path.join(__dirname, '/webapp')))
 
 //**** end ****
 
@@ -171,7 +171,7 @@ function readConfig(cust, def) {
     return f
   } catch (e) {
     log.error('config', 'Read default config failed : %j', def)
-    log.error('config', '--> exit')
-    process.exit(1)
+    log.error('config', '--> no config !!! return empty json !!!!')
+    return '{}'
   }
 }

@@ -2,7 +2,7 @@ import { NgModule, Injectable, APP_INITIALIZER } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
-const CONFIGFILE = 'clientconfig.json';
+const CONFIGFILE = 'webappconfig.json';
 
 @Injectable()
 export class Config {
@@ -16,7 +16,7 @@ export class Config {
       .toPromise()
       .then((config: any) => {
         this._addAsProperty(config.app);
-        if (config.config.enableLocalClientConfig) { this._updateFromLocalStorage(config.config.localClientConfigKeys); }
+        if (config.config.enableLocalConfig) { this._updateFromLocalStorage(config.config.localConfigKeys); }
       })
       .catch(e => console.error('error loading config file: %s error: ', CONFIGFILE, e));
     return promise;

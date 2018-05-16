@@ -3,7 +3,7 @@
 
 This is a small node.js server to run AsperaBrowser.
 
-It provides all static files (from folder "webclient") for the AsperaBrowser. And also works as simple "REST proxy" for the Aspera NodeAPI, to forward REST calls from the Angular WebApp to the NodeAPI on the specified transfer server. 
+It provides all static files (from folder "webapp") for the AsperaBrowser. And also works as simple "REST proxy" for the Aspera NodeAPI, to forward REST calls from the Angular WebApp to the NodeAPI on the specified transfer server. 
 (The Rest-call forward is needed to avoid the CORS and SSL exception form the Web-browser.)
 
 ### See it live:
