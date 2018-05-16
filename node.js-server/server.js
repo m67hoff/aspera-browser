@@ -105,7 +105,7 @@ app.use(express.static(path.join(__dirname, '/webapp')))
 // ***  functions
 function makeNodeRequest(localReq, localRes) {
   const options = {}
-  options.url = localReq.headers.nodeurl
+  options.url = (localReq.headers.nodeurl) ? localReq.headers.nodeurl : 'https://demo.asperasoft.com:9092'
   if (FIXED_NODEAPI_URL !== '') {
     log.verbose('makeNodeRequest', 'set URL from config: %s', FIXED_NODEAPI_URL)
     options.url = FIXED_NODEAPI_URL

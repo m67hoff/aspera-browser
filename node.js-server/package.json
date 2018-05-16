@@ -1,7 +1,7 @@
 {
 	"name": "asperabrowser",
 	"version": "0.0.1",
-	"description": "small Angular App and node.js server for Aspera file transfer",
+	"description": "Angular App and node.js server for Aspera file transfer",
 	"author": "mhoff@de.ibm.com",
 	"license": "Apache-2.0",
 	"repository": {
@@ -10,7 +10,7 @@
 	},
 	"main": "server.js",
 	"bin": {
-		"asbrowser": "./server.js"
+		"asperabrowser": "./server.js"
 	},
 	"scripts": {
 		"start": "node server.js",
