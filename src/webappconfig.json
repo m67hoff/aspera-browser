@@ -16,8 +16,8 @@
         "connectInstaller": "//d3gcli72yxqn2z.cloudfront.net/connect/v4"
     },
     "config": {
-        "enableLocalClientConfig": true,
-        "localClientConfigKeys": [
+        "enableLocalConfig": true,
+        "localConfigKeys": [
             "logLevel",
             "apiConnectProxy"
         ]
