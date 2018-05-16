@@ -1,5 +1,5 @@
 ![](img/aspera.png)
-## Aspera Browser -  Architecture  
+## AsperaBrowser -  Architecture  
 
 ### component diagram
 ![](img/components.jpg) 

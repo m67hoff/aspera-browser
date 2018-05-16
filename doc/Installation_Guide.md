@@ -1,4 +1,4 @@
-## Aspera Browser -  Installation Guide
+## AsperaBrowser -  Installation Guide
 
 ### run & test local development version
 (Prereq: Node.js,npm and angular cli installed)
@@ -19,13 +19,15 @@ The branch **bluemix_deploy**, has a severconfig.json & clientconfig.json that w
 Also it sends data to Google statistics (in index.html)   
 
 ##### 1) Build the AsperaBrowser Angular
-If the AsperaBrowser Agular App has also changed rebuild it from the **parent dir** with `npm build` .  This will create a new build in the `webclient/` directory that contains the static WebApp. 
+If the AsperaBrowser Agular App has also changed rebuild it from the **parent dir** with `npm run build` .  This will create a new build in the `webclient/` directory that contains the static WebApp. 
 
 ##### 2) Deploy to IBM Cloud 
 first check your login to the right  IBM Cloud Foundry Space with:
-`cf t ; cf a`
+```
+cf t ; cf a
+```
 Deploy to this space with:   
 ```
-cf push 
+cf p 
 ``` 
-(you may need to change the host in `manifest.yml` since the URL AsperaBrowser is already taken by my sample.)
+(you may need to change the host in `manifest.yml` since the URL AsperaBrowser is already taken by my sample.)2
