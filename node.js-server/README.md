@@ -1,4 +1,4 @@
-![](../doc/img/aspera.png)
+![](/doc/img/aspera.png)
 ## AsperaBrowser -  node.js Server 
 
 This is a small node.js server to run AsperaBrowser.
@@ -26,4 +26,4 @@ xx
 
 
 More ways to install and run AsperaBrowser are explained in the 
-[Installation Guide](../doc/Installation_Guide.md) 
+[Installation Guide](/doc/Installation_Guide.md) 
