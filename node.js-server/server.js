@@ -8,6 +8,9 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 
+const helmet = require('helmet')
+app.use(helmet())
+
 // set environment
 const CONFIG = './serverconfig.json'
 const LOGOUTPUT = process.stdout
