@@ -7,15 +7,18 @@ const nodeRequest = require('request')
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
-
+const packagejson = require('./package.json')
 const helmet = require('helmet')
-app.use(helmet())
 
-// set environment
-const CONFIG = './serverconfig.json'
+// set defaults
 const LOGOUTPUT = process.stdout
 
-// config file settings
+const DEFAULTCLIENTCONFIG = path.join(__dirname, './webclient/clientconfig.json')
+const CLIENTCONFIG = './clientconfig.json'
+const DEFAULTSERVERCONFIG = path.join(__dirname, './serverconfig.json')
+const SERVERCONFIG = './serverconfig.json'
+
+// duplicate config file settings 
 var LOGLEVEL = 'info'
 var FIXED_NODEAPI_URL = ''
 var FIXED_NODEAPI_USER = ''
@@ -24,15 +27,11 @@ var ENABLE_CORS = false
 var CORS_ORIGIN = 'http://localhost:4200'
 var PORT = 8080
 
-function json2s (obj) { return JSON.stringify(obj, null, 2) }  // format JSON payload for log
-function btoa (str) { return Buffer.from(str).toString('base64') } // like Browser btoa
-function atob (b64) { return Buffer.from(b64, 'base64').toString() } // like Browser atob
-
 // read in the config file and set log.level
-function loadConf () {
-  var c = JSON.parse(fs.readFileSync(CONFIG))
+function loadConf() {
+  var c = JSON.parse(readConfig(SERVERCONFIG, DEFAULTSERVERCONFIG))
   if (c.LOGLEVEL) { log.level = c.LOGLEVEL }
-  log.warn('log  ', 'Read Config - Set LOGLEVEL to %j', c.LOGLEVEL)
+  log.notice('log  ', 'Read Config - Set LOGLEVEL to %j', c.LOGLEVEL)
   log.verbose('conf ', json2s(c))
   if (c.FIXED_NODEAPI_URL) { FIXED_NODEAPI_URL = c.FIXED_NODEAPI_URL }
   if (c.FIXED_NODEAPI_USER) { FIXED_NODEAPI_USER = c.FIXED_NODEAPI_USER }
@@ -43,21 +42,23 @@ function loadConf () {
   return c
 }
 
+//**** Main  ****
+
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0' // accept untrusted certificates
 log.stream = LOGOUTPUT
 log.level = LOGLEVEL
+log.notice('main', 'Moin Moin from asperabrowser v' + packagejson.version)
+
 loadConf()
 
+app.use(helmet())
 app.use(bodyParser.json())
 
 // start server on the specified port and binding host
 if (process.env.VCAP_APP_PORT) { PORT = process.env.VCAP_APP_PORT }
-app.listen(PORT, function () {
+app.listen(PORT, function() {
   log.http('express', 'server starting on ' + PORT)
 })
-
-// serve static files / angular web client
-app.use(express.static(path.join(__dirname, '/webclient')))
 
 // enable CORS with preflight
 if (ENABLE_CORS) {
@@ -76,14 +77,33 @@ if (ENABLE_CORS) {
 }
 
 // listen on supported nodeAPI REST endpoints
-app.get('/info', makeNodeRequest)
-app.post('/files/browse', makeNodeRequest)
-app.post('/files/download_setup', makeNodeRequest)
-app.post('/files/upload_setup', makeNodeRequest)
-app.post('/files/delete', makeNodeRequest)
-app.post('/files/create', makeNodeRequest)
+var getEndpoints = ['/info']
+var postEndpoints = [
+  '/files/browse',
+  '/files/download_setup',
+  '/files/upload_setup',
+  '/files/delete',
+  '/files/create'
+]
+app.get(getEndpoints, makeNodeRequest)
+app.post(postEndpoints, makeNodeRequest)
 
-function makeNodeRequest (localReq, localRes) {
+// provide webapp configfile (default or custom)
+var webappconfig = JSON.parse(readConfig(CLIENTCONFIG, DEFAULTCLIENTCONFIG))
+app.get(['/config','/clientconfig.json'], (req, res) => {
+  log.http('express', 'Request ' + req.method + ' ' + req.originalUrl)
+  log.verbose('express', 'webapp config:\n', json2s(webappconfig))
+  res.send(webappconfig)
+})
+
+// serve static files / angular web client
+log.http('express', 'static_file_path:', path.join(__dirname, '/webclient'))
+app.use(express.static(path.join(__dirname, '/webclient')))
+
+//**** end ****
+
+// ***  functions
+function makeNodeRequest(localReq, localRes) {
   const options = {}
   options.url = localReq.headers.nodeurl
   if (FIXED_NODEAPI_URL !== '') {
@@ -131,4 +151,27 @@ function makeNodeRequest (localReq, localRes) {
         .json(remoteBody)
     }
   })
+}
+
+function json2s(obj) { return JSON.stringify(obj, null, 2) }  // format JSON payload for log
+function btoa(str) { return Buffer.from(str).toString('base64') } // like Browser btoa
+function atob(b64) { return Buffer.from(b64, 'base64').toString() } // like Browser atob
+
+// read custom configf file  if not there ready default config file 
+function readConfig(cust, def) {
+  try {
+    var f = fs.readFileSync(cust)
+    return f
+  } catch (e) {
+    log.warn('config', 'Read custom config failed : %j', cust)
+  }
+  log.warn('config', 'Try default config: %j', def)
+  try {
+    f = fs.readFileSync(def)
+    return f
+  } catch (e) {
+    log.error('config', 'Read default config failed : %j', def)
+    log.error('config', '--> exit')
+    process.exit(1)
+  }
 }
