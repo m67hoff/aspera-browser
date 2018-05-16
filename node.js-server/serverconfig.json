@@ -1,5 +1,5 @@
 {
-    "LOGLEVEL": "warn",
+    "LOGLEVEL": "notice",
     "PORT": 8080,
     "FIXED_NODEAPI_URL": "",
     "FIXED_NODEAPI_USER": "",
