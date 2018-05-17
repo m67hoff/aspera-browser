@@ -19,10 +19,9 @@ To build the AsperaBrowser Angular App run `npm run build`.  This will create a 
 [Architecture Overview](doc/Architecture.md) provides information on the application components and the used APIs. 
 
 ### Todo / planned 
-- npm package
 - Docs & more Docs
+- easier setup & setup on windows  
 - Transfer Management in UI 
-- devops integration (travis / greenkeeper)
 
 ### Screenshots 
 
