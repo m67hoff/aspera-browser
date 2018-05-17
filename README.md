@@ -7,7 +7,7 @@ UI using Angular Material components.
 ### See it live:
 My sample is deployed on IBM Cloud:
 http://asperabrowser.mybluemix.net
-(This sample is preconfigured with a login to the Aspera Demoserver. Just click refresh to login)
+(This sample is preconfigured with a login to the Aspera Demoserver. Just click login)
 
 ### use it on you own system / node.js server
 Normally AsperaBrowser is provided by a node.js web server. See the [node.js-server directory](node.js-server) to use/install it on your own system.
@@ -19,10 +19,10 @@ To build the AsperaBrowser Angular App run `npm run build`.  This will create a 
 [Architecture Overview](doc/Architecture.md) provides information on the application components and the used APIs. 
 
 ### Todo / planned 
-- npm package
+- support https and certificates  
 - Docs & more Docs
+- easier setup & setup on windows  
 - Transfer Management in UI 
-- devops integration (travis / greenkeeper)
 
 ### Screenshots 
 
