@@ -1,11 +1,11 @@
 [Unit]
 Description=AsperaBrowser node.js server
 Wants=network-online.target
-After=network-online.target
+After=network-online.target asperanoded.service
 ConditionPathExists=/usr/lib/node_modules/asperabrowser
 
 [Service]
-ExecStart=/usr/bin/mhofftestnpm
+ExecStart=/usr/bin/asperabrowser
 Restart=always
 RestartSec=5
 StandardOutput=syslog
