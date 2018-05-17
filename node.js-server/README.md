@@ -16,8 +16,8 @@ http://asperabrowser.mybluemix.net
 AsperaBrowser can run on the same system as the Aspera Highspeed Transfer Server or on a separate system with https access to the NodeAPI of the Transfer Server.  
 The easiest way to install AsperaBrowser is to use the npm module.
 
-#### Install on CentOS 
-## (docu and proccess currently under work and todo)
+### Install on CentOS 
+## (docu and setup currently under work and todo)
 
 Install Node.js  
 - https://nodejs.org/en/download
@@ -33,7 +33,7 @@ Install asperabrowser
 npm i -g asperabrowser
 ```
 
-allow users to run node listen on 80 or 443 
+allow users to run node.js server listen on 80 or 443 
 ```
 setcap cap_net_bind_service=+ep /usr/bin/node
 ```
@@ -71,6 +71,6 @@ cp /usr/lib/node_modules/asperabrowser/serverconfig.json .
 cp /usr/lib/node_modules/asperabrowser/webapp/webappconfig.json .
 
 ```
-
+### Additional Infos 
 More ways to install and run AsperaBrowser are explained in the 
 [Installation Guide](/doc/Installation_Guide.md) 
