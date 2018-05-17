@@ -12,6 +12,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --prod --aot",
+    "patch": "cd node.js-server; npm version patch; cd ..; git commit -m version node.js-server/package* ; npm version patch",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
