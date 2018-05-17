@@ -45,8 +45,9 @@
           Connect Client:
           <br>
           <mat-radio-group name="token" [(ngModel)]="uiCred.useTokenAuth">
-            <mat-radio-button checked=true [value]="true">ssh-key</mat-radio-button>
-            <mat-radio-button [value]="false">password</mat-radio-button>
+            <mat-radio-button checked=true [value]="true">token auth / built-in ssh-key</mat-radio-button>
+            <br>
+            <mat-radio-button [value]="false">ask system user password</mat-radio-button>
           </mat-radio-group>
         </div>
 
@@ -86,9 +87,9 @@
 
       <!-- buttons / status -->
       <mat-card-content>
-        <button mat-raised-button color="primary" (click)="(dirList) ? browse(dirList.self.path) : browse('/')">
-          <mat-icon>refresh</mat-icon>
-          Refresh
+        <button mat-raised-button color="primary" style="min-width: 110px" (click)="(dirList) ? browse(dirList.self.path) : browse('/')">
+          <mat-icon>{{ isConnected ? 'refresh' : 'lock_open' }}</mat-icon>
+          {{ isConnected ? 'Refresh' : 'Login ' }}
         </button>
         <button mat-raised-button color="primary" [disabled]="(dirList && selection.selected.length !== 0) ? false : true" (click)="download()">
           <mat-icon>file_download</mat-icon>
