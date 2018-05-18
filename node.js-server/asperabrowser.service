@@ -6,6 +6,7 @@ ConditionPathExists=/usr/lib/node_modules/asperabrowser
 
 [Service]
 ExecStart=/usr/bin/asperabrowser
+ExecReload=/bin/kill -HUP $MAINPID
 Restart=always
 RestartSec=5
 StandardOutput=syslog

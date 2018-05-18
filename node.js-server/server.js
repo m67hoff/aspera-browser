@@ -52,6 +52,13 @@ log.notice('main', 'Moin Moin from asperabrowser v' + packagejson.version)
 
 loadConf()
 
+// reload request
+process.on('SIGHUP', () => {
+  log.warn('main', 'Received SIGHUP -> reload config files');
+  loadConf()
+  webappconfig = JSON.parse(readConfig(WEBAPPCONFIG, DEFAULT_WEBAPPCONFIG))
+});
+
 app.use(helmet())
 app.use(bodyParser.json())
 
