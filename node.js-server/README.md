@@ -17,9 +17,10 @@ AsperaBrowser can run on the same system as the Aspera Highspeed Transfer Server
 The easiest way to install AsperaBrowser is to use the npm module.
 
 ### Install on CentOS
-## (docu and setup currently under work and todo)
+(all steps need to run root)
+### (docu and setup currently under work and todo)
 
-Install Node.js
+Install Node.js 
 - https://nodejs.org/en/download
 - https://nodejs.org/en/download/package-manager/
 
@@ -28,45 +29,24 @@ curl --silent --location https://rpm.nodesource.com/setup_8.x | sudo bash -
 yum -y install nodejs
 ```
 
-Install asperabrowser
+Install asperabrowser (global)
 ```
 npm i -g asperabrowser
 ```
 
-allow users to run node.js server listen on 80 or 443
+config systemd to run asperabrowser as service and start the service
 ```
-setcap cap_net_bind_service=+ep /usr/bin/node
-```
-
-create user to run the node.js server (security)
-```
-useradd asperabrowser
-```
-
-run it manually
-```
-su - asperabrowser
-asperabrowser
-```
-
-setup systemd to run asperabrowser
-```
-cp /usr/lib/node_modules/asperabrowser/asperabrowser.service /usr/lib/systemd/system/
-systemctl daemon-reload
-systemctl start asperabrowser
-systemctl status asperabrowser
+asperabrowser -c
 ```
 
 check status
 ```
-systemctl status asperabrowser
-cat /var/log/messages
-ps -fu asperabrowser
+asperabrowser -s
 ```
 
-(optional) create custom config
+(optional) copy config files for customization (not working at the moment) 
 ```
-su - asperabrowser
+cd /opt/asperabrowser
 cp /usr/lib/node_modules/asperabrowser/serverconfig.json .
 cp /usr/lib/node_modules/asperabrowser/webapp/webappconfig.json .
 
