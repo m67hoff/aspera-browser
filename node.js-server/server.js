@@ -4,15 +4,21 @@
 const fs = require('fs')
 const path = require('path')
 const log = require('npmlog')
+const program = require('commander')
+
+const packagejson = require('./package.json')
+const setup = require('./setup')
+
 const nodeRequest = require('request')
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
-const packagejson = require('./package.json')
 const helmet = require('helmet')
 
 // set defaults
 const LOGOUTPUT = process.stdout
+
+const ERR_ROOT = 4
 
 const DEFAULT_WEBAPPCONFIG = path.join(__dirname, './webapp/webappconfig.json')
 const WEBAPPCONFIG = './webappconfig.json'
@@ -28,6 +34,25 @@ var ENABLE_CORS = false
 var CORS_ORIGIN = 'http://localhost:4200'
 var PORT = 8080
 
+// cli options 
+program
+  .option('-c, --config', 'configure and start the service. Enable auto restart')
+  .option('-s, --status', 'show service status')
+  .version(packagejson.version, '-v, --version')
+  .parse(process.argv);
+
+if (program.config) {
+  loadConf()
+  setup.service()
+  process.exit(0)
+}
+
+if (program.status) {
+  loadConf()
+  setup.status()
+  process.exit(0)
+}
+
 // read in the config file and set log.level
 function loadConf() {
   var c = JSON.parse(readConfig(SERVERCONFIG, DEFAULT_SERVERCONFIG))
@@ -42,6 +67,17 @@ function loadConf() {
   if (c.PORT) { PORT = c.PORT }
   return c
 }
+
+function drop_root() {
+  if (process.getuid() != 0) {
+    log.error('main', 'Error: only root can change uid')
+    process.exit(ERR_ROOT)
+  }
+  process.setgid('nobody');
+  process.setuid('nobody');
+  log.notice('main', 'drop root - new user id:', process.getuid() + ', Group ID:', process.getgid());
+}
+
 
 //**** Main  ****
 
@@ -64,8 +100,14 @@ app.use(bodyParser.json())
 
 // start server on the specified port and binding host
 if (process.env.VCAP_APP_PORT) { PORT = process.env.VCAP_APP_PORT }
+if ((PORT <= 1024) && (process.getuid() != 0)) {
+  log.error('main', 'Error: PORT ', PORT)
+  log.error('main', 'Error: only root can run with ports below 1024')
+  process.exit(ERR_ROOT)
+}
 app.listen(PORT, function() {
   log.http('express', 'server starting on ' + PORT)
+  if (PORT <= 1024) { drop_root() }
 })
 
 // enable CORS with preflight

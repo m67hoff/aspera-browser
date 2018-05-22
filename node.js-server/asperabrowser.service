@@ -13,9 +13,7 @@ StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=asperabrowser
 
-User=asperabrowser
-Group=asperabrowser
-WorkingDirectory=/home/asperabrowser
+#WorkingDirectory=/opt/asperabrowser
 
 [Install]
 WantedBy=multi-user.target
