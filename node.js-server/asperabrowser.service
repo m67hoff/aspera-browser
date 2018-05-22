@@ -6,15 +6,14 @@ ConditionPathExists=/usr/lib/node_modules/asperabrowser
 
 [Service]
 ExecStart=/usr/bin/asperabrowser
+ExecReload=/bin/kill -HUP $MAINPID
 Restart=always
 RestartSec=5
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=asperabrowser
 
-User=asperabrowser
-Group=asperabrowser
-WorkingDirectory=/home/asperabrowser
+#WorkingDirectory=/opt/asperabrowser
 
 [Install]
 WantedBy=multi-user.target
