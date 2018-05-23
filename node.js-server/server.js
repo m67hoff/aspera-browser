@@ -36,7 +36,7 @@ var PORT = 8080
 
 // cli options 
 program
-  .option('-c, --config', 'configure and start the service. Enable auto restart')
+  .option('--config', 'configure and start the service. Enable auto restart')
   .option('-s, --status', 'show service status')
   .version(packagejson.version, '-v, --version')
   .parse(process.argv);
