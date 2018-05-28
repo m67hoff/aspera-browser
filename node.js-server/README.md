@@ -36,7 +36,7 @@ npm i -g asperabrowser
 
 config systemd to run asperabrowser as service and start the service
 ```
-asperabrowser -c
+asperabrowser --config
 ```
 
 check status
