@@ -6,7 +6,7 @@ UI using Angular Material components.
 
 ### See it live:
 My sample is deployed on IBM Cloud:
-http://asperabrowser.mybluemix.net
+https://asperabrowser.mybluemix.net
 (This sample is preconfigured with a login to the Aspera Demoserver. Just click login)
 
 ### use it on you own system / node.js server

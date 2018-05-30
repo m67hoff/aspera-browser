@@ -8,7 +8,7 @@ It provides all static files (from folder "webapp") for the AsperaBrowser. And a
 
 ### See it live:
 My sample is deployed on IBM Cloud:
-http://asperabrowser.mybluemix.net
+https://asperabrowser.mybluemix.net
 (This sample is preconfigured with a login to the Aspera Demoserver. Just click login)
 
 ### Install and run it on you own Server
