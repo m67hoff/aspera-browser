@@ -44,12 +44,9 @@ check status
 asperabrowser -s
 ```
 
-(optional) copy config files for customization (not working at the moment) 
+(optional) copy config files for customization 
 ```
-cd /opt/asperabrowser
-cp /usr/lib/node_modules/asperabrowser/serverconfig.json .
-cp /usr/lib/node_modules/asperabrowser/webapp/webappconfig.json .
-
+asperabrowser --defaults
 ```
 ### Additional Infos
 More ways to install and run AsperaBrowser are explained in the

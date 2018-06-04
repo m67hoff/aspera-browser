@@ -5,5 +5,7 @@
     "FIXED_NODEAPI_USER": "",
     "FIXED_NODEAPI_PASS": "",
     "ENABLE_CORS": true,
-    "CORS_ORIGIN": "http://localhost:4200"
+    "CORS_ORIGIN": "http://localhost:4200",
+    "HTTPS_PORT": 44344,
+    "USE_HTTPS": true
 }
