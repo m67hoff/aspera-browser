@@ -207,7 +207,7 @@ function json2s(obj) { return JSON.stringify(obj, null, 2) }  // format JSON pay
 function btoa(str) { return Buffer.from(str).toString('base64') } // like Browser btoa
 function atob(b64) { return Buffer.from(b64, 'base64').toString() } // like Browser atob
 
-// read custom configf file  if not there ready default config file 
+// read custom config file  if not there ready default config file 
 function readConfig(cust, def) {
   try {
     var f = fs.readFileSync(cust)
