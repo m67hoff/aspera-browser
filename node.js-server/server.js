@@ -42,20 +42,30 @@ program
   .option('--config', 'configure and start the service. Enable auto restart')
   .option('--defaults', 'copy default config files')
   .option('-s, --status', 'show service status')
+  .option('-r, --restart', 'restart service')
   .version(packagejson.version, '-v, --version')
   .parse(process.argv);
 
 if (program.config) {
+  loadConf()
   setup.service()
   process.exit(0)
 }
 
 if (program.status) {
+  loadConf()
   setup.status()
   process.exit(0)
 }
 
+if (program.restart) {
+  loadConf()
+  setup.restart()
+  process.exit(0)
+}
+
 if (program.defaults) {
+  loadConf()
   setup.copyDefaults()
   process.exit(0)
 }

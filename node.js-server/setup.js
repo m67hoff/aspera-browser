@@ -35,10 +35,8 @@ exports.service = function() {
                 child_process.execSync('systemctl restart asperabrowser', { "timeout": 2000 })
 
                 // status service             
-                log.info('setup', 'service status (systemctl status asperabrowser):')
                 child_process.execSync('sleep 1')
-                var stdout = child_process.execSync('systemctl status asperabrowser', { "timeout": 2000 })
-                log.info('setup', '\n' + stdout)
+                exports.status()
 
             } catch (e) {
                 log.error('setup', e.message)
@@ -61,6 +59,30 @@ exports.status = function() {
                 log.info('status', 'service status (systemctl status asperabrowser):')
                 var stdout = child_process.execSync('systemctl status asperabrowser', { "timeout": 2000 })
                 log.info('status', '\n' + stdout)
+
+            } catch (e) {
+                log.error('status', e.message)
+                process.exit(C.ERR_LINUX_TRY)
+            }
+            break;
+
+        default:
+            log.error('status', 'at the moment only linux is supported.  Your platform: ' + process.platform)
+            process.exit(C.ERR_OS)
+    }
+}
+
+exports.restart = function() {
+    switch (process.platform) {
+        case "linux":
+            try {
+                // restart service             
+                log.info('restart', 'service restart (systemctl restart asperabrowser):')
+                child_process.execSync('systemctl restart asperabrowser', { "timeout": 2000 })
+                
+                // status service             
+                child_process.execSync('sleep 1')
+                exports.status()
 
             } catch (e) {
                 log.error('status', e.message)
