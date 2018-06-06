@@ -4,7 +4,7 @@
 Angular App using Aspera Connect API and Node API for file and folder upload & download.
 UI using Angular Material components.
 
-(:grey_exclamation: At the moment this is just a personal project for me to get familiar with the Aspera APIs and technology, and not an "official" open source porject from IBM / Aspera)
+(:exclamation: At the moment this is just a personal project for me to get familiar with the Aspera APIs and technology, and not an "official" open source porject from IBM / Aspera)
 
 ### See it live:
 A sample is deployed on IBM Cloud:
