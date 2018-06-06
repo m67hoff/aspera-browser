@@ -6,13 +6,15 @@ a simple node.js server to run the AsperaBrowser Angular WebApp.
 It provides all static files (from folder "webapp") for the AsperaBrowser. And also works as simple "REST proxy" for the Aspera NodeAPI, to forward REST calls from the AsperaBrowser WebApp to the NodeAPI on the specified Aspera Transfer Server.
 (The Rest-call forward is needed to avoid CORS and SSL exceptions form the client Browser)
 
+(:grey_exclamation: At the moment this is just a personal project for me to get familiar with the Aspera APIs and technology, and not an "official" open source porject from IBM / Aspera)
+
 ### See it live:
 A sample is deployed on IBM Cloud:
 [asperabrowser.mybluemix.net](https://asperabrowser.mybluemix.net)
 (This sample is preconfigured with a login to the Aspera Demoserver. Just click login)
 
 #### AsperaBrowser WebApp:
-this node.js server is just a server side "helper" to provide the AsperaBrowser WebApp. The Angular App is maintained on [GitHub aspera-browser project](/)
+this node.js server is just a server side "helper" to provide the AsperaBrowser WebApp. The Angular App (source) is maintained on [GitHub aspera-browser project](https://github.com/m67hoff/aspera-browser)
 
 ### Install and run it on you own Server
 
@@ -21,7 +23,7 @@ The easiest way to install AsperaBrowser is to use the npm module.
 
 ### Install on CentOS
 (all steps need to run root)
-### Beta version: docu and setup currently under work!
+#### :wrench: Beta version: docu and setup currently under work!
 
 Install Node.js 
 - https://nodejs.org/en/download
