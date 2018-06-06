@@ -7,5 +7,5 @@
     "ENABLE_CORS": true,
     "CORS_ORIGIN": "http://localhost:4200",
     "HTTPS_PORT": 44344,
-    "USE_HTTPS": true
+    "USE_HTTPS": false
 }
