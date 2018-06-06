@@ -178,6 +178,11 @@ export class AppComponent implements OnInit, AfterViewInit {
       );
   }
 
+  getNodeHostname(){
+    // return this.uiCred.nodeURL
+    return (this.uiCred.nodeURL.includes("localhost")) ? location.origin : this.uiCred.nodeURL 
+  } 
+
   browse(path: string) {
     this.log.debug('--> action browse');
     this.selection = new SelectionModel<any>(true, []);

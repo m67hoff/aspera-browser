@@ -1,15 +1,20 @@
 ![](/doc/img/aspera.png)
 ## AsperaBrowser -  node.js Server
 
-This is a small node.js server to run AsperaBrowser.
+a simple node.js server to run the AsperaBrowser Angular WebApp.
 
-It provides all static files (from folder "webapp") for the AsperaBrowser. And also works as simple "REST proxy" for the Aspera NodeAPI, to forward REST calls from the Angular WebApp to the NodeAPI on the specified transfer server.
-(The Rest-call forward is needed to avoid the CORS and SSL exception form the Web-browser.)
+It provides all static files (from folder "webapp") for the AsperaBrowser. And also works as simple "REST proxy" for the Aspera NodeAPI, to forward REST calls from the AsperaBrowser WebApp to the NodeAPI on the specified Aspera Transfer Server.
+(The Rest-call forward is needed to avoid CORS and SSL exceptions form the client Browser)
+
+(:exclamation: At the moment this is just a personal project for me to get familiar with the Aspera APIs and technology, and not an "official" open source project from IBM / Aspera)
 
 ### See it live:
-My sample is deployed on IBM Cloud:
-http://asperabrowser.mybluemix.net
+A sample is deployed on IBM Cloud:
+[asperabrowser.mybluemix.net](https://asperabrowser.mybluemix.net)
 (This sample is preconfigured with a login to the Aspera Demoserver. Just click login)
+
+#### AsperaBrowser WebApp:
+this node.js server is just a server side "helper" to provide the AsperaBrowser WebApp. The Angular App (source) is maintained on [GitHub aspera-browser project](https://github.com/m67hoff/aspera-browser)
 
 ### Install and run it on you own Server
 
@@ -18,7 +23,7 @@ The easiest way to install AsperaBrowser is to use the npm module.
 
 ### Install on CentOS
 (all steps need to run root)
-### (docu and setup currently under work and todo)
+#### :wrench: Beta version: docu and setup currently under work!
 
 Install Node.js 
 - https://nodejs.org/en/download
@@ -36,7 +41,7 @@ npm i -g asperabrowser
 
 config systemd to run asperabrowser as service and start the service
 ```
-asperabrowser -c
+asperabrowser --config
 ```
 
 check status
@@ -44,12 +49,9 @@ check status
 asperabrowser -s
 ```
 
-(optional) copy config files for customization (not working at the moment) 
+(optional) copy config files for customization 
 ```
-cd /opt/asperabrowser
-cp /usr/lib/node_modules/asperabrowser/serverconfig.json .
-cp /usr/lib/node_modules/asperabrowser/webapp/webappconfig.json .
-
+asperabrowser --defaults
 ```
 ### Additional Infos
 More ways to install and run AsperaBrowser are explained in the

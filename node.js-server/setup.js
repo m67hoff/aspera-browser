@@ -3,13 +3,7 @@ const fs = require('fs')
 const path = require('path')
 const child_process = require('child_process')
 
-const ERR_OS = 1
-const ERR_LINUX_TRY = 2
-const ERR_LINUX_FS = 3
-
-const SERVICE = 'asperabrowser.service'
-const SERVICE_CONFIG = path.join(__dirname, SERVICE)
-const SERVICE_DIR = '/usr/lib/systemd/system'
+const C = require('./const')
 
 exports.service = function() {
     switch (process.platform) {
@@ -17,14 +11,20 @@ exports.service = function() {
             log.info('setup', 'Setup running for platform: ' + process.platform)
 
             try {
-                if (!fs.lstatSync(SERVICE_DIR).isDirectory()) {
-                    log.error('setup', 'Error: dir not found: ' + SERVICE_DIR)
+
+                if (!fs.existsSync(C.WORKING_DIR)) {
+                    log.info('setup', 'create working directory: ' + C.WORKING_DIR)
+                    fs.mkdirSync(C.WORKING_DIR)
+                }
+
+                if (!fs.lstatSync(C.SERVICE_DIR).isDirectory()) {
+                    log.error('setup', 'Error: dir not found: ' + C.SERVICE_DIR)
                     log.error('setup', 'Error: at the moment we only support linux with systemd')
-                    process.exit(ERR_LINUX_FS)
+                    process.exit(C.ERR_LINUX_FS)
                 }
                 // copy service   
-                log.info('setup', 'copy service setup ' + path.join(__dirname, SERVICE) + ' to ' + path.join(SERVICE_DIR, SERVICE))
-                fs.copyFileSync(path.join(__dirname, SERVICE), path.join(SERVICE_DIR, SERVICE));
+                log.info('setup', 'copy service setup ' + path.join(__dirname, C.SERVICE) + ' -> ' + path.join(C.SERVICE_DIR, C.SERVICE))
+                fs.copyFileSync(path.join(__dirname, C.SERVICE), path.join(C.SERVICE_DIR, C.SERVICE));
 
                 // reload service
                 log.info('setup', 'reload systemd')
@@ -35,21 +35,19 @@ exports.service = function() {
                 child_process.execSync('systemctl restart asperabrowser', { "timeout": 2000 })
 
                 // status service             
-                log.info('setup', 'service status (systemctl status asperabrowser):')
                 child_process.execSync('sleep 1')
-                var stdout = child_process.execSync('systemctl status asperabrowser', { "timeout": 2000 })
-                log.info('setup', '\n' + stdout)
+                exports.status()
 
             } catch (e) {
                 log.error('setup', e.message)
                 log.error('setup', 'Error: at the moment only linux with systemd is supported.')
-                process.exit(ERR_LINUX_TRY)
+                process.exit(C.ERR_LINUX_TRY)
             }
             break;
 
         default:
             log.error('setup', 'at the moment only linux is supported.  Your platform: ' + process.platform)
-            process.exit(ERR_OS)
+            process.exit(C.ERR_OS)
     }
 }
 
@@ -64,13 +62,71 @@ exports.status = function() {
 
             } catch (e) {
                 log.error('status', e.message)
-                log.error('status', 'Error: at the moment only linux with systemd is supported.')
-                process.exit(ERR_LINUX_TRY)
+                process.exit(C.ERR_LINUX_TRY)
             }
             break;
 
         default:
             log.error('status', 'at the moment only linux is supported.  Your platform: ' + process.platform)
-            process.exit(ERR_OS)
+            process.exit(C.ERR_OS)
     }
+}
+
+exports.restart = function() {
+    switch (process.platform) {
+        case "linux":
+            try {
+                // restart service             
+                log.info('restart', 'service restart (systemctl restart asperabrowser):')
+                child_process.execSync('systemctl restart asperabrowser', { "timeout": 2000 })
+                
+                // status service             
+                child_process.execSync('sleep 1')
+                exports.status()
+
+            } catch (e) {
+                log.error('status', e.message)
+                process.exit(C.ERR_LINUX_TRY)
+            }
+            break;
+
+        default:
+            log.error('status', 'at the moment only linux is supported.  Your platform: ' + process.platform)
+            process.exit(C.ERR_OS)
+    }
+}
+
+exports.copyDefaults = function() {
+    switch (process.platform) {
+        case "linux":
+            try {
+
+                if (!fs.existsSync(C.WORKING_DIR)) {
+                    log.info('setup', 'create working directory: ' + C.WORKING_DIR)
+                    fs.mkdirSync(C.WORKING_DIR)
+                } 
+                
+                copyDefaultsFile( C.DEFAULT_WEBAPPCONFIG, C.WEBAPPCONFIG)
+                copyDefaultsFile( C.DEFAULT_SERVERCONFIG, C.SERVERCONFIG)
+                copyDefaultsFile( C.DEFAULT_HTTPS_KEY, C.HTTPS_KEY)
+                copyDefaultsFile( C.DEFAULT_HTTPS_CERT, C.HTTPS_CERT)
+                
+            } catch (e) {
+                log.error('setup', e.message)
+                process.exit(C.ERR_LINUX_TRY)
+            }
+            break;
+
+        default:
+            log.error('setup', 'at the moment only linux is supported.  Your platform: ' + process.platform)
+            process.exit(C.ERR_OS)
+    }
+}
+
+function copyDefaultsFile(source, target) {
+
+    target = path.join(C.WORKING_DIR, target)
+
+    log.info('setup', 'copy config file ' + source + ' -> ' + target)
+    fs.copyFileSync(source, target, fs.constants.COPYFILE_EXCL)
 }
