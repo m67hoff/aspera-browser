@@ -14,3 +14,5 @@
 - 20180108 - some simple error handling
 - 20180115 - simple config files 
 - 20180508 - version footer & docu 
+- 20180606 - HTTPS support 
+

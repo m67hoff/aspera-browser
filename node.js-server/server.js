@@ -3,10 +3,13 @@
 
 const fs = require('fs')
 const path = require('path')
+const https = require('https')
+
 const log = require('npmlog')
 const program = require('commander')
 
 const packagejson = require('./package.json')
+const C = require('./const')
 const setup = require('./setup')
 
 const nodeRequest = require('request')
@@ -15,16 +18,6 @@ const app = express()
 const bodyParser = require('body-parser')
 const helmet = require('helmet')
 
-// set defaults
-const LOGOUTPUT = process.stdout
-
-const ERR_ROOT = 4
-
-const DEFAULT_WEBAPPCONFIG = path.join(__dirname, './webapp/webappconfig.json')
-const WEBAPPCONFIG = './webappconfig.json'
-const DEFAULT_SERVERCONFIG = path.join(__dirname, './serverconfig.json')
-const SERVERCONFIG = './serverconfig.json'
-
 // duplicate config file settings 
 var LOGLEVEL = 'info'
 var FIXED_NODEAPI_URL = ''
@@ -32,12 +25,24 @@ var FIXED_NODEAPI_USER = ''
 var FIXED_NODEAPI_PASS = ''
 var ENABLE_CORS = false
 var CORS_ORIGIN = 'http://localhost:4200'
-var PORT = 8080
+var PORT = 8888
+
+var HTTPS_PORT = 44344
+var USE_HTTPS = false
+
+
+/**************************************************************/
+/*                      Main                                  */
+/**************************************************************/
+log.stream = C.LOGOUTPUT
+log.level = LOGLEVEL
 
 // cli options 
 program
   .option('--config', 'configure and start the service. Enable auto restart')
+  .option('--defaults', 'copy default config files')
   .option('-s, --status', 'show service status')
+  .option('-r, --restart', 'restart service')
   .version(packagejson.version, '-v, --version')
   .parse(process.argv);
 
@@ -53,57 +58,72 @@ if (program.status) {
   process.exit(0)
 }
 
-// read in the config file and set log.level
-function loadConf() {
-  var c = JSON.parse(readConfig(SERVERCONFIG, DEFAULT_SERVERCONFIG))
-  if (c.LOGLEVEL) { log.level = c.LOGLEVEL }
-  log.notice('log  ', 'Read Config - Set LOGLEVEL to %j', c.LOGLEVEL)
-  log.verbose('conf ', json2s(c))
-  if (c.FIXED_NODEAPI_URL) { FIXED_NODEAPI_URL = c.FIXED_NODEAPI_URL }
-  if (c.FIXED_NODEAPI_USER) { FIXED_NODEAPI_USER = c.FIXED_NODEAPI_USER }
-  if (c.FIXED_NODEAPI_PASS) { FIXED_NODEAPI_PASS = c.FIXED_NODEAPI_PASS }
-  if (c.ENABLE_CORS) { ENABLE_CORS = c.ENABLE_CORS }
-  if (c.CORS_ORIGIN) { CORS_ORIGIN = c.CORS_ORIGIN }
-  if (c.PORT) { PORT = c.PORT }
-  return c
+if (program.restart) {
+  loadConf()
+  setup.restart()
+  process.exit(0)
 }
 
-function drop_root() {
-  if (process.getuid() != 0) {
-    log.error('main', 'Error: only root can change uid')
-    process.exit(ERR_ROOT)
-  }
-  process.setgid('nobody');
-  process.setuid('nobody');
-  log.notice('main', 'drop root - new user id:', process.getuid() + ', Group ID:', process.getgid());
+if (program.defaults) {
+  loadConf()
+  setup.copyDefaults()
+  process.exit(0)
 }
 
 
-//**** Main  ****
-
+// start asperabrowser 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0' // accept untrusted certificates
-log.stream = LOGOUTPUT
-log.level = LOGLEVEL
 log.notice('main', 'Moin Moin from asperabrowser v' + packagejson.version)
 
 loadConf()
 
-// reload request
+// service reload request
 process.on('SIGHUP', () => {
   log.warn('main', 'Received SIGHUP -> reload config files');
   loadConf()
-  webappconfig = JSON.parse(readConfig(WEBAPPCONFIG, DEFAULT_WEBAPPCONFIG))
+  webappconfig = JSON.parse(readConfig(C.WEBAPPCONFIG, C.DEFAULT_WEBAPPCONFIG))
 });
 
 app.use(helmet())
 app.use(bodyParser.json())
 
-// start server on the specified port and binding host
+// start https server
+if (USE_HTTPS) {
+
+  const httpsOptions = {
+    key: readConfig(C.HTTPS_KEY, C.DEFAULT_HTTPS_KEY),
+    cert: readConfig(C.HTTPS_CERT, C.DEFAULT_HTTPS_CERT)
+  };
+
+  var httpsApp = https.createServer(httpsOptions, app)
+  
+  if ((HTTPS_PORT <= 1024) && (process.getuid() != 0)) {
+    log.error('main', 'Error: HTTPS_PORT ', HTTPS_PORT)
+    log.error('main', 'Error: only root can run with ports below 1024')
+    process.exit(C.ERR_ROOT)
+  }
+  httpsApp.listen(HTTPS_PORT, function() {
+    log.http('https', 'https server starting on ' + HTTPS_PORT)
+  })
+
+  app.use(function(req, res, next) {
+    if (req.secure) {
+      next();
+    } else {
+      var https_url = 'https://' + req.hostname + ':' + HTTPS_PORT + req.url
+      log.http('https', 'redirect to: ' + https_url)
+      res.redirect(https_url);
+    }
+  })
+}
+
+
+// start http server
 if (process.env.VCAP_APP_PORT) { PORT = process.env.VCAP_APP_PORT }
 if ((PORT <= 1024) && (process.getuid() != 0)) {
   log.error('main', 'Error: PORT ', PORT)
   log.error('main', 'Error: only root can run with ports below 1024')
-  process.exit(ERR_ROOT)
+  process.exit(C.ERR_ROOT)
 }
 app.listen(PORT, function() {
   log.http('express', 'server starting on ' + PORT)
@@ -139,8 +159,8 @@ app.get(getEndpoints, makeNodeRequest)
 app.post(postEndpoints, makeNodeRequest)
 
 // provide webapp configfile (default or custom)
-var webappconfig = JSON.parse(readConfig(WEBAPPCONFIG, DEFAULT_WEBAPPCONFIG))
-app.get(['/config','/webappconfig.json'], (req, res) => {
+var webappconfig = JSON.parse(readConfig(C.WEBAPPCONFIG, C.DEFAULT_WEBAPPCONFIG))
+app.get(['/config', '/webappconfig.json'], (req, res) => {
   log.http('express', 'Request ' + req.method + ' ' + req.originalUrl)
   log.verbose('express', 'webapp config:\n', json2s(webappconfig))
   res.send(webappconfig)
@@ -150,9 +170,12 @@ app.get(['/config','/webappconfig.json'], (req, res) => {
 log.http('express', 'static_file_path:', path.join(__dirname, '/webapp'))
 app.use(express.static(path.join(__dirname, '/webapp')))
 
-//**** end ****
 
-// ***  functions
+
+/**************************************************************/
+/*                      Functions                             */
+/**************************************************************/
+
 function makeNodeRequest(localReq, localRes) {
   const options = {}
   options.url = (localReq.headers.nodeurl) ? localReq.headers.nodeurl : 'https://demo.asperasoft.com:9092'
@@ -207,7 +230,7 @@ function json2s(obj) { return JSON.stringify(obj, null, 2) }  // format JSON pay
 function btoa(str) { return Buffer.from(str).toString('base64') } // like Browser btoa
 function atob(b64) { return Buffer.from(b64, 'base64').toString() } // like Browser atob
 
-// read custom configf file  if not there ready default config file 
+// read custom config file  if not there, than read default config file 
 function readConfig(cust, def) {
   try {
     var f = fs.readFileSync(cust)
@@ -221,7 +244,36 @@ function readConfig(cust, def) {
     return f
   } catch (e) {
     log.error('config', 'Read default config failed : %j', def)
-    log.error('config', '--> no config !!! return empty json !!!!')
-    return '{}'
+    log.error('config', '--> exit')
+    process.exit(C.ERR_CONFIG)
   }
 }
+
+// read in the config file and set log.level
+function loadConf() {
+  var c = JSON.parse(readConfig(C.SERVERCONFIG, C.DEFAULT_SERVERCONFIG))
+  if (c.LOGLEVEL) { log.level = c.LOGLEVEL }
+  log.notice('log  ', 'Read Config - Set LOGLEVEL to %j', c.LOGLEVEL)
+  log.verbose('conf ', json2s(c))
+  if (c.FIXED_NODEAPI_URL) { FIXED_NODEAPI_URL = c.FIXED_NODEAPI_URL }
+  if (c.FIXED_NODEAPI_USER) { FIXED_NODEAPI_USER = c.FIXED_NODEAPI_USER }
+  if (c.FIXED_NODEAPI_PASS) { FIXED_NODEAPI_PASS = c.FIXED_NODEAPI_PASS }
+  if (c.ENABLE_CORS) { ENABLE_CORS = c.ENABLE_CORS }
+  if (c.CORS_ORIGIN) { CORS_ORIGIN = c.CORS_ORIGIN }
+  if (c.PORT) { PORT = c.PORT }
+  if (c.HTTPS_PORT) { HTTPS_PORT = c.HTTPS_PORT }
+  if (c.USE_HTTPS) { USE_HTTPS = c.USE_HTTPS }
+  return c
+}
+
+// set the user to nobody 
+function drop_root() {
+  if (process.getuid() != 0) {
+    log.error('main', 'Error: only root can change uid')
+    process.exit(C.ERR_ROOT)
+  }
+  process.setgid('nobody');
+  process.setuid('nobody');
+  log.notice('main', 'drop root - new user id:', process.getuid() + ', Group ID:', process.getgid());
+}
+
