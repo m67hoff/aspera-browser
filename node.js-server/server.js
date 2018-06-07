@@ -76,6 +76,15 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0' // accept untrusted certificates
 log.notice('main', 'Moin Moin from asperabrowser v' + packagejson.version)
 
 loadConf()
+// PORT from Cloud Foundry Environment (if running under CF)  https://docs.cloudfoundry.org/devguide/deploy-apps/environment-variable.html
+if (process.env.VCAP_APP_PORT) {
+  PORT = process.env.VCAP_APP_PORT
+  log.info('main', 'set port from CF environment ' + PORT)
+}
+if (process.env.PORT) {
+  PORT = process.env.PORT
+  log.info('main', 'set port from CF environment ' + PORT)
+}
 
 // service reload request
 process.on('SIGHUP', () => {
@@ -87,21 +96,24 @@ process.on('SIGHUP', () => {
 app.use(helmet())
 app.use(bodyParser.json())
 
+if (
+  (PORT <= 1024 || (USE_HTTPS && HTTPS_PORT <= 1024))
+  && !isAdmin()
+) {
+  log.error('main', 'Error: only root can run with ports below 1024')
+  log.error('main', 'PORT: ' + PORT + ' HTTPS_PORT: ' + HTTPS_PORT)
+  process.exit(C.ERR_ROOT)
+}
+
 // start https server
 if (USE_HTTPS) {
-
   const httpsOptions = {
     key: readConfig(C.HTTPS_KEY, C.DEFAULT_HTTPS_KEY),
     cert: readConfig(C.HTTPS_CERT, C.DEFAULT_HTTPS_CERT)
   };
 
   var httpsApp = https.createServer(httpsOptions, app)
-  
-  if ((HTTPS_PORT <= 1024) && (process.getuid() != 0)) {
-    log.error('main', 'Error: HTTPS_PORT ', HTTPS_PORT)
-    log.error('main', 'Error: only root can run with ports below 1024')
-    process.exit(C.ERR_ROOT)
-  }
+
   httpsApp.listen(HTTPS_PORT, function() {
     log.http('https', 'https server starting on ' + HTTPS_PORT)
   })
@@ -117,17 +129,10 @@ if (USE_HTTPS) {
   })
 }
 
-
 // start http server
-if (process.env.VCAP_APP_PORT) { PORT = process.env.VCAP_APP_PORT }
-if ((PORT <= 1024) && (process.getuid() != 0)) {
-  log.error('main', 'Error: PORT ', PORT)
-  log.error('main', 'Error: only root can run with ports below 1024')
-  process.exit(C.ERR_ROOT)
-}
 app.listen(PORT, function() {
   log.http('express', 'server starting on ' + PORT)
-  if (PORT <= 1024) { drop_root() }
+  drop_root()
 })
 
 // enable CORS with preflight
@@ -266,14 +271,43 @@ function loadConf() {
   return c
 }
 
-// set the user to nobody 
-function drop_root() {
-  if (process.getuid() != 0) {
-    log.error('main', 'Error: only root can change uid')
-    process.exit(C.ERR_ROOT)
+// portable version for process.getuid() == 0
+function isAdmin() {
+  switch (process.platform) {
+    case "darwin":
+    case "linux":
+      if (process.getuid() == 0) return true
+      break
+    case "win32":
+      log.warn('main', 'currently checking for admin rights is not supported on Microsoft Windows')
+      break
+    default:
+      log.error('main', 'unsupported OS. your platform: ' + process.platform)
+      break
   }
-  process.setgid('nobody');
-  process.setuid('nobody');
-  log.notice('main', 'drop root - new user id:', process.getuid() + ', Group ID:', process.getgid());
+  return false
+}
+
+// set the user to nobody if running as root
+function drop_root() {
+  switch (process.platform) {
+    case "darwin":
+    case "linux":
+      if (process.getuid() == 0) {
+        log.notice('main', 'drop root - new user id:', process.getuid() + ', Group ID:', process.getgid());
+        process.setgid('nobody')
+        process.setuid('nobody')
+      }
+      break
+    case "win32":
+      log.warn('main', 'currently dropping process rights is not supported on Microsoft Windows')
+      log.warn('main', 'still running under same user')
+      break
+    default:
+      log.error('main', 'unsupported OS. your platform: ' + process.platform)
+      log.warn('main', 'dropping process rights not supported')
+      log.warn('main', 'still running under same user')
+      break
+  }
 }
 
