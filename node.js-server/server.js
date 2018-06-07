@@ -12,7 +12,7 @@ const packagejson = require('./package.json')
 const C = require('./const')
 const setup = require('./setup')
 
-const nodeRequest = require('request')
+const nodeApiRequest = require('request')
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
@@ -160,8 +160,8 @@ var postEndpoints = [
   '/files/delete',
   '/files/create'
 ]
-app.get(getEndpoints, makeNodeRequest)
-app.post(postEndpoints, makeNodeRequest)
+app.get(getEndpoints, createNodeRequest)
+app.post(postEndpoints, createNodeRequest)
 
 // provide webapp configfile (default or custom)
 var webappconfig = JSON.parse(readConfig(C.WEBAPPCONFIG, C.DEFAULT_WEBAPPCONFIG))
@@ -181,25 +181,25 @@ app.use(express.static(path.join(__dirname, '/webapp')))
 /*                      Functions                             */
 /**************************************************************/
 
-function makeNodeRequest(localReq, localRes) {
+function createNodeRequest(localReq, localRes) {
   const options = {}
   options.url = (localReq.headers.nodeurl) ? localReq.headers.nodeurl : 'https://demo.asperasoft.com:9092'
   if (FIXED_NODEAPI_URL !== '') {
-    log.verbose('makeNodeRequest', 'set URL from config: %s', FIXED_NODEAPI_URL)
+    log.verbose('createNodeRequest', 'set URL from config: %s', FIXED_NODEAPI_URL)
     options.url = FIXED_NODEAPI_URL
   }
   options.url += localReq.path
-  log.http('makeNodeRequest', options.url)
+  log.http('createNodeRequest', options.url)
   options.method = localReq.method
   options.json = localReq.body
   options.headers = localReq.headers
   if (FIXED_NODEAPI_USER !== '') {
-    log.verbose('makeNodeRequest', 'set authorization from config -> User: %s Password: %s', FIXED_NODEAPI_USER, FIXED_NODEAPI_PASS)
+    log.verbose('createNodeRequest', 'set authorization from config -> User: %s Password: %s', FIXED_NODEAPI_USER, FIXED_NODEAPI_PASS)
     options.headers.authorization = 'Basic ' + btoa(FIXED_NODEAPI_USER + ':' + FIXED_NODEAPI_PASS)
   }
-  log.verbose('makeNodeRequest', 'options:\n', json2s(options))
+  log.verbose('createNodeRequest', 'options:\n', json2s(options))
 
-  nodeRequest(options, (error, remoteRes, remoteBody) => {
+  nodeApiRequest(options, (error, remoteRes, remoteBody) => {
     if (ENABLE_CORS) {
       localRes.set({
         'Access-Control-Allow-Credentials': 'true',
@@ -207,7 +207,7 @@ function makeNodeRequest(localReq, localRes) {
       })
     }
     if (error) {
-      log.error('remoteNodeRequest', 'error:', error)
+      log.error('remoteNodeApiRequest', 'error:', error)
       switch (error.code) {
         case 'ECONNREFUSED':
           localRes.status(403)
@@ -223,8 +223,8 @@ function makeNodeRequest(localReq, localRes) {
       }
       localRes.json(error)
     } else {
-      log.http('remoteNodeRequest', 'statusCode:', remoteRes.statusCode)
-      log.verbose('remoteNodeRequest', 'body:\n', json2s(remoteBody))
+      log.http('remoteNodeApiRequest', 'statusCode:', remoteRes.statusCode)
+      log.verbose('remoteNodeApiRequest', 'body:\n', json2s(remoteBody))
       localRes.status(remoteRes.statusCode)
         .json(remoteBody)
     }
