@@ -4,7 +4,7 @@
     "FIXED_NODEAPI_URL": "https://localhost:9092",
     "FIXED_NODEAPI_USER": "",
     "FIXED_NODEAPI_PASS": "",
-    "ENABLE_CORS": true,
+    "ENABLE_CORS": false,
     "CORS_ORIGIN": "",
     "HTTPS_PORT": 443,
     "USE_HTTPS": false
