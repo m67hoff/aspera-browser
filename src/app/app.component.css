@@ -128,8 +128,13 @@ button {
   vertical-align: middle;
 }
 
-.mat-header-row, .mat-row {
+.mat-header-row, .mat-row, .mat-footer-row {
   min-height: 32px;
+}
+
+.mat-header-cell {
+  font-size: 14px;
+  font-weight: bold;
 }
 
 .mat-column-select {
