@@ -12,7 +12,7 @@ RestartSec=5
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=asperabrowser
-
+SyslogFacility=local2
 WorkingDirectory=/opt/asperabrowser
 
 [Install]
