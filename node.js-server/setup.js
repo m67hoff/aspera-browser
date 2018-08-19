@@ -26,13 +26,17 @@ exports.service = function() {
                 log.info('setup', 'copy service setup ' + path.join(__dirname, C.SERVICE) + ' -> ' + path.join(C.SERVICE_DIR, C.SERVICE))
                 fs.copyFileSync(path.join(__dirname, C.SERVICE), path.join(C.SERVICE_DIR, C.SERVICE));
 
-                // reload service
+                // reload systemd
                 log.info('setup', 'reload systemd')
                 child_process.execSync('systemctl daemon-reload', { "timeout": 2000 })
 
+                // enable service               
+                log.info('setup', 'enable asperabrowser service')
+                child_process.execSync('systemctl enable ' + C.SERVICE, { "timeout": 2000 })
+
                 // restart service               
                 log.info('setup', 'restarting asperabrowser service')
-                child_process.execSync('systemctl restart asperabrowser', { "timeout": 2000 })
+                child_process.execSync('systemctl restart ' + C.SERVICE, { "timeout": 2000 })
 
                 // status service             
                 child_process.execSync('sleep 1')
@@ -57,7 +61,7 @@ exports.status = function() {
             try {
                 // status service             
                 log.info('status', 'service status (systemctl status asperabrowser):')
-                var stdout = child_process.execSync('systemctl status asperabrowser', { "timeout": 2000 })
+                var stdout = child_process.execSync('systemctl status ' + C.SERVICE, { "timeout": 2000 })
                 log.info('status', '\n' + stdout)
 
             } catch (e) {
@@ -78,7 +82,7 @@ exports.restart = function() {
             try {
                 // restart service             
                 log.info('restart', 'service restart (systemctl restart asperabrowser):')
-                child_process.execSync('systemctl restart asperabrowser', { "timeout": 2000 })
+                child_process.execSync('systemctl restart ' + C.SERVICE, { "timeout": 2000 })
                 
                 // status service             
                 child_process.execSync('sleep 1')
