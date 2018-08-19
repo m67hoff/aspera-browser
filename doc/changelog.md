@@ -15,4 +15,5 @@
 - 20180115 - simple config files 
 - 20180508 - version footer & docu 
 - 20180606 - HTTPS support 
+- 20180816 - start on reboot / linux
 

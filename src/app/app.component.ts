@@ -127,23 +127,31 @@ export class AppComponent implements OnInit, AfterViewInit {
       }
     };
 
-    this.asperaWeb = new AW4.Connect({ sdkLocation: this.config.connectInstaller, minVersion: '3.7.0' });
+    this.asperaWeb = new AW4.Connect({ sdkLocation: this.config.connectInstaller, minVersion: '3.8.0' });
     this.asperaWeb.addEventListener(AW4.Connect.EVENT.STATUS, statusEventListener);
     this.log.info('Connect init App_ID: ', this.asperaWeb.initSession() );
-    this.asperaWeb.addEventListener('transfer', this.handleTransferEvents);
+    this.asperaWeb.addEventListener('transfer', (eventType, data) => this.handleTransferEvents(eventType, data, this));
   }
 
-  handleTransferEvents(event, obj) {
-    switch (event) {
-      case 'transfer':
-        // this.log.info('transfer: ', obj);
-        break;
-    }
+  handleTransferEvents(event, allTransfersInfo, this_app) {
+    (allTransfersInfo.result_count > 0) && this_app.log.debug('AllTransfersInfo: ', allTransfersInfo);
   }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+ 
+  // master seletion button in table header 
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected == numRows;
+  }
+  masterToggle() {
+    this.isAllSelected() ?
+        this.selection.clear() :
+        this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
   applyFilter(filterValue: string) {
