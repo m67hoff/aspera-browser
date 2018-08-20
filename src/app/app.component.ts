@@ -25,11 +25,8 @@ interface BreadcrumbNav { dirname: string; path: string; }
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, AfterViewInit {
-  
-  version_footer: string = 
-    environment.package.name + 
-    " v" + environment.package.version + 
-    ((environment.production) ? "prod" : "dev") 
+
+  version_footer: string = environment.package.name + ' v' + environment.package.version + ((environment.production) ? 'prod' : 'dev');
 
   asperaWeb: any;
   connectSettings = {
@@ -41,6 +38,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   uiCred: NodeAPIcred;
   dirList: DirList;
   breadcrumbNavs: Array<BreadcrumbNav>;
+  totalFiles: number;
+  totalBytes: number;
+  totalDirs: number;
 
   displayedColumns = ['select', 'type', 'basename', 'size', 'mtime'];
   dataSource = new MatTableDataSource();
@@ -67,8 +67,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     nodeAPI.setCred(this.config.defaultCred);
     if (this.config.enableCredLocalStorage) {
       this.uiCred = nodeAPI.loadCred();
-      if (this.config.isFixedURL) {this.uiCred.nodeURL = this.config.fixedURL; }
-      if (this.config.isFixedConnectAuth) {this.uiCred.useTokenAuth = this.config.fixedConnectAuth; }
+      if (this.config.isFixedURL) { this.uiCred.nodeURL = this.config.fixedURL; }
+      if (this.config.isFixedConnectAuth) { this.uiCred.useTokenAuth = this.config.fixedConnectAuth; }
       this.nodeAPI.saveCred(this.uiCred);
     } else {
       this.uiCred = nodeAPI.getCred();
@@ -129,7 +129,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.asperaWeb = new AW4.Connect({ sdkLocation: this.config.connectInstaller, minVersion: '3.8.0' });
     this.asperaWeb.addEventListener(AW4.Connect.EVENT.STATUS, statusEventListener);
-    this.log.info('Connect init App_ID: ', this.asperaWeb.initSession() );
+    this.log.info('Connect init App_ID: ', this.asperaWeb.initSession());
     this.asperaWeb.addEventListener('transfer', (eventType, data) => this.handleTransferEvents(eventType, data, this));
   }
 
@@ -141,17 +141,26 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
- 
-  // master seletion button in table header 
+
+  // master selection button in table header
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
-    return numSelected == numRows;
+    return numSelected === numRows;
   }
   masterToggle() {
-    this.isAllSelected() ?
-        this.selection.clear() :
-        this.dataSource.data.forEach(row => this.selection.select(row));
+    this.isAllSelected() ? this.selection.clear() : this.dataSource.data.forEach(row => this.selection.select(row));
+    this.updateSelectedTotals();
+  }
+  itemToggle(item) {
+    this.selection.toggle(item);
+    this.updateSelectedTotals();
+  }
+  updateSelectedTotals() {
+    this.totalBytes = this.selection.selected.map(i => i.size).reduce((acc, cur) => acc + cur, 0);
+    this.totalFiles = this.selection.selected.filter(i => i.type === 'file').length;
+    this.totalDirs = this.selection.selected.filter(i => i.type === 'directory').length;
+    this.log.debug('Selected Total: ', this.selection.selected.length, ' File:', this.totalFiles, ' Bytes: ', this.totalBytes, ' Dirs: ', this.totalDirs);
   }
 
   applyFilter(filterValue: string) {
@@ -170,26 +179,26 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.browseInProgress = true;
     this.nodeAPI.info()
       .subscribe(
-      (info: any) => {
-        this.browseInProgress = false;
-        this.HTTPerror = undefined;
-        this.log.info('get info result json: ', info);
-        this.isConnected = true;
-        this.browse('/');
-      },
-      (err) => {
-        this.browseInProgress = false;
-        this.HTTPerror = err;
-        this.log.error(' nodeAPI info ERROR: ', err);
-        this.isConnected = false;
-      }
+        (info: any) => {
+          this.browseInProgress = false;
+          this.HTTPerror = undefined;
+          this.log.info('get info result json: ', info);
+          this.isConnected = true;
+          this.browse('/');
+        },
+        (err) => {
+          this.browseInProgress = false;
+          this.HTTPerror = err;
+          this.log.error(' nodeAPI info ERROR: ', err);
+          this.isConnected = false;
+        }
       );
   }
 
-  getNodeHostname(){
+  getNodeHostname() {
     // return this.uiCred.nodeURL
-    return (this.uiCred.nodeURL.includes("localhost")) ? location.origin : this.uiCred.nodeURL 
-  } 
+    return (this.uiCred.nodeURL.includes('localhost')) ? location.origin : this.uiCred.nodeURL;
+  }
 
   browse(path: string) {
     this.log.debug('--> action browse');
@@ -198,20 +207,20 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.browseInProgress = true;
     this.nodeAPI.browse(path)
       .subscribe(
-      (dirList: DirList) => {
-        this.browseInProgress = false;
-        this.HTTPerror = undefined;
-        this.isConnected = true;
-        this.dirList = dirList;
-        this.dataSource.data = dirList.items;
-        this.breadcrumbNavs = this.breadcrumb(dirList.self.path);
-        this.log.info('browse result dirList: ', dirList);
-      },
-      (err) => {
-        this.browseInProgress = false;
-        this.HTTPerror = err;
-        this.log.error(' nodeAPI browse ERROR: ', err);
-      }
+        (dirList: DirList) => {
+          this.browseInProgress = false;
+          this.HTTPerror = undefined;
+          this.isConnected = true;
+          this.dirList = dirList;
+          this.dataSource.data = dirList.items;
+          this.breadcrumbNavs = this.breadcrumb(dirList.self.path);
+          this.log.info('browse result dirList: ', dirList);
+        },
+        (err) => {
+          this.browseInProgress = false;
+          this.HTTPerror = err;
+          this.log.error(' nodeAPI browse ERROR: ', err);
+        }
       );
   }
 
@@ -223,20 +232,20 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.nodeAPI.download_setup(paths)
       .subscribe(
-      (transferSpecs) => {
-        this.log.debug('download_setup result transferSpecs: ', transferSpecs);
-        this.HTTPerror = undefined;
-        const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
-        if (this.uiCred.useTokenAuth) { transferSpec['authentication'] = 'token'; }
+        (transferSpecs) => {
+          this.log.debug('download_setup result transferSpecs: ', transferSpecs);
+          this.HTTPerror = undefined;
+          const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
+          if (this.uiCred.useTokenAuth) { transferSpec['authentication'] = 'token'; }
 
-        this.log.info('download_setup result transferSpec: ', transferSpec);
-        this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
-        this.showConnectSnackBar();
-      },
-      (err) => {
-        this.HTTPerror = err;
-        this.log.error('nodeAPI download_setup ERROR: ', err);
-      }
+          this.log.info('download_setup result transferSpec: ', transferSpec);
+          this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
+          this.showConnectSnackBar();
+        },
+        (err) => {
+          this.HTTPerror = err;
+          this.log.error('nodeAPI download_setup ERROR: ', err);
+        }
       );
   }
 
@@ -246,10 +255,10 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed()
       .subscribe(
-      res => {
-        this.log.info('Delete Dialog: ', res);
-        if (res) { this.delete(); }
-      }
+        res => {
+          this.log.info('Delete Dialog: ', res);
+          if (res) { this.delete(); }
+        }
       );
   }
   delete() {
@@ -260,15 +269,15 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.nodeAPI.delete(paths)
       .subscribe(
-      (res) => {
-        this.HTTPerror = undefined;
-        this.log.info('delete result : ', res);
-        this.browse(this.dirList.self.path);
-      },
-      (err) => {
-        this.HTTPerror = err;
-        this.log.error('nodeAPI delete ERROR: ', err);
-      }
+        (res) => {
+          this.HTTPerror = undefined;
+          this.log.info('delete result : ', res);
+          this.browse(this.dirList.self.path);
+        },
+        (err) => {
+          this.HTTPerror = err;
+          this.log.error('nodeAPI delete ERROR: ', err);
+        }
       );
   }
 
@@ -279,11 +288,11 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed()
       .subscribe(
-      res => {
-        this.log.debug('New Folder Dialog name: ', dirname);
-        if (res) { dirname = res.trim(); }
-        if (dirname !== '') { this.createDir(dirname); }
-      }
+        res => {
+          this.log.debug('New Folder Dialog name: ', dirname);
+          if (res) { dirname = res.trim(); }
+          if (dirname !== '') { this.createDir(dirname); }
+        }
       );
   }
   createDir(name: string) {
@@ -293,15 +302,15 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.nodeAPI.createDir(newDirPath)
       .subscribe(
-      (res) => {
-        this.HTTPerror = undefined;
-        this.log.info('create Dir result : ', res);
-        this.browse(newDirPath);
-      },
-      (err) => {
-        this.HTTPerror = err;
-        this.log.error('nodeAPI create ERROR: ', err);
-      }
+        (res) => {
+          this.HTTPerror = undefined;
+          this.log.info('create Dir result : ', res);
+          this.browse(newDirPath);
+        },
+        (err) => {
+          this.HTTPerror = err;
+          this.log.error('nodeAPI create ERROR: ', err);
+        }
       );
   }
 
@@ -321,20 +330,20 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.nodeAPI.upload_setup(paths, this.dirList.self.path)
       .subscribe(
-      (transferSpecs) => {
-        this.log.debug('upload_setup result transferSpecs: ', transferSpecs);
-        this.HTTPerror = undefined;
-        const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
-        if (this.uiCred.useTokenAuth) { transferSpec['authentication'] = 'token'; }
+        (transferSpecs) => {
+          this.log.debug('upload_setup result transferSpecs: ', transferSpecs);
+          this.HTTPerror = undefined;
+          const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
+          if (this.uiCred.useTokenAuth) { transferSpec['authentication'] = 'token'; }
 
-        this.log.info('upload_setup result transferSpec: ', transferSpec);
-        this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
-        this.showConnectSnackBar();
-      },
-      (err) => {
-        this.HTTPerror = err;
-        this.log.error('nodeAPI upload_setup ERROR: ', err);
-      }
+          this.log.info('upload_setup result transferSpec: ', transferSpec);
+          this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
+          this.showConnectSnackBar();
+        },
+        (err) => {
+          this.HTTPerror = err;
+          this.log.error('nodeAPI upload_setup ERROR: ', err);
+        }
       );
 
   }
