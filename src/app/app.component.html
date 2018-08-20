@@ -138,16 +138,14 @@
 
           <ng-container matColumnDef="select">
             <mat-header-cell *matHeaderCellDef> 
-              <mat-checkbox *ngIf="dirList" (change)="$event ? masterToggle() : null"
-                  [checked]="selection.hasValue() && isAllSelected()"
-                  [indeterminate]="selection.hasValue() && !isAllSelected()">
+              <mat-checkbox *ngIf="dirList" (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()">
               </mat-checkbox>
             </mat-header-cell>
             <mat-cell *matCellDef="let item">
-              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(item) : null" [checked]="selection.isSelected(item)">
+              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? itemToggle(item) : null" [checked]="selection.isSelected(item)">
               </mat-checkbox>
             </mat-cell>
-            <mat-footer-cell *matFooterCellDef> <span *ngIf="(selection.selected.length > 0)">selected:{{ selection.selected.length }}</span> </mat-footer-cell>
+            <mat-footer-cell *matFooterCellDef></mat-footer-cell>
           </ng-container>
 
           <ng-container matColumnDef="type">
@@ -156,6 +154,7 @@
               <mat-icon color="primary" class="folder-icon" *ngIf="(item.type == 'directory')" mat-list-icon>folder</mat-icon>
               <mat-icon *ngIf="(item.type == 'file')" mat-list-icon>insert_drive_file</mat-icon>
             </mat-cell>
+            <mat-footer-cell *matFooterCellDef></mat-footer-cell>
           </ng-container>
 
           <ng-container matColumnDef="basename">
@@ -163,6 +162,7 @@
             <mat-cell [ngClass]="(item.type == 'directory') ? 'folder-txt' : 'file-txt' " *matCellDef="let item" (click)="(item.type == 'directory') ? browse(item.path) : 0">
               {{ item.basename }}
             </mat-cell>
+            <mat-footer-cell *matFooterCellDef><span *ngIf="(selection.selected.length > 0)">selected Files: {{ totalFiles}}</span></mat-footer-cell>
           </ng-container>
 
           <ng-container matColumnDef="size">
@@ -171,19 +171,21 @@
               <span *ngIf="(item.type == 'directory')"> </span>
               <span *ngIf="(item.type == 'file')"> {{ item.size | size }}</span>
             </mat-cell>
+            <mat-footer-cell *matFooterCellDef> <span *ngIf="(selection.selected.length > 0)">{{ totalBytes | size }}</span> </mat-footer-cell>
           </ng-container>
 
           <ng-container matColumnDef="mtime">
             <mat-header-cell *matHeaderCellDef mat-sort-header> M Time </mat-header-cell>
             <mat-cell *matCellDef="let item"> {{ item.mtime | date:'yyyy-MM-dd HH:mm:ss z' }} </mat-cell>
+            <mat-footer-cell *matFooterCellDef><span *ngIf="(selection.selected.length > 0)">+ {{totalDirs}} Directories</span></mat-footer-cell>
           </ng-container>
 
           <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
           <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-          <mat-footer-row *matFooterRowDef="['select']; sticky: true"></mat-footer-row>
+          <mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></mat-footer-row>
         </mat-table>
 
-        <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10, 20, 30, 50, 100]" showFirstLastButtons>
+        <mat-paginator #paginator [pageSize]="25" [pageSizeOptions]="[10, 20, 30, 50, 100]" showFirstLastButtons>
         </mat-paginator>
 
       </mat-card-content>

@@ -80,6 +80,7 @@ button {
 }
 
 .mat-table {
+  height: calc( 100vh - 435px);
   overflow: auto;
 }
 
@@ -132,9 +133,13 @@ button {
   min-height: 32px;
 }
 
+.mat-header-row, .mat-footer-row {
+  font-weight: bold;
+}
+
 .mat-header-cell {
   font-size: 14px;
-  font-weight: bold;
+  font-weight: 900;
 }
 
 .mat-column-select {
