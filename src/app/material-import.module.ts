@@ -18,6 +18,8 @@ import {
 
 } from '@angular/material';
 
+import {MatTooltipModule} from '@angular/material/tooltip';
+
 import { MatTableModule } from '@angular/material/table';
 import { CdkTableModule } from '@angular/cdk/table';
 
@@ -39,6 +41,8 @@ import { CdkTableModule } from '@angular/cdk/table';
         MatPaginatorModule,
         MatSortModule,
 
+        MatTooltipModule,
+
         MatTableModule,
         CdkTableModule,
     ],
@@ -59,6 +63,8 @@ import { CdkTableModule } from '@angular/cdk/table';
         MatSnackBarModule,
         MatPaginatorModule,
         MatSortModule,
+
+        MatTooltipModule,
 
         MatTableModule,
         CdkTableModule,
