@@ -1,7 +1,7 @@
 .app-sidenav {
   padding: 10px;
   min-width: 450px;
-  background-color: #f3f3f3
+  background-color: snow
 }
   
 .app-toolbar-filler {
@@ -53,13 +53,23 @@ button {
   margin: 5px;
 }
 
+.transfer-button {
+  min-width: 24px;
+  margin: 1px;
+  padding: 1px;
+} 
+
+.transfer-bar {
+  height: 8x;
+} 
+
 .progressInfo {
   margin-left: 5px;
   margin-top: 10px;
 }
 
 .mat-progress-bar {
-
+ 
 }
 
 .status {

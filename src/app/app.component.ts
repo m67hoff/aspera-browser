@@ -41,6 +41,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   totalFiles: number;
   totalBytes: number;
   totalDirs: number;
+  allTransfersList = [];
+  runningTransfers: number;
 
   displayedColumns = ['select', 'type', 'basename', 'size', 'mtime'];
   dataSource = new MatTableDataSource();
@@ -134,8 +136,53 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   handleTransferEvents(event, allTransfersInfo, this_app) {
-    (allTransfersInfo.result_count > 0) && this_app.log.debug('AllTransfersInfo: ', allTransfersInfo);
+    if (allTransfersInfo.result_count > 0) {
+      this_app.log.debug('AllTransfersInfo: ', allTransfersInfo);
+
+      allTransfersInfo.transfers.forEach(incomingTI => {
+        this_app.log.debug(
+          'TransferInfo: ' + incomingTI.title
+          + ' - ' + incomingTI.calculated_rate_kbps + ' kbps ' + Math.floor(incomingTI.calculated_rate_kbps / 8) + ' kBps '
+          + incomingTI.remaining_usec + ' µs ' + Math.floor(incomingTI.remaining_usec / 1000 / 1000) + ' s '
+          + '\n' + Math.floor(incomingTI.bytes_written/1024) + ' kB_done ' + Math.floor(incomingTI.bytes_expected/1024) + ' kB_exp '
+          + Math.floor((incomingTI.bytes_expected - incomingTI.bytes_written)/1024) + ' kB_todo '
+          + Math.floor(((incomingTI.bytes_expected - incomingTI.bytes_written)/1024)/ (incomingTI.calculated_rate_kbps / 8) ) + ' sec_calc '
+        )
+
+        const index = this_app.allTransfersList.findIndex(ti => ti.uuid === incomingTI.uuid);
+        if (index === -1) {
+          this_app.allTransfersList.push(incomingTI);
+        } else {
+          this_app.allTransfersList[index] = incomingTI;
+          if (incomingTI.status === 'removed') { this_app.allTransfersList.splice(index, 1) }
+        }
+      });
+
+      this_app.runningTransfers = 0
+      this_app.allTransfersList.forEach(ti => {
+        /* this_app.log.debug(
+          'AllTransferStatus: %s %s %s %s% %s kbps', ti.title, ti.uuid, ti.status, (ti.percentage * 100).toFixed(1), ti.calculated_rate_kbps
+        ) */
+        if (ti.status === 'running') { this_app.runningTransfers++ }
+      });
+    }
   }
+
+  stopTransfer(uuid: string) {
+    this.log.info('Connect stopTransfer: ', uuid);
+    this.asperaWeb.stopTransfer(uuid)
+  }
+
+  resumeTransfer(uuid: string) {
+    this.log.info('Connect resumeTransfer: ', uuid);
+    this.asperaWeb.resumeTransfer(uuid)
+  }
+
+  removeTransfer(uuid: string) {
+    this.log.info('Connect removeTransfer: ', uuid);
+    this.asperaWeb.removeTransfer(uuid)
+  }
+
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -160,7 +207,9 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.totalBytes = this.selection.selected.map(i => i.size).reduce((acc, cur) => acc + cur, 0);
     this.totalFiles = this.selection.selected.filter(i => i.type === 'file').length;
     this.totalDirs = this.selection.selected.filter(i => i.type === 'directory').length;
-    this.log.debug('Selected Total: ', this.selection.selected.length, ' File:', this.totalFiles, ' Bytes: ', this.totalBytes, ' Dirs: ', this.totalDirs);
+    this.log.debug(
+      'Selected Total: ', this.selection.selected.length, ' File:', this.totalFiles, ' Bytes: ', this.totalBytes, ' Dirs: ', this.totalDirs
+    );
   }
 
   applyFilter(filterValue: string) {
