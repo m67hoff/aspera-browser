@@ -141,12 +141,13 @@ export class AppComponent implements OnInit, AfterViewInit {
 
       allTransfersInfo.transfers.forEach(incomingTI => {
         this_app.log.debug(
-          'TransferInfo: ' + incomingTI.title
-          + ' - ' + incomingTI.calculated_rate_kbps + ' kbps ' + Math.floor(incomingTI.calculated_rate_kbps / 8) + ' kBps '
+          'TransferInfo: ' + incomingTI.title + ' file ' + incomingTI.current_file
+          + '\n' + incomingTI.calculated_rate_kbps + ' kbps ' + Math.floor(incomingTI.calculated_rate_kbps / 8) + ' kBps '
           + incomingTI.remaining_usec + ' µs ' + Math.floor(incomingTI.remaining_usec / 1000 / 1000) + ' s '
+          + Math.floor(((incomingTI.bytes_expected - incomingTI.bytes_written)/1024)/ (incomingTI.calculated_rate_kbps / 8) ) + ' sec_calc '
           + '\n' + Math.floor(incomingTI.bytes_written/1024) + ' kB_done ' + Math.floor(incomingTI.bytes_expected/1024) + ' kB_exp '
           + Math.floor((incomingTI.bytes_expected - incomingTI.bytes_written)/1024) + ' kB_todo '
-          + Math.floor(((incomingTI.bytes_expected - incomingTI.bytes_written)/1024)/ (incomingTI.calculated_rate_kbps / 8) ) + ' sec_calc '
+          + '\nstart: ' + incomingTI.start_time + ' end: ' + incomingTI.end_time
         )
 
         const index = this_app.allTransfersList.findIndex(ti => ti.uuid === incomingTI.uuid);

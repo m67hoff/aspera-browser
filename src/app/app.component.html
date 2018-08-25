@@ -106,7 +106,7 @@
         <mat-progress-bar class="transfer-bar" *ngIf="ti.status !== 'completed'" mode="determinate" value="{{ti.percentage*100}}"></mat-progress-bar>
         <span *ngIf="ti.status === 'running'">{{ ti.calculated_rate_kbps | rate }} | </span>
         <span *ngIf="ti.status !== 'completed'">{{ ti.bytes_written | size }} of {{ ti.bytes_expected | size }} </span>
-        <span *ngIf="ti.status === 'running'"> | ETA {{(ti.remaining_usec / 1000) | duration }}</span>
+        <span *ngIf="ti.status === 'running'"> | ETA: {{(ti.remaining_usec / 1000) | ETA | date:'EE HH:mm:ss'}} - {{(ti.remaining_usec / 1000) | duration }}  </span>
         <br/>
         <button mat-button class="transfer-button" color="primary" (click)="stopTransfer(ti.uuid)" [disabled]="(ti.status === 'running') || (ti.status === 'initiating')  || (ti.status === 'queued')    ? false : true"
           matTooltip="pause" matTooltipShowDelay="200" matTooltipHideDelay="300"><mat-icon>pause_circle_outline</mat-icon></button>
