@@ -14,7 +14,7 @@ import { AppComponent } from './app.component';
 import { AsperaNodeApiService } from './services/aspera-node-api.service';
 import { SizePipe, RatePipe } from './pipes/size.pipe';
 import { DurationPipe, ETAPipe } from './pipes/duration.pipe';
-import { StatusPipe } from './pipes/status.pipe';
+import { StatusPipe, StringPipe } from './pipes/status.pipe';
 import { CreateDirDialogComponent } from './dialog/create-dir-dialog.component';
 import { DeleteConfDialogComponent } from './dialog/delete-conf-dialog.component';
 
@@ -26,8 +26,8 @@ import { LoggerModule } from './logger/logger.module';
   declarations: [
     AppComponent,
     SizePipe, RatePipe,
-    DurationPipe, ETAPipe, 
-    StatusPipe,
+    DurationPipe, ETAPipe,
+    StatusPipe, StringPipe,
     CreateDirDialogComponent,
     DeleteConfDialogComponent
   ],
