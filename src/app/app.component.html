@@ -84,26 +84,33 @@
   </mat-sidenav>
 
   <!-- side nav transfers -->
-  <mat-sidenav #sidenav_trans position="end" mode="side" opened="true" class="app-sidenav">
+  <mat-sidenav #sidenav_trans position="end" mode="side" opened="true" class="transfer-sidenav">
     <!-- <mat-toolbar color="primary">Transfers</mat-toolbar> -->
     <!-- <h3 align="center">Transfer Activity</h3> -->
     <span *ngFor="let ti of allTransfersList">
       <mat-card>
-        <span matTooltip="{{ ti.status}}" matTooltipShowDelay="200" matTooltipHideDelay="300">
-          <mat-icon *ngIf="ti.status === 'completed'" style="color: green">check_circle</mat-icon>
-          <mat-icon *ngIf="ti.status === 'cancelled'" color="primary">pause_circle_filled</mat-icon>
-          <mat-icon *ngIf="ti.status === 'failed'" color="warn">error</mat-icon>
-          <mat-icon *ngIf="ti.status === 'initiating'" style="color: lightgreen">launch</mat-icon>
-          <mat-icon *ngIf="ti.status === 'queued'" color="accent">av_timer</mat-icon>
-          <mat-icon *ngIf="ti.status === 'removed'" color="warn">cancel</mat-icon>
-          <mat-icon *ngIf="ti.status === 'running'" style="color: green">loop</mat-icon>
-          <mat-icon *ngIf="ti.status === 'willretry'" color="accent">replay</mat-icon>
 
-          {{ ti.transfer_spec.direction === 'send' ? 'upload' : 'download' }} : {{ ti.title}} - {{ ti.files ? ti.files.length : '?'
-          }} Files
+        <span class="transfer-title" matTooltip="{{ ti.status | status }}" matTooltipShowDelay="200" matTooltipHideDelay="300">
+          <mat-icon class="transfer-icon" *ngIf="ti.status === 'cancelled'" color="primary">pause_circle_filled</mat-icon>
+          <mat-icon class="transfer-icon" *ngIf="ti.status === 'completed'" style="color: green">check_circle</mat-icon>
+          <mat-icon class="transfer-icon" *ngIf="ti.status === 'failed'" color="warn">error</mat-icon>
+          <mat-icon class="transfer-icon" *ngIf="ti.status === 'initiating'" style="color: lightgreen">launch</mat-icon>
+          <mat-icon class="transfer-icon" *ngIf="ti.status === 'queued'" color="accent">av_timer</mat-icon>
+          <mat-icon class="transfer-icon" *ngIf="ti.status === 'removed'" color="warn">cancel</mat-icon>
+          <mat-icon class="transfer-icon" *ngIf="ti.status === 'running'" style="color: green">loop</mat-icon>
+          <mat-icon class="transfer-icon" *ngIf="ti.status === 'willretry'" color="accent">replay</mat-icon>
+          {{ ti.transfer_spec.direction === 'send' ? 'upload' : 'download' }} : {{ ti.title}}
         </span>
-        <br/>
-        <mat-progress-bar class="transfer-bar" *ngIf="ti.status !== 'completed'" mode="determinate" value="{{ti.percentage*100}}"></mat-progress-bar>
+        <span class="transfer-subtitle">
+          <br/>Files: {{ ti.files ? ti.files.length : '?'}}
+          <br/> {{ ti.status === 'running' ? 'Current: ' + ti.current_file : 'Status: ' + (ti.status | status) }}
+        </span>
+        <span class="transfer-bar" *ngIf="ti.status !== 'completed'" matTooltip="{{ ti.percentage | percent }}" matTooltipShowDelay="200"
+          matTooltipHideDelay="300">
+          <br/>
+          <mat-progress-bar mode="determinate" value="{{ti.percentage*100}}"></mat-progress-bar>
+        </span>
+
         <span *ngIf="ti.status === 'running'">{{ ti.calculated_rate_kbps | rate }} | </span>
         <span *ngIf="ti.status !== 'completed'">{{ ti.bytes_written | size }} of {{ ti.bytes_expected | size }} </span>
         <span *ngIf="ti.status === 'running'"> | ETA: {{(ti.remaining_usec / 1000) | ETA | date:'EE HH:mm:ss'}} - {{(ti.remaining_usec
@@ -125,7 +132,7 @@
         </button>
         &nbsp;&nbsp;&nbsp;
         <button mat-button class="transfer-button" color="primary" (click)="showTransferMonitor(ti.uuid)" [disabled]="(ti.status === 'completed')  ? true : false"
-        matTooltip="show Aspera Connect Transfer Mointor" matTooltipShowDelay="200" matTooltipHideDelay="300"><mat-icon>insert_chart_outlined</mat-icon></button>
+          matTooltip="show Aspera Connect Transfer Mointor" matTooltipShowDelay="200" matTooltipHideDelay="300"><mat-icon>insert_chart_outlined</mat-icon></button>
 
       </mat-card>
     </span>

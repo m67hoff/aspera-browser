@@ -57,6 +57,31 @@ button {
   min-width: 100px;
 } 
 
+.transfer-sidenav {
+  padding: 10px;
+  padding-left: 0px;
+  min-width: 350px;
+  background-color: snow
+}
+  
+
+.transfer-title {
+  font-weight: 500;
+  align-self: center;
+} 
+
+.transfer-icon {
+  align-self: center;
+} 
+
+.transfer-subtitle {
+  font-weight: 300;
+} 
+
+.transfer-bar mat-progress-bar{
+  padding-top: 3px;
+  padding-bottom : 3px;
+} 
 
 .transfer-button {
   min-width: 24px;
@@ -64,17 +89,13 @@ button {
   padding: 1px;
 } 
 
-.transfer-bar {
-  height: 8x;
-} 
+.mat-progress-bar {
+  height: 6px;
+}
 
 .progressInfo {
   margin-left: 5px;
   margin-top: 10px;
-}
-
-.mat-progress-bar {
- 
 }
 
 .status {
