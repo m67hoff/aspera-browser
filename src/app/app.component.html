@@ -151,14 +151,23 @@
           <mat-icon>file_download</mat-icon>
           Download
         </button>
-        <button mat-raised-button color="primary" [disabled]="(dirList && selection.selected.length === 0) ? false : true" (click)="showSelectFileDialog()">
-          <mat-icon>file_upload</mat-icon>
-          Upload File
+
+        <button mat-raised-button color="primary" [disabled]="(dirList && selection.selected.length === 0) ? false : true" [matMenuTriggerFor]="uploadMenu">
+          <mat-icon>cloud_upload</mat-icon>
+          Upload
         </button>
-        <button mat-raised-button color="primary" [disabled]="(dirList && selection.selected.length === 0) ? false : true" (click)="showSelectFolderDialog()">
-          <mat-icon>open_in_browser</mat-icon>
-          Upload Folder
-        </button>
+        <mat-menu #uploadMenu="matMenu">
+          <button mat-raised-button color="primary" (click)="showSelectFileDialog()">
+            <mat-icon>file_upload</mat-icon>
+            File
+          </button>
+          <br/>
+          <button mat-raised-button color="primary" (click)="showSelectFolderDialog()">
+            <mat-icon>open_in_browser</mat-icon>
+            Folder
+          </button>
+        </mat-menu>
+
         <button mat-raised-button color="primary" [disabled]="(dirList && selection.selected.length !== 0) ? false : true" (click)="selection.clear()">
           <mat-icon>clear</mat-icon>
           Clear
@@ -208,7 +217,7 @@
 
           <ng-container matColumnDef="type">
             <mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="click to sort column" matTooltipShowDelay="200" matTooltipHideDelay="300">
-            Type </mat-header-cell>
+              Type </mat-header-cell>
             <mat-cell *matCellDef="let item" (click)="(item.type == 'directory') ? browse(item.path) : 0">
               <mat-icon color="primary" class="folder-icon" *ngIf="(item.type == 'directory')" mat-list-icon>folder</mat-icon>
               <mat-icon *ngIf="(item.type == 'file')" mat-list-icon>insert_drive_file</mat-icon>
@@ -218,7 +227,7 @@
 
           <ng-container matColumnDef="basename">
             <mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="click to sort column" matTooltipShowDelay="200" matTooltipHideDelay="300">
-            Name </mat-header-cell>
+              Name </mat-header-cell>
             <mat-cell [ngClass]="(item.type == 'directory') ? 'folder-txt' : 'file-txt' " *matCellDef="let item" (click)="(item.type == 'directory') ? browse(item.path) : 0">
               {{ item.basename }}
             </mat-cell>
@@ -227,7 +236,7 @@
 
           <ng-container matColumnDef="size">
             <mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="click to sort column" matTooltipShowDelay="200" matTooltipHideDelay="300">
-            Size </mat-header-cell>
+              Size </mat-header-cell>
             <mat-cell *matCellDef="let item">
               <span *ngIf="(item.type == 'directory')"> </span>
               <span *ngIf="(item.type == 'file')"> {{ item.size | size }}</span>
@@ -238,7 +247,7 @@
 
           <ng-container matColumnDef="mtime">
             <mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="click to sort column" matTooltipShowDelay="200" matTooltipHideDelay="300">
-            M Time </mat-header-cell>
+              M Time </mat-header-cell>
             <mat-cell *matCellDef="let item"> {{ item.mtime | date:'yyyy-MM-dd HH:mm:ss z' }} </mat-cell>
             <mat-footer-cell *matFooterCellDef><span *ngIf="(selection.selected.length > 0)">+ {{totalDirs}} Directories</span></mat-footer-cell>
           </ng-container>
