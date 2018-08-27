@@ -123,6 +123,9 @@
               <polygon points="15.59,7 12,10.59 8.41,7 7,8.41 10.59,12 7,15.59 8.41,17 12,13.41 15.59,17 17,15.59 13.41,12 17,8.41" /></svg>
           </mat-icon>
         </button>
+        &nbsp;&nbsp;&nbsp;
+        <button mat-button class="transfer-button" color="primary" (click)="showTransferMonitor(ti.uuid)" [disabled]="(ti.status === 'completed')  ? true : false"
+        matTooltip="show Aspera Connect Transfer Mointor" matTooltipShowDelay="200" matTooltipHideDelay="300"><mat-icon>insert_chart_outlined</mat-icon></button>
 
       </mat-card>
     </span>
@@ -157,12 +160,12 @@
           Upload
         </button>
         <mat-menu #uploadMenu="matMenu">
-          <button mat-raised-button color="primary" (click)="showSelectFileDialog()">
+          <button mat-raised-button class="menu-button" color="primary" (click)="showSelectFileDialog()">
             <mat-icon>file_upload</mat-icon>
             File
           </button>
           <br/>
-          <button mat-raised-button color="primary" (click)="showSelectFolderDialog()">
+          <button mat-raised-button class="menu-button" color="primary" (click)="showSelectFolderDialog()">
             <mat-icon>open_in_browser</mat-icon>
             Folder
           </button>

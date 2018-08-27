@@ -53,6 +53,11 @@ button {
   margin: 5px;
 }
 
+.menu-button {
+  min-width: 100px;
+} 
+
+
 .transfer-button {
   min-width: 24px;
   margin: 1px;
