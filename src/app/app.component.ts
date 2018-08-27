@@ -117,22 +117,29 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     const asperaInstaller = new AW4.ConnectInstaller({ sdkLocation: this.config.connectInstaller });
-    const statusEventListener = function (eventType, data) {
-      if (eventType === AW4.Connect.EVENT.STATUS && data === AW4.Connect.STATUS.INITIALIZING) {
-        asperaInstaller.showLaunching();
-      } else if (eventType === AW4.Connect.EVENT.STATUS && data === AW4.Connect.STATUS.FAILED) {
-        asperaInstaller.showDownload();
-      } else if (eventType === AW4.Connect.EVENT.STATUS && data === AW4.Connect.STATUS.OUTDATED) {
-        asperaInstaller.showUpdate();
-      } else if (eventType === AW4.Connect.EVENT.STATUS && data === AW4.Connect.STATUS.RUNNING) {
-        asperaInstaller.connected();
-      }
-    };
 
     this.asperaWeb = new AW4.Connect({ sdkLocation: this.config.connectInstaller, minVersion: '3.8.0' });
-    this.asperaWeb.addEventListener(AW4.Connect.EVENT.STATUS, statusEventListener);
+
+    this.asperaWeb.addEventListener(AW4.Connect.EVENT.STATUS, (eventType, status) => {
+      this.log.debug('AsperaInstaller status: ', status);
+      
+      switch (status) {
+        case AW4.Connect.STATUS.INITIALIZING:
+          asperaInstaller.showLaunching();
+        case AW4.Connect.STATUS.FAILED:
+          asperaInstaller.showDownload();
+        case AW4.Connect.STATUS.OUTDATED:
+          asperaInstaller.showUpdate();
+        case AW4.Connect.STATUS.RUNNING:
+          asperaInstaller.connected();
+      }
+    });
+
     this.log.info('Connect init App_ID: ', this.asperaWeb.initSession());
-    this.asperaWeb.addEventListener('transfer', (eventType, data) => this.handleTransferEvents(eventType, data, this));
+
+    this.asperaWeb.addEventListener(AW4.Connect.EVENT.TRANSFER, (eventType, data) => this.handleTransferEvents(eventType, data, this));
+
+    
   }
 
   handleTransferEvents(event, allTransfersInfo, this_app) {
@@ -144,9 +151,9 @@ export class AppComponent implements OnInit, AfterViewInit {
           'TransferInfo: ' + incomingTI.title + ' file ' + incomingTI.current_file
           + '\n' + incomingTI.calculated_rate_kbps + ' kbps ' + Math.floor(incomingTI.calculated_rate_kbps / 8) + ' kBps '
           + incomingTI.remaining_usec + ' µs ' + Math.floor(incomingTI.remaining_usec / 1000 / 1000) + ' s '
-          + Math.floor(((incomingTI.bytes_expected - incomingTI.bytes_written)/1024)/ (incomingTI.calculated_rate_kbps / 8) ) + ' sec_calc '
-          + '\n' + Math.floor(incomingTI.bytes_written/1024) + ' kB_done ' + Math.floor(incomingTI.bytes_expected/1024) + ' kB_exp '
-          + Math.floor((incomingTI.bytes_expected - incomingTI.bytes_written)/1024) + ' kB_todo '
+          + Math.floor(((incomingTI.bytes_expected - incomingTI.bytes_written) / 1024) / (incomingTI.calculated_rate_kbps / 8)) + ' sec_calc '
+          + '\n' + Math.floor(incomingTI.bytes_written / 1024) + ' kB_done ' + Math.floor(incomingTI.bytes_expected / 1024) + ' kB_exp '
+          + Math.floor((incomingTI.bytes_expected - incomingTI.bytes_written) / 1024) + ' kB_todo '
           + '\nstart: ' + incomingTI.start_time + ' end: ' + incomingTI.end_time
         )
 
