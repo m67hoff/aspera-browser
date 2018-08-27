@@ -8,6 +8,12 @@
   flex: 1 1 auto;
 }
 
+.toolbar-button {
+  min-width: 36px;
+  margin: 0px;
+  padding: 0px;
+} 
+
 .mat-sidenav mat-card {
   margin: 10px;
   padding: 10px;
@@ -67,20 +73,27 @@ button {
 
 .transfer-title {
   font-weight: 500;
-  align-self: center;
+  padding-bottom : 3px;
 } 
 
 .transfer-icon {
-  align-self: center;
+  position: relative;
+  top: 6px;
 } 
 
 .transfer-subtitle {
   font-weight: 300;
+  font-size: 14px;
 } 
 
 .transfer-bar mat-progress-bar{
   padding-top: 3px;
   padding-bottom : 3px;
+} 
+
+.transfer-detail {
+  font-weight: 400;
+  font-size: 14px;
 } 
 
 .transfer-button {

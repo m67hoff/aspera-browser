@@ -2,17 +2,20 @@
 <mat-toolbar color="primary" class="app-toolbar">
   <p>AsperaBrowser - Angular Sample App to Aspera API</p>
   <span class="app-toolbar-filler"></span>
-  <button mat-button matTooltip="User Login and NodeAPI Settings" matTooltipShowDelay="500" matTooltipHideDelay="500" (click)="sidenav_set.toggle()">
+  <button mat-button class="toolbar-button" (click)="sidenav_set.toggle()" matTooltip="User Login and NodeAPI Settings" matTooltipShowDelay="500"
+    matTooltipHideDelay="500">
     <mat-icon>settings</mat-icon>
   </button>
-  <button mat-button (click)="sidenav_trans.toggle()" matTooltip="Show tansfer activity" matTooltipShowDelay="500" matTooltipHideDelay="500"
-    matBadge="{{ runningTransfers }}" [matBadgeHidden]="!runningTransfers" matBadgeColor="accent">
+  &nbsp;&nbsp;
+  <button mat-button class="toolbar-button" (click)="sidenav_trans.toggle()" matTooltip="Show tansfer activity" matTooltipShowDelay="500"
+    matTooltipHideDelay="500" matBadge="{{ runningTransfers }}" [matBadgeHidden]="!runningTransfers" matBadgeColor="accent">
     <mat-icon>
       <svg viewBox="0 0 24 24">
         <polygon points="8.29 20.51 5.39 13.26 1 13.26 1 11.8 6.38 11.8 8.38 16.77 14.41 3.49 18.57 11.8 23 11.8 23 13.26 17.66 13.26 14.48 6.9 8.29 20.51"></polygon>
       </svg>
     </mat-icon>
   </button>
+  &nbsp;&nbsp;
 </mat-toolbar>
 
 <mat-sidenav-container autosize class="app-sidenav-container">
@@ -90,7 +93,7 @@
     <span *ngFor="let ti of allTransfersList">
       <mat-card>
 
-        <span class="transfer-title" matTooltip="{{ ti.status | status }}" matTooltipShowDelay="200" matTooltipHideDelay="300">
+        <div class="transfer-title" matTooltip="{{ ti.status | status }}" matTooltipShowDelay="200" matTooltipHideDelay="300">
           <mat-icon class="transfer-icon" *ngIf="ti.status === 'cancelled'" color="primary">pause_circle_filled</mat-icon>
           <mat-icon class="transfer-icon" *ngIf="ti.status === 'completed'" style="color: green">check_circle</mat-icon>
           <mat-icon class="transfer-icon" *ngIf="ti.status === 'failed'" color="warn">error</mat-icon>
@@ -100,39 +103,44 @@
           <mat-icon class="transfer-icon" *ngIf="ti.status === 'running'" style="color: green">loop</mat-icon>
           <mat-icon class="transfer-icon" *ngIf="ti.status === 'willretry'" color="accent">replay</mat-icon>
           {{ ti.transfer_spec.direction === 'send' ? 'upload' : 'download' }} : {{ ti.title}}
-        </span>
-        <span class="transfer-subtitle">
-          <br/>Files: {{ ti.files ? ti.files.length : '?'}}
+        </div>
+        <div class="transfer-subtitle">
+          Files: {{ ti.files ? ti.files.length : '?'}}
           <br/> {{ ti.status === 'running' ? 'Current: ' + ti.current_file : 'Status: ' + (ti.status | status) }}
-        </span>
-        <span class="transfer-bar" *ngIf="ti.status !== 'completed'" matTooltip="{{ ti.percentage | percent }}" matTooltipShowDelay="200"
+        </div>
+        <div class="transfer-bar" *ngIf="ti.status !== 'completed'" matTooltip="{{ ti.percentage | percent }}" matTooltipShowDelay="200"
           matTooltipHideDelay="300">
-          <br/>
           <mat-progress-bar mode="determinate" value="{{ti.percentage*100}}"></mat-progress-bar>
-        </span>
-
-        <span *ngIf="ti.status === 'running'">{{ ti.calculated_rate_kbps | rate }} | </span>
-        <span *ngIf="ti.status !== 'completed'">{{ ti.bytes_written | size }} of {{ ti.bytes_expected | size }} </span>
-        <span *ngIf="ti.status === 'running'"> | ETA: {{(ti.remaining_usec / 1000) | ETA | date:'EE HH:mm:ss'}} - {{(ti.remaining_usec
-          / 1000) | duration }} </span>
-        <br/>
-        <button mat-button class="transfer-button" color="primary" (click)="stopTransfer(ti.uuid)" [disabled]="(ti.status === 'running') || (ti.status === 'initiating')  || (ti.status === 'queued')    ? false : true"
-          matTooltip="pause" matTooltipShowDelay="200" matTooltipHideDelay="300"><mat-icon>pause_circle_outline</mat-icon></button>
-
-        <button mat-button class="transfer-button" color="primary" (click)="resumeTransfer(ti.uuid)" [disabled]="(ti.status === 'running') || (ti.status === 'completed')  ? true : false"
-          matTooltip="restart" matTooltipShowDelay="200" matTooltipHideDelay="300"><mat-icon>play_circle_outline</mat-icon></button>
-
-        <button mat-button class="transfer-button" color="accent" (click)="removeTransfer(ti.uuid)" [disabled]="(ti.status === 'running') || (ti.status === 'initiating')  || (ti.status === 'queued')  ? true : false"
-          matTooltip="cancel & remove" matTooltipShowDelay="200" matTooltipHideDelay="300">
-          <mat-icon> <svg viewBox="0 0 24 24">
-              <path d="M12,2C6.47,2,2,6.47,2,12c0,5.53,4.47,10,10,10c5.53,0,10-4.47,10-10C22,6.47,17.53,2,12,2z 
+        </div>
+        <div class="transfer-detail">
+          <span *ngIf="ti.status === 'running'">{{ ti.calculated_rate_kbps | rate }} | </span>
+          <span *ngIf="ti.status !== 'completed'">{{ ti.bytes_written | size }} of {{ ti.bytes_expected | size }} </span>
+          <span *ngIf="ti.status === 'running'"> | ETA: {{(ti.remaining_usec / 1000) | ETA | date:'EE HH:mm:ss'}} - {{(ti.remaining_usec
+            / 1000) | duration }} </span>
+        </div>
+        <div class="transfer-button-row">
+          <button mat-button class="transfer-button" color="primary" (click)="stopTransfer(ti.uuid)" [disabled]="(ti.status === 'running') || (ti.status === 'initiating')  || (ti.status === 'queued')    ? false : true"
+            matTooltip="pause" matTooltipShowDelay="200" matTooltipHideDelay="300">
+            <mat-icon>pause_circle_outline</mat-icon>
+          </button>
+          <button mat-button class="transfer-button" color="primary" (click)="resumeTransfer(ti.uuid)" [disabled]="(ti.status === 'running') || (ti.status === 'completed')  ? true : false"
+            matTooltip="restart" matTooltipShowDelay="200" matTooltipHideDelay="300">
+            <mat-icon>play_circle_outline</mat-icon>
+          </button>
+          <button mat-button class="transfer-button" color="accent" (click)="removeTransfer(ti.uuid)" [disabled]="(ti.status === 'running') || (ti.status === 'initiating')  || (ti.status === 'queued')  ? true : false"
+            matTooltip="cancel & remove" matTooltipShowDelay="200" matTooltipHideDelay="300">
+            <mat-icon> <svg viewBox="0 0 24 24">
+                <path d="M12,2C6.47,2,2,6.47,2,12c0,5.53,4.47,10,10,10c5.53,0,10-4.47,10-10C22,6.47,17.53,2,12,2z 
               M12,20c-4.41,0-8-3.59-8-8,s3.59-8,8-8s8,3.59,8,8S16.41,20,12,20z" />
-              <polygon points="15.59,7 12,10.59 8.41,7 7,8.41 10.59,12 7,15.59 8.41,17 12,13.41 15.59,17 17,15.59 13.41,12 17,8.41" /></svg>
-          </mat-icon>
-        </button>
-        &nbsp;&nbsp;&nbsp;
-        <button mat-button class="transfer-button" color="primary" (click)="showTransferMonitor(ti.uuid)" [disabled]="(ti.status === 'completed')  ? true : false"
-          matTooltip="show Aspera Connect Transfer Mointor" matTooltipShowDelay="200" matTooltipHideDelay="300"><mat-icon>insert_chart_outlined</mat-icon></button>
+                <polygon points="15.59,7 12,10.59 8.41,7 7,8.41 10.59,12 7,15.59 8.41,17 12,13.41 15.59,17 17,15.59 13.41,12 17,8.41" /></svg>
+            </mat-icon>
+          </button>
+          &nbsp;&nbsp;&nbsp;
+          <button mat-button class="transfer-button" color="primary" (click)="showTransferMonitor(ti.uuid)" [disabled]="(ti.status === 'completed')  ? true : false"
+            matTooltip="show Aspera Connect Transfer Mointor" matTooltipShowDelay="200" matTooltipHideDelay="300">
+            <mat-icon>insert_chart_outlined</mat-icon>
+          </button>
+        </div>
 
       </mat-card>
     </span>
