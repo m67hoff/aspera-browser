@@ -17,7 +17,7 @@ export class SizePipe implements PipeTransform {
     if (bytes >= 100 * kB) { return (bytes / kB).toFixed(0) + ' kB'; }
     if (bytes >= 10 * kB) { return (bytes / kB).toFixed(1) + ' kB'; }
     if (bytes >= kB) { return (bytes / kB).toFixed(2) + ' kB'; }
- 
+
     return bytes + ' B';
   }
 
