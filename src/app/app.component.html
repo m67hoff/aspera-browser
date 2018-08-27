@@ -104,9 +104,11 @@
           <mat-icon class="transfer-icon" *ngIf="ti.status === 'willretry'" color="accent">replay</mat-icon>
           {{ ti.transfer_spec.direction === 'send' ? 'upload' : 'download' }}: {{ ti.title | string}}
         </div>
-        <div class="transfer-subtitle" matTooltip="{{ ti.status === 'running' && ti.current_file.length > 30 ? ti.current_file : '' }}" matTooltipShowDelay="200" matTooltipHideDelay="300">
+        <div class="transfer-subtitle" matTooltip="{{ ti.status === 'running' && ti.current_file.length > 30 ? ti.current_file : '' }}"
+          matTooltipShowDelay="200" matTooltipHideDelay="300">
           Files: {{ ti.files ? ti.files.length : '?'}}
-          <br/> {{ ti.status === 'running' ? 'Current: ' + (ti.current_file | string) : 'Status: ' + (ti.status | status) }}
+          <br/> {{ ti.status === 'running' ? 'Current: ' + (ti.current_file | string) : 'Status: ' + (ti.status | status)
+          }}
         </div>
         <div class="transfer-bar" *ngIf="ti.status !== 'completed'" matTooltip="{{ ti.percentage | percent }}" matTooltipShowDelay="200"
           matTooltipHideDelay="300">
@@ -114,8 +116,9 @@
         </div>
         <div class="transfer-detail">
           <span *ngIf="ti.status !== 'completed'">{{ ti.bytes_written | size }} of {{ ti.bytes_expected | size }} </span>
-          <br/> 
-          <span *ngIf="ti.status === 'running'">ETA: {{(ti.remaining_usec / 1000) | ETA | date:'EE HH:mm:ss'}} - {{(ti.remaining_usec / 1000) | duration }} remaining</span>
+          <br/>
+          <span *ngIf="ti.status === 'running'">ETA: {{(ti.remaining_usec / 1000) | ETA | date:'EE HH:mm:ss'}} - {{(ti.remaining_usec
+            / 1000) | duration }} remaining</span>
           <span *ngIf="ti.status === 'running'"> - {{ ti.calculated_rate_kbps | rate }}</span>
         </div>
         <div class="transfer-button-row">
@@ -202,6 +205,7 @@
           <mat-progress-bar mode="indeterminate" *ngIf="browseInProgress"></mat-progress-bar>
           <span class="status" *ngIf="HTTPerror">Error: {{ HTTPerror.status }} - {{ HTTPerror.statusText }} - {{ HTTPerror.message
             }} - {{ HTTPerror.error?.code }} - {{ HTTPerror.error?.host }}</span>
+          <span class="status" *ngIf="APIerror">Error: {{ APIerror }}</span>
         </div>
         <!-- result / table -->
         <p class="path">

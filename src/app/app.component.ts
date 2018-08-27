@@ -49,6 +49,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   selection: SelectionModel<any>;
 
   HTTPerror: HttpErrorResponse = undefined;
+  APIerror: string = undefined;
 
   isConnected = false;
   browseInProgress = false;
@@ -175,7 +176,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     const app_id = this.asperaWeb.initSession();
     this.log.info('Connect init App_ID: ', app_id);
-    this.log.info('Connect version: ', this.asperaWeb.version());
+    this.asperaWeb.version({ success: (data => this.log.info('Connect version: ', data)) });
   }
 
   ngAfterViewInit() {
@@ -259,6 +260,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         (info: any) => {
           this.browseInProgress = false;
           this.HTTPerror = undefined;
+          this.APIerror = undefined;
           this.log.info('get info result json: ', info);
           this.isConnected = true;
           this.browse('/');
@@ -288,16 +290,25 @@ export class AppComponent implements OnInit, AfterViewInit {
         (dirList: DirList) => {
           this.browseInProgress = false;
           this.HTTPerror = undefined;
-          this.isConnected = true;
-          this.dirList = dirList;
-          this.dataSource.data = dirList.items;
-          this.breadcrumbNavs = this.breadcrumb(dirList.self.path);
+          this.APIerror = undefined;
+
           this.log.info('browse result dirList: ', dirList);
+          if (dirList.self && dirList.self.path) {
+            this.isConnected = true;
+            this.dirList = dirList;
+            this.dataSource.data = dirList.items;
+            this.breadcrumbNavs = this.breadcrumb(dirList.self.path);
+          } else {
+            let err = 'API call returned wrong / unexpected data'
+            this.APIerror = err;
+            this.log.error('nodeAPI browse ERROR: ', err);
+            this.log.error('nodeAPI browse ERROR: ', dirList);
+          }
         },
         (err) => {
           this.browseInProgress = false;
           this.HTTPerror = err;
-          this.log.error(' nodeAPI browse ERROR: ', err);
+          this.log.error('nodeAPI browse ERROR: ', err);
         }
       );
   }
@@ -313,12 +324,20 @@ export class AppComponent implements OnInit, AfterViewInit {
         (transferSpecs) => {
           this.log.debug('download_setup result transferSpecs: ', transferSpecs);
           this.HTTPerror = undefined;
-          const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
-          if (this.uiCred.useTokenAuth) { transferSpec['authentication'] = 'token'; }
+          this.APIerror = undefined;
+          if (transferSpecs.transfer_specs && transferSpecs.transfer_specs[0]) {
+            const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
+            if (this.uiCred.useTokenAuth) { transferSpec['authentication'] = 'token'; }
 
-          this.log.info('download_setup result transferSpec: ', transferSpec);
-          this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
-          this.showConnectSnackBar();
+            this.log.info('download_setup result transferSpec: ', transferSpec);
+            this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
+            this.showConnectSnackBar();
+          } else {
+            let err = 'nodeAPI download_setup - API call returned wrong / unexpected data'
+            this.APIerror = err;
+            this.log.error('nodeAPI download_setup ERROR: : ', err);
+            this.log.error('nodeAPI download_setup:  ', transferSpecs);
+          }
         },
         (err) => {
           this.HTTPerror = err;
@@ -349,6 +368,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       .subscribe(
         (res) => {
           this.HTTPerror = undefined;
+          this.APIerror = undefined;
           this.log.info('delete result : ', res);
           this.browse(this.dirList.self.path);
         },
@@ -382,6 +402,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       .subscribe(
         (res) => {
           this.HTTPerror = undefined;
+          this.APIerror = undefined;
           this.log.info('create Dir result : ', res);
           this.browse(newDirPath);
         },
@@ -411,12 +432,20 @@ export class AppComponent implements OnInit, AfterViewInit {
         (transferSpecs) => {
           this.log.debug('upload_setup result transferSpecs: ', transferSpecs);
           this.HTTPerror = undefined;
-          const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
-          if (this.uiCred.useTokenAuth) { transferSpec['authentication'] = 'token'; }
+          this.APIerror = undefined;
+          if (transferSpecs.transfer_specs && transferSpecs.transfer_specs[0]) {
+            const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
+            if (this.uiCred.useTokenAuth) { transferSpec['authentication'] = 'token'; }
 
-          this.log.info('upload_setup result transferSpec: ', transferSpec);
-          this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
-          this.showConnectSnackBar();
+            this.log.info('upload_setup result transferSpec: ', transferSpec);
+            this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
+            this.showConnectSnackBar();
+          } else {
+            let err = 'nodeAPI upload_setup - API call returned wrong / unexpected data'
+            this.APIerror = err;
+            this.log.error('nodeAPI upload_setup ERROR: : ', err);
+            this.log.error('nodeAPI upload_setup:  ', transferSpecs);
+          }
         },
         (err) => {
           this.HTTPerror = err;
