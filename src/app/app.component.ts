@@ -126,12 +126,16 @@ export class AppComponent implements OnInit, AfterViewInit {
       switch (status) {
         case AW4.Connect.STATUS.INITIALIZING:
           asperaInstaller.showLaunching();
+          break;
         case AW4.Connect.STATUS.FAILED:
           asperaInstaller.showDownload();
+          break;
         case AW4.Connect.STATUS.OUTDATED:
           asperaInstaller.showUpdate();
+          break;
         case AW4.Connect.STATUS.RUNNING:
           asperaInstaller.connected();
+          break;
       }
     });
 
