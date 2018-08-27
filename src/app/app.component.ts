@@ -116,13 +116,13 @@ export class AppComponent implements OnInit, AfterViewInit {
 
 
   ngOnInit() {
-    const asperaInstaller = new AW4.ConnectInstaller({ sdkLocation: this.config.connectInstaller });
-
+    
     this.asperaWeb = new AW4.Connect({ sdkLocation: this.config.connectInstaller, minVersion: '3.8.0' });
+    const asperaInstaller = new AW4.ConnectInstaller({ sdkLocation: this.config.connectInstaller });
 
     this.asperaWeb.addEventListener(AW4.Connect.EVENT.STATUS, (eventType, status) => {
       this.log.debug('AsperaInstaller status: ', status);
-      
+
       switch (status) {
         case AW4.Connect.STATUS.INITIALIZING:
           asperaInstaller.showLaunching();
@@ -135,47 +135,52 @@ export class AppComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.log.info('Connect init App_ID: ', this.asperaWeb.initSession());
+    this.asperaWeb.addEventListener(AW4.Connect.EVENT.TRANSFER, (eventType, allTransfersInfo) => {
+      if (allTransfersInfo.result_count > 0) {
+        this.log.debug('AllTransfersInfo: ', allTransfersInfo);
 
-    this.asperaWeb.addEventListener(AW4.Connect.EVENT.TRANSFER, (eventType, data) => this.handleTransferEvents(eventType, data, this));
+        allTransfersInfo.transfers.forEach(incomingTI => {
+          this.log.debug(
+            'TransferInfo: ' + incomingTI.title + ' file ' + incomingTI.current_file
+            + '\n' + incomingTI.calculated_rate_kbps + ' kbps ' + Math.floor(incomingTI.calculated_rate_kbps / 8) + ' kBps '
+            + incomingTI.remaining_usec + ' µs ' + Math.floor(incomingTI.remaining_usec / 1000 / 1000) + ' s '
+            + Math.floor(((incomingTI.bytes_expected - incomingTI.bytes_written) / 1024) / (incomingTI.calculated_rate_kbps / 8)) + ' sec_calc '
+            + '\n' + Math.floor(incomingTI.bytes_written / 1024) + ' kB_done ' + Math.floor(incomingTI.bytes_expected / 1024) + ' kB_exp '
+            + Math.floor((incomingTI.bytes_expected - incomingTI.bytes_written) / 1024) + ' kB_todo '
+            + '\nstart: ' + incomingTI.start_time + ' end: ' + incomingTI.end_time
+          )
 
+          const index = this.allTransfersList.findIndex(ti => ti.uuid === incomingTI.uuid);
+          if (index === -1) {
+            this.allTransfersList.push(incomingTI);
+          } else {
+            this.allTransfersList[index] = incomingTI;
+            if (incomingTI.status === 'removed') { this.allTransfersList.splice(index, 1) }
+          }
+        });
+
+        this.runningTransfers = 0
+        this.allTransfersList.forEach(ti => {
+          /* this.log.debug(
+            'AllTransferStatus: %s %s %s %s% %s kbps', ti.title, ti.uuid, ti.status, (ti.percentage * 100).toFixed(1), ti.calculated_rate_kbps
+          ) */
+          if (ti.status === 'running') { this.runningTransfers++ }
+        });
+      }
+    });
     
+    const app_id = this.asperaWeb.initSession()
+    this.log.info('Connect init App_ID: ', app_id);
+    this.log.info('Connect version: ', this.asperaWeb.version());
   }
 
-  handleTransferEvents(event, allTransfersInfo, this_app) {
-    if (allTransfersInfo.result_count > 0) {
-      this_app.log.debug('AllTransfersInfo: ', allTransfersInfo);
-
-      allTransfersInfo.transfers.forEach(incomingTI => {
-        this_app.log.debug(
-          'TransferInfo: ' + incomingTI.title + ' file ' + incomingTI.current_file
-          + '\n' + incomingTI.calculated_rate_kbps + ' kbps ' + Math.floor(incomingTI.calculated_rate_kbps / 8) + ' kBps '
-          + incomingTI.remaining_usec + ' µs ' + Math.floor(incomingTI.remaining_usec / 1000 / 1000) + ' s '
-          + Math.floor(((incomingTI.bytes_expected - incomingTI.bytes_written) / 1024) / (incomingTI.calculated_rate_kbps / 8)) + ' sec_calc '
-          + '\n' + Math.floor(incomingTI.bytes_written / 1024) + ' kB_done ' + Math.floor(incomingTI.bytes_expected / 1024) + ' kB_exp '
-          + Math.floor((incomingTI.bytes_expected - incomingTI.bytes_written) / 1024) + ' kB_todo '
-          + '\nstart: ' + incomingTI.start_time + ' end: ' + incomingTI.end_time
-        )
-
-        const index = this_app.allTransfersList.findIndex(ti => ti.uuid === incomingTI.uuid);
-        if (index === -1) {
-          this_app.allTransfersList.push(incomingTI);
-        } else {
-          this_app.allTransfersList[index] = incomingTI;
-          if (incomingTI.status === 'removed') { this_app.allTransfersList.splice(index, 1) }
-        }
-      });
-
-      this_app.runningTransfers = 0
-      this_app.allTransfersList.forEach(ti => {
-        /* this_app.log.debug(
-          'AllTransferStatus: %s %s %s %s% %s kbps', ti.title, ti.uuid, ti.status, (ti.percentage * 100).toFixed(1), ti.calculated_rate_kbps
-        ) */
-        if (ti.status === 'running') { this_app.runningTransfers++ }
-      });
-    }
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
+  
+  // transfer activity methods  
   stopTransfer(uuid: string) {
     this.log.info('Connect stopTransfer: ', uuid);
     this.asperaWeb.stopTransfer(uuid)
@@ -191,26 +196,36 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.asperaWeb.removeTransfer(uuid)
   }
 
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+  clearInactiveTransfers() {
+    this.log.info('Connect clearInactiveTransfers!');
+    this.allTransfersList.forEach(ti => {
+      if (ti.status !== 'running') { this.removeTransfer(ti.uuid) } 
+    })
   }
+  
+  showTransferMonitor(uuid: string) {
+    this.log.info('Connect showTransferMonitor: ', uuid);
+    this.asperaWeb.showTransferMonitor(uuid)
+  } 
 
-  // master selection button in table header
+
+  // table header methods 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
     return numSelected === numRows;
   }
+
   masterToggle() {
     this.isAllSelected() ? this.selection.clear() : this.dataSource.data.forEach(row => this.selection.select(row));
     this.updateSelectedTotals();
   }
+
   itemToggle(item) {
     this.selection.toggle(item);
     this.updateSelectedTotals();
   }
+
   updateSelectedTotals() {
     this.totalBytes = this.selection.selected.map(i => i.size).reduce((acc, cur) => acc + cur, 0);
     this.totalFiles = this.selection.selected.filter(i => i.type === 'file').length;
@@ -226,6 +241,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = filterValue;
   }
 
+  // settings sidenav methods  
   testconnection() {
     this.log.debug('--> action test');
     this.uiCred.nodeURL = this.uiCred.nodeURL.trim();
@@ -252,6 +268,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       );
   }
 
+  //  card title & button methods  
   getNodeHostname() {
     // return this.uiCred.nodeURL
     return (this.uiCred.nodeURL.includes('localhost')) ? location.origin : this.uiCred.nodeURL;
