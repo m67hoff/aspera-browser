@@ -12,11 +12,15 @@ import {
     MatProgressBarModule,
     MatTabsModule,
     MatDialogModule,
+    MatMenuModule,
     MatPaginatorModule,
     MatSortModule,
     MatSnackBarModule,
 
 } from '@angular/material';
+
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatBadgeModule} from '@angular/material/badge';
 
 import { MatTableModule } from '@angular/material/table';
 import { CdkTableModule } from '@angular/cdk/table';
@@ -35,9 +39,13 @@ import { CdkTableModule } from '@angular/cdk/table';
         MatProgressBarModule,
         MatTabsModule,
         MatDialogModule,
+        MatMenuModule,
         MatSnackBarModule,
         MatPaginatorModule,
         MatSortModule,
+
+        MatTooltipModule,
+        MatBadgeModule,
 
         MatTableModule,
         CdkTableModule,
@@ -56,9 +64,13 @@ import { CdkTableModule } from '@angular/cdk/table';
         MatProgressBarModule,
         MatTabsModule,
         MatDialogModule,
+        MatMenuModule,
         MatSnackBarModule,
         MatPaginatorModule,
         MatSortModule,
+
+        MatTooltipModule,
+        MatBadgeModule,
 
         MatTableModule,
         CdkTableModule,

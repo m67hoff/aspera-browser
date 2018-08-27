@@ -1,12 +1,18 @@
 .app-sidenav {
   padding: 10px;
   min-width: 450px;
-  background-color: #f3f3f3
+  background-color: snow
 }
   
 .app-toolbar-filler {
   flex: 1 1 auto;
 }
+
+.toolbar-button {
+  min-width: 36px;
+  margin: 0px;
+  padding: 0px;
+} 
 
 .mat-sidenav mat-card {
   margin: 10px;
@@ -53,13 +59,56 @@ button {
   margin: 5px;
 }
 
+.menu-button {
+  min-width: 100px;
+} 
+
+.transfer-sidenav {
+  padding: 10px;
+  padding-left: 0px;
+  min-width: 400px;
+  background-color: snow
+}
+  
+
+.transfer-title {
+  font-weight: 500;
+  padding-bottom : 3px;
+} 
+
+.transfer-icon {
+  position: relative;
+  top: 6px;
+} 
+
+.transfer-subtitle {
+  font-weight: 300;
+  font-size: 14px;
+} 
+
+.transfer-bar mat-progress-bar{
+  padding-top: 3px;
+  padding-bottom : 3px;
+} 
+
+.transfer-detail {
+  font-weight: 300;
+  font-size: 14px;
+} 
+
+.transfer-button {
+  min-width: 24px;
+  margin: 1px;
+  padding: 1px;
+} 
+
+.mat-progress-bar {
+  height: 6px;
+}
+
 .progressInfo {
   margin-left: 5px;
   margin-top: 10px;
-}
-
-.mat-progress-bar {
-
 }
 
 .status {

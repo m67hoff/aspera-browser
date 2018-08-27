@@ -2,15 +2,26 @@
 <mat-toolbar color="primary" class="app-toolbar">
   <p>AsperaBrowser - Angular Sample App to Aspera API</p>
   <span class="app-toolbar-filler"></span>
-  <button mat-button (click)="sidenav.toggle()">
+  <button mat-button class="toolbar-button" (click)="sidenav_set.toggle()" matTooltip="User Login and NodeAPI Settings" matTooltipShowDelay="500"
+    matTooltipHideDelay="500">
     <mat-icon>settings</mat-icon>
   </button>
+  &nbsp;&nbsp;
+  <button mat-button class="toolbar-button" (click)="sidenav_trans.toggle()" matTooltip="Show tansfer activity" matTooltipShowDelay="500"
+    matTooltipHideDelay="500" matBadge="{{ runningTransfers }}" [matBadgeHidden]="!runningTransfers" matBadgeColor="accent">
+    <mat-icon>
+      <svg viewBox="0 0 24 24">
+        <polygon points="8.29 20.51 5.39 13.26 1 13.26 1 11.8 6.38 11.8 8.38 16.77 14.41 3.49 18.57 11.8 23 11.8 23 13.26 17.66 13.26 14.48 6.9 8.29 20.51"></polygon>
+      </svg>
+    </mat-icon>
+  </button>
+  &nbsp;&nbsp;
 </mat-toolbar>
 
 <mat-sidenav-container autosize class="app-sidenav-container">
 
-  <!-- side nav -->
-  <mat-sidenav #sidenav position="end" mode="over" class="app-sidenav">
+  <!-- side nav setteings -->
+  <mat-sidenav #sidenav_set position="start" mode="over" class="app-sidenav">
     <mat-card>
       <h3> Node API Settings: </h3>
       <form #settings="ngForm">
@@ -37,7 +48,8 @@
           <mat-placeholder>
             <mat-icon>lock</mat-icon> Password
           </mat-placeholder>
-          <input matInput #password autocomplete="current-password" name="password" [(ngModel)]="uiCred.nodePW" [type]="hidePW ? 'password' : 'text'" required>
+          <input matInput #password autocomplete="current-password" name="password" [(ngModel)]="uiCred.nodePW" [type]="hidePW ? 'password' : 'text'"
+            required>
           <mat-icon matSuffix (click)="hidePW = !hidePW">{{ hidePW ? 'visibility' : 'visibility_off' }}</mat-icon>
         </mat-form-field>
 
@@ -55,8 +67,10 @@
           <button mat-raised-button class="test-button" (click)="testconnection()" [disabled]="!settings.valid || !settings.dirty">
             Apply & Save
           </button>
-          <mat-icon color="accent" class="test-icon" [ngStyle]=" isConnected ? {color: 'green'} : {} ">{{ isConnected ? 'check_circle' : 'error' }}</mat-icon>
-          <span class="status" *ngIf="HTTPerror">Error: {{ HTTPerror.status }} - {{ HTTPerror.statusText }} - {{ HTTPerror.message }} - {{ HTTPerror.error?.code }} - {{ HTTPerror.error?.host }}</span>
+          <mat-icon color="warn" class="test-icon" [ngStyle]=" isConnected ? {color: 'green'} : {} ">{{ isConnected ? 'check_circle'
+            : 'error' }}</mat-icon>
+          <span class="status" *ngIf="HTTPerror">Error: {{ HTTPerror.status }} - {{ HTTPerror.statusText }} - {{ HTTPerror.message
+            }} - {{ HTTPerror.error?.code }} - {{ HTTPerror.error?.host }}</span>
         </p>
       </form>
     </mat-card>
@@ -70,6 +84,66 @@
         </a>
       </mat-nav-list>
     </mat-card>
+  </mat-sidenav>
+
+  <!-- side nav transfers -->
+  <mat-sidenav #sidenav_trans position="end" mode="side" opened="false" class="transfer-sidenav">
+    <!-- <mat-toolbar color="primary">Transfers</mat-toolbar> -->
+    <!-- <h3 align="center">Transfer Activity</h3> -->
+    <span *ngFor="let ti of allTransfersList">
+      <mat-card>
+
+        <div class="transfer-title" matTooltip="{{ ti.title.length > 30 ? ti.title : '' }}" matTooltipShowDelay="200" matTooltipHideDelay="300">
+          <mat-icon class="transfer-icon" *ngIf="ti.status === 'cancelled'" color="primary">pause_circle_filled</mat-icon>
+          <mat-icon class="transfer-icon" *ngIf="ti.status === 'completed'" style="color: green">check_circle</mat-icon>
+          <mat-icon class="transfer-icon" *ngIf="ti.status === 'failed'" color="warn">error</mat-icon>
+          <mat-icon class="transfer-icon" *ngIf="ti.status === 'initiating'" style="color: lightgreen">launch</mat-icon>
+          <mat-icon class="transfer-icon" *ngIf="ti.status === 'queued'" color="accent">av_timer</mat-icon>
+          <mat-icon class="transfer-icon" *ngIf="ti.status === 'removed'" color="warn">cancel</mat-icon>
+          <mat-icon class="transfer-icon" *ngIf="ti.status === 'running'" style="color: green">loop</mat-icon>
+          <mat-icon class="transfer-icon" *ngIf="ti.status === 'willretry'" color="accent">replay</mat-icon>
+          {{ ti.transfer_spec.direction === 'send' ? 'upload' : 'download' }}: {{ ti.title | string}}
+        </div>
+        <div class="transfer-subtitle" matTooltip="{{ ti.status === 'running' && ti.current_file.length > 30 ? ti.current_file : '' }}" matTooltipShowDelay="200" matTooltipHideDelay="300">
+          Files: {{ ti.files ? ti.files.length : '?'}}
+          <br/> {{ ti.status === 'running' ? 'Current: ' + (ti.current_file | string) : 'Status: ' + (ti.status | status) }}
+        </div>
+        <div class="transfer-bar" *ngIf="ti.status !== 'completed'" matTooltip="{{ ti.percentage | percent }}" matTooltipShowDelay="200"
+          matTooltipHideDelay="300">
+          <mat-progress-bar mode="determinate" value="{{ti.percentage*100}}"></mat-progress-bar>
+        </div>
+        <div class="transfer-detail">
+          <span *ngIf="ti.status !== 'completed'">{{ ti.bytes_written | size }} of {{ ti.bytes_expected | size }} </span>
+          <br/> 
+          <span *ngIf="ti.status === 'running'">ETA: {{(ti.remaining_usec / 1000) | ETA | date:'EE HH:mm:ss'}} - {{(ti.remaining_usec / 1000) | duration }} remaining</span>
+          <span *ngIf="ti.status === 'running'"> - {{ ti.calculated_rate_kbps | rate }}</span>
+        </div>
+        <div class="transfer-button-row">
+          <button mat-button class="transfer-button" color="primary" (click)="stopTransfer(ti.uuid)" [disabled]="(ti.status === 'running') || (ti.status === 'initiating')  || (ti.status === 'queued')    ? false : true"
+            matTooltip="pause" matTooltipShowDelay="200" matTooltipHideDelay="300">
+            <mat-icon>pause_circle_outline</mat-icon>
+          </button>
+          <button mat-button class="transfer-button" color="primary" (click)="resumeTransfer(ti.uuid)" [disabled]="(ti.status === 'running') || (ti.status === 'completed')  ? true : false"
+            matTooltip="restart" matTooltipShowDelay="200" matTooltipHideDelay="300">
+            <mat-icon>play_circle_outline</mat-icon>
+          </button>
+          <button mat-button class="transfer-button" color="accent" (click)="removeTransfer(ti.uuid)" [disabled]="(ti.status === 'running') || (ti.status === 'initiating')  || (ti.status === 'queued')  ? true : false"
+            matTooltip="cancel & remove" matTooltipShowDelay="200" matTooltipHideDelay="300">
+            <mat-icon> <svg viewBox="0 0 24 24">
+                <path d="M12,2C6.47,2,2,6.47,2,12c0,5.53,4.47,10,10,10c5.53,0,10-4.47,10-10C22,6.47,17.53,2,12,2z 
+              M12,20c-4.41,0-8-3.59-8-8,s3.59-8,8-8s8,3.59,8,8S16.41,20,12,20z" />
+                <polygon points="15.59,7 12,10.59 8.41,7 7,8.41 10.59,12 7,15.59 8.41,17 12,13.41 15.59,17 17,15.59 13.41,12 17,8.41" /></svg>
+            </mat-icon>
+          </button>
+          &nbsp;&nbsp;&nbsp;
+          <button mat-button class="transfer-button" color="primary" (click)="showTransferMonitor(ti.uuid)" [disabled]="(ti.status === 'completed')  ? true : false"
+            matTooltip="show Aspera Connect Transfer Mointor" matTooltipShowDelay="200" matTooltipHideDelay="300">
+            <mat-icon>insert_chart_outlined</mat-icon>
+          </button>
+        </div>
+
+      </mat-card>
+    </span>
   </mat-sidenav>
 
   <!-- main page -->
@@ -95,14 +169,23 @@
           <mat-icon>file_download</mat-icon>
           Download
         </button>
-        <button mat-raised-button color="primary" [disabled]="(dirList && selection.selected.length === 0) ? false : true" (click)="showSelectFileDialog()">
-          <mat-icon>file_upload</mat-icon>
-          Upload File
+
+        <button mat-raised-button color="primary" [disabled]="(dirList && selection.selected.length === 0) ? false : true" [matMenuTriggerFor]="uploadMenu">
+          <mat-icon>cloud_upload</mat-icon>
+          Upload
         </button>
-        <button mat-raised-button color="primary" [disabled]="(dirList && selection.selected.length === 0) ? false : true" (click)="showSelectFolderDialog()">
-          <mat-icon>open_in_browser</mat-icon>
-          Upload Folder
-        </button>
+        <mat-menu #uploadMenu="matMenu">
+          <button mat-raised-button class="menu-button" color="primary" (click)="showSelectFileDialog()">
+            <mat-icon>file_upload</mat-icon>
+            File
+          </button>
+          <br/>
+          <button mat-raised-button class="menu-button" color="primary" (click)="showSelectFolderDialog()">
+            <mat-icon>open_in_browser</mat-icon>
+            Folder
+          </button>
+        </mat-menu>
+
         <button mat-raised-button color="primary" [disabled]="(dirList && selection.selected.length !== 0) ? false : true" (click)="selection.clear()">
           <mat-icon>clear</mat-icon>
           Clear
@@ -117,7 +200,8 @@
         </button>
         <div class="progressInfo">
           <mat-progress-bar mode="indeterminate" *ngIf="browseInProgress"></mat-progress-bar>
-          <span class="status" *ngIf="HTTPerror">Error: {{ HTTPerror.status }} - {{ HTTPerror.statusText }} - {{ HTTPerror.message }} - {{ HTTPerror.error?.code }} - {{ HTTPerror.error?.host }}</span>
+          <span class="status" *ngIf="HTTPerror">Error: {{ HTTPerror.status }} - {{ HTTPerror.statusText }} - {{ HTTPerror.message
+            }} - {{ HTTPerror.error?.code }} - {{ HTTPerror.error?.host }}</span>
         </div>
         <!-- result / table -->
         <p class="path">
@@ -137,8 +221,9 @@
         <mat-table #table [dataSource]="dataSource" matSort>
 
           <ng-container matColumnDef="select">
-            <mat-header-cell *matHeaderCellDef> 
-              <mat-checkbox *ngIf="dirList" (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()">
+            <mat-header-cell *matHeaderCellDef matTooltip="click to toggle selection" matTooltipShowDelay="200" matTooltipHideDelay="300">
+              <mat-checkbox *ngIf="dirList" (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()">
               </mat-checkbox>
             </mat-header-cell>
             <mat-cell *matCellDef="let item">
@@ -149,7 +234,8 @@
           </ng-container>
 
           <ng-container matColumnDef="type">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> Type </mat-header-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="click to sort column" matTooltipShowDelay="200" matTooltipHideDelay="300">
+              Type </mat-header-cell>
             <mat-cell *matCellDef="let item" (click)="(item.type == 'directory') ? browse(item.path) : 0">
               <mat-icon color="primary" class="folder-icon" *ngIf="(item.type == 'directory')" mat-list-icon>folder</mat-icon>
               <mat-icon *ngIf="(item.type == 'file')" mat-list-icon>insert_drive_file</mat-icon>
@@ -158,7 +244,8 @@
           </ng-container>
 
           <ng-container matColumnDef="basename">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="click to sort column" matTooltipShowDelay="200" matTooltipHideDelay="300">
+              Name </mat-header-cell>
             <mat-cell [ngClass]="(item.type == 'directory') ? 'folder-txt' : 'file-txt' " *matCellDef="let item" (click)="(item.type == 'directory') ? browse(item.path) : 0">
               {{ item.basename }}
             </mat-cell>
@@ -166,16 +253,19 @@
           </ng-container>
 
           <ng-container matColumnDef="size">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> Size </mat-header-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="click to sort column" matTooltipShowDelay="200" matTooltipHideDelay="300">
+              Size </mat-header-cell>
             <mat-cell *matCellDef="let item">
               <span *ngIf="(item.type == 'directory')"> </span>
               <span *ngIf="(item.type == 'file')"> {{ item.size | size }}</span>
             </mat-cell>
-            <mat-footer-cell *matFooterCellDef> <span *ngIf="(selection.selected.length > 0)">{{ totalBytes | size }}</span> </mat-footer-cell>
+            <mat-footer-cell *matFooterCellDef> <span *ngIf="(selection.selected.length > 0)">{{ totalBytes | size }}</span>
+            </mat-footer-cell>
           </ng-container>
 
           <ng-container matColumnDef="mtime">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> M Time </mat-header-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="click to sort column" matTooltipShowDelay="200" matTooltipHideDelay="300">
+              M Time </mat-header-cell>
             <mat-cell *matCellDef="let item"> {{ item.mtime | date:'yyyy-MM-dd HH:mm:ss z' }} </mat-cell>
             <mat-footer-cell *matFooterCellDef><span *ngIf="(selection.selected.length > 0)">+ {{totalDirs}} Directories</span></mat-footer-cell>
           </ng-container>
@@ -189,7 +279,7 @@
         </mat-paginator>
 
       </mat-card-content>
-      <mat-card-footer>	
+      <mat-card-footer>
       </mat-card-footer>
     </mat-card>
     <div class="version-footer">{{ version_footer }}</div>
