@@ -30,7 +30,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   asperaWeb: any;
   connectSettings = {
-    allow_dialogs: true
+    allow_dialogs: false
   };
 
   config: { [key: string]: any };
@@ -159,7 +159,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
           const index = this.allTransfersList.findIndex(ti => ti.uuid === incomingTI.uuid);
           if (index === -1) {
-            this.allTransfersList.push(incomingTI);
+            if (incomingTI.status !== 'removed') { this.allTransfersList.push(incomingTI); }
           } else {
             this.allTransfersList[index] = incomingTI;
             if (incomingTI.status === 'removed') { this.allTransfersList.splice(index, 1); }
@@ -376,32 +376,40 @@ export class AppComponent implements OnInit, AfterViewInit {
       .subscribe(
         (transferSpecs) => {
           this.log.debug('download_setup result transferSpecs: ', transferSpecs);
-          this.HTTPerror = undefined;
-          this.APIerror = undefined;
-          if (transferSpecs.transfer_specs && transferSpecs.transfer_specs[0]) {
-            const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
-            if (this.uiCred.useTokenAuth) { transferSpec['authentication'] = 'token'; }
-
-            this.log.info('download_setup result transferSpec: ', transferSpec);
-            this.log.debug('startTransfer connectSettings: ', this.connectSettings);
-            this.asperaWeb.startTransfer(transferSpec, this.connectSettings,
-              {
-                success: (obj => this.log.debug('startTransfer CB: ', obj)),
-                error: (err => this.log.error('startTransfer CB ERROR: ', err.error))
-              });
-            this.showConnectSnackBar();
-          } else {
-            const err = 'nodeAPI download_setup - API call returned wrong / unexpected data';
-            this.APIerror = err;
-            this.log.error('nodeAPI download_setup ERROR: : ', err);
-            this.log.error('nodeAPI download_setup:  ', transferSpecs);
-          }
+          this.startTransfer(transferSpecs);
         },
         (err) => {
           this.HTTPerror = err;
           this.log.error('nodeAPI download_setup ERROR: ', err);
         }
       );
+  }
+
+  startTransfer(transferSpecs) {
+    this.HTTPerror = undefined;
+    this.APIerror = undefined;
+    if (transferSpecs.transfer_specs && transferSpecs.transfer_specs[0]) {
+      const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
+      if (this.uiCred.useTokenAuth) {
+        transferSpec['authentication'] = 'token';
+        this.connectSettings.allow_dialogs = false;
+      } else {
+        this.connectSettings.allow_dialogs = true;
+      }
+      this.log.info('startTransfer transferSpec: ', transferSpec);
+      this.log.debug('startTransfer connectSettings: ', this.connectSettings);
+      this.asperaWeb.startTransfer(transferSpec, this.connectSettings,
+        {
+          success: (obj => this.log.debug('startTransfer CB: ', obj)),
+          error: (err => this.log.error('startTransfer CB ERROR: ', err.error))
+        });
+      this.showConnectSnackBar();
+    } else {
+      const err = 'nodeAPI *load_setup - API call returned wrong / unexpected data';
+      this.APIerror = err;
+      this.log.error('nodeAPI *load_setup ERROR: : ', err);
+      this.log.error('nodeAPI *load_setup:  ', transferSpecs);
+    }
   }
 
   deleteDialog() {
@@ -489,26 +497,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       .subscribe(
         (transferSpecs) => {
           this.log.debug('upload_setup result transferSpecs: ', transferSpecs);
-          this.HTTPerror = undefined;
-          this.APIerror = undefined;
-          if (transferSpecs.transfer_specs && transferSpecs.transfer_specs[0]) {
-            const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
-            if (this.uiCred.useTokenAuth) { transferSpec['authentication'] = 'token'; }
-
-            this.log.info('upload_setup result transferSpec: ', transferSpec);
-            this.log.debug('startTransfer connectSettings: ', this.connectSettings);
-            this.asperaWeb.startTransfer(transferSpec, this.connectSettings,
-              {
-                success: (obj => this.log.debug('startTransfer CB: ', obj)),
-                error: (err => this.log.error('startTransfer CB ERROR: ', err.error))
-              });
-            this.showConnectSnackBar();
-          } else {
-            const err = 'nodeAPI upload_setup - API call returned wrong / unexpected data';
-            this.APIerror = err;
-            this.log.error('nodeAPI upload_setup ERROR: : ', err);
-            this.log.error('nodeAPI upload_setup:  ', transferSpecs);
-          }
+          this.startTransfer(transferSpecs);
         },
         (err) => {
           this.HTTPerror = err;
