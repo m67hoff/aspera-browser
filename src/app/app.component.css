@@ -69,16 +69,25 @@ button {
   min-width: 400px;
   background-color: snow
 }
-  
+
+.transfer-date {
+  font-weight: 300;
+  font-size: 12px;
+  text-align: right;
+  position: relative;
+  top: -5px;
+} 
 
 .transfer-title {
   font-weight: 500;
-  padding-bottom : 3px;
+  padding-bottom : 0px;
+  position: relative;
+  top: -12px;
 } 
 
 .transfer-icon {
   position: relative;
-  top: 6px;
+  top: 8px;
 } 
 
 .transfer-subtitle {
