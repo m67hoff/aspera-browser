@@ -118,7 +118,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
 
-    this.asperaWeb = new AW4.Connect({ sdkLocation: this.config.connectInstaller, minVersion: '3.8.0', pollingTime: 3000 });
+    this.asperaWeb = new AW4.Connect({ sdkLocation: this.config.connectInstaller, minVersion: '3.8.0', pollingTime: 3000, dragDropEnabled: true });
     const asperaInstaller = new AW4.ConnectInstaller({ sdkLocation: this.config.connectInstaller });
 
     this.asperaWeb.addEventListener(AW4.Connect.EVENT.STATUS, (eventType, status) => {
@@ -177,6 +177,15 @@ export class AppComponent implements OnInit, AfterViewInit {
     const app_id = this.asperaWeb.initSession();
     this.log.info('Connect init App_ID: ', app_id);
     this.asperaWeb.version({ success: (data => this.log.info('Connect version: ', data)) });
+
+    this.asperaWeb.setDragDropTargets(
+      '#dragdroparea',
+      { 'dragEnter': true, "dragLeave": true, "dragOver": true, "drop": true },
+      dragDropObject => {
+        this.log.debug('DragDrop Object: ', dragDropObject);
+      }
+    );
+
   }
 
   ngAfterViewInit() {
