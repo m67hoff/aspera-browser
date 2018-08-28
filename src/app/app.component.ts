@@ -200,9 +200,23 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.asperaWeb.stopTransfer(uuid);
   }
 
+  stopAllTransfers() {
+    this.log.info('Connect stopAllTransfers!');
+    this.allTransfersList.forEach(ti => {
+      if (ti.status === 'running') { this.stopTransfer(ti.uuid); }
+    });
+  }
+
   resumeTransfer(uuid: string) {
     this.log.info('Connect resumeTransfer: ', uuid);
     this.asperaWeb.resumeTransfer(uuid);
+  }
+
+  resumeAllTransfers() {
+    this.log.info('Connect resumeAllTransfers!');
+    this.allTransfersList.forEach(ti => {
+      if (ti.status !== 'completed') { this.resumeTransfer(ti.uuid); }
+    });
   }
 
   removeTransfer(uuid: string) {
@@ -220,6 +234,11 @@ export class AppComponent implements OnInit, AfterViewInit {
   showTransferMonitor(uuid: string) {
     this.log.info('Connect showTransferMonitor: ', uuid);
     this.asperaWeb.showTransferMonitor(uuid);
+  }
+
+  showTransferManager() {
+    this.log.info('Connect showTransferManager!');
+    this.asperaWeb.showTransferManager();
   }
 
 
