@@ -107,8 +107,26 @@ button {
 
 .transfer-button {
   min-width: 24px;
-  margin: 1px;
-  padding: 1px;
+  margin: 0px;
+  padding: 0px;
+} 
+
+.all-transfer-title {
+  font-weight: 500;
+  font-size: 12px;
+  padding-bottom : 0px;
+} 
+
+.all-transfer-button-row {
+  height: 28px;
+  position: relative;
+  top: -5px;
+}
+
+.all-transfer-button {
+  min-width: 24px;
+  margin: 0px;
+  padding: 0px;
 } 
 
 .mat-progress-bar {
