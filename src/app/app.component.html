@@ -92,7 +92,7 @@
     <!-- <h3 align="center">Transfer Activity</h3> -->
     <span *ngFor="let ti of allTransfersList">
       <mat-card>
-        <div class="transfer-date"> {{ ti.start_time | date:'EE HH:mm' }}  </div>
+        <div class="transfer-date"> {{ ti.start_time | date:'EE HH:mm' }} </div>
         <div class="transfer-title" matTooltip="{{ ti.title.length > 30 ? ti.title : '' }}" matTooltipShowDelay="200" matTooltipHideDelay="300">
           <mat-icon class="transfer-icon" *ngIf="ti.status === 'cancelled'" color="primary">pause_circle_filled</mat-icon>
           <mat-icon class="transfer-icon" *ngIf="ti.status === 'completed'" style="color: green">check_circle</mat-icon>
@@ -116,9 +116,11 @@
         </div>
         <div class="transfer-detail">
           <span *ngIf="ti.status !== 'completed'">{{ ti.bytes_written | size }} of {{ ti.bytes_expected | size }} </span>
-          <span *ngIf="ti.status === 'completed'">{{ ti.bytes_written | size }} in {{ ti.elapsed_usec/1000 | duration }} </span>
+          <span *ngIf="ti.status === 'completed'">{{ ti.bytes_written | size }} in {{ ti.elapsed_usec/1000 | duration }}
+          </span>
           <br/>
-          <span *ngIf="ti.status === 'running'">ETA: {{(ti.remaining_usec/1000) | ETA | date:'EE HH:mm:ss'}} - {{(ti.remaining_usec/1000) | duration }} remaining</span>
+          <span *ngIf="ti.status === 'running'">ETA: {{(ti.remaining_usec/1000) | ETA | date:'EE HH:mm:ss'}} - {{(ti.remaining_usec/1000)
+            | duration }} remaining</span>
           <span *ngIf="ti.status === 'running'"> - {{ ti.calculated_rate_kbps | rate }}</span>
         </div>
         <div class="transfer-button-row">
@@ -140,13 +142,43 @@
           </button>
           &nbsp;&nbsp;&nbsp;
           <button mat-button class="transfer-button" color="primary" (click)="showTransferMonitor(ti.uuid)" [disabled]="(ti.status === 'completed')  ? true : false"
-            matTooltip="show Aspera Connect Transfer Mointor" matTooltipShowDelay="200" matTooltipHideDelay="300">
+            matTooltip="show AsperaConnect Transfer Mointor" matTooltipShowDelay="200" matTooltipHideDelay="300">
             <mat-icon>insert_chart_outlined</mat-icon>
           </button>
         </div>
 
       </mat-card>
     </span>
+
+    <mat-card class="all-transfer-card">
+      <div class="all-transfer-title">
+        All Transfer Activity
+      </div>
+      <div class="all-transfer-button-row">
+        <button mat-button class="all-transfer-button" color="primary" (click)="stopAllTransfers()" matTooltip="pause all transfers"
+          matTooltipShowDelay="200" matTooltipHideDelay="300">
+          <mat-icon>pause_circle_outline</mat-icon>
+        </button>
+        <button mat-button class="all-transfer-button" color="primary" (click)="resumeAllTransfers()" matTooltip="restart all transfers"
+          matTooltipShowDelay="200" matTooltipHideDelay="300">
+          <mat-icon>play_circle_outline</mat-icon>
+        </button>
+        <button mat-button class="all-transfer-button" color="accent" (click)="clearInactiveTransfers()" matTooltip="remove all incative transfers"
+          matTooltipShowDelay="200" matTooltipHideDelay="300">
+          <mat-icon> <svg viewBox="0 0 24 24">
+              <path d="M12,2C6.47,2,2,6.47,2,12c0,5.53,4.47,10,10,10c5.53,0,10-4.47,10-10C22,6.47,17.53,2,12,2z 
+              M12,20c-4.41,0-8-3.59-8-8,s3.59-8,8-8s8,3.59,8,8S16.41,20,12,20z" />
+              <polygon points="15.59,7 12,10.59 8.41,7 7,8.41 10.59,12 7,15.59 8.41,17 12,13.41 15.59,17 17,15.59 13.41,12 17,8.41" /></svg>
+          </mat-icon>
+        </button>
+        &nbsp;&nbsp;&nbsp;
+        <button mat-button class="all-transfer-button" color="primary" (click)="showTransferManager()" matTooltip="show AsperaConnect"
+          matTooltipShowDelay="200" matTooltipHideDelay="300">
+          <mat-icon>dvr</mat-icon>
+        </button>
+      </div>
+    </mat-card>
+
   </mat-sidenav>
 
   <!-- main page -->
