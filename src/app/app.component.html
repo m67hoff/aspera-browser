@@ -92,7 +92,7 @@
     <!-- <h3 align="center">Transfer Activity</h3> -->
     <span *ngFor="let ti of allTransfersList">
       <mat-card>
-
+        <div class="transfer-date"> {{ ti.start_time | date:'EE HH:mm' }}  </div>
         <div class="transfer-title" matTooltip="{{ ti.title.length > 30 ? ti.title : '' }}" matTooltipShowDelay="200" matTooltipHideDelay="300">
           <mat-icon class="transfer-icon" *ngIf="ti.status === 'cancelled'" color="primary">pause_circle_filled</mat-icon>
           <mat-icon class="transfer-icon" *ngIf="ti.status === 'completed'" style="color: green">check_circle</mat-icon>
