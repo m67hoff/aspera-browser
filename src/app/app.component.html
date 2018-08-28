@@ -254,63 +254,64 @@
           <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
         </mat-form-field>
 
-        <mat-table #table id="dragdroparea" [dataSource]="dataSource" matSort>
+        <div id="dragdroparea" [ngClass]="{'dragging-over-grid' : isDragOver }">
+          <mat-table #table [dataSource]="dataSource" matSort>
 
-          <ng-container matColumnDef="select">
-            <mat-header-cell *matHeaderCellDef matTooltip="click to toggle selection" matTooltipShowDelay="200" matTooltipHideDelay="300">
-              <mat-checkbox *ngIf="dirList" (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
-                [indeterminate]="selection.hasValue() && !isAllSelected()">
-              </mat-checkbox>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let item">
-              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? itemToggle(item) : null" [checked]="selection.isSelected(item)">
-              </mat-checkbox>
-            </mat-cell>
-            <mat-footer-cell *matFooterCellDef></mat-footer-cell>
-          </ng-container>
+            <ng-container matColumnDef="select">
+              <mat-header-cell *matHeaderCellDef matTooltip="click to toggle selection" matTooltipShowDelay="200" matTooltipHideDelay="300">
+                <mat-checkbox *ngIf="dirList" (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+                  [indeterminate]="selection.hasValue() && !isAllSelected()">
+                </mat-checkbox>
+              </mat-header-cell>
+              <mat-cell *matCellDef="let item">
+                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? itemToggle(item) : null" [checked]="selection.isSelected(item)">
+                </mat-checkbox>
+              </mat-cell>
+              <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+            </ng-container>
 
-          <ng-container matColumnDef="type">
-            <mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="click to sort column" matTooltipShowDelay="200" matTooltipHideDelay="300">
-              Type </mat-header-cell>
-            <mat-cell *matCellDef="let item" (click)="(item.type == 'directory') ? browse(item.path) : 0">
-              <mat-icon color="primary" class="folder-icon" *ngIf="(item.type == 'directory')" mat-list-icon>folder</mat-icon>
-              <mat-icon *ngIf="(item.type == 'file')" mat-list-icon>insert_drive_file</mat-icon>
-            </mat-cell>
-            <mat-footer-cell *matFooterCellDef></mat-footer-cell>
-          </ng-container>
+            <ng-container matColumnDef="type">
+              <mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="click to sort column" matTooltipShowDelay="200" matTooltipHideDelay="300">
+                Type </mat-header-cell>
+              <mat-cell *matCellDef="let item" (click)="(item.type == 'directory') ? browse(item.path) : 0">
+                <mat-icon color="primary" class="folder-icon" *ngIf="(item.type == 'directory')" mat-list-icon>folder</mat-icon>
+                <mat-icon *ngIf="(item.type == 'file')" mat-list-icon>insert_drive_file</mat-icon>
+              </mat-cell>
+              <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+            </ng-container>
 
-          <ng-container matColumnDef="basename">
-            <mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="click to sort column" matTooltipShowDelay="200" matTooltipHideDelay="300">
-              Name </mat-header-cell>
-            <mat-cell [ngClass]="(item.type == 'directory') ? 'folder-txt' : 'file-txt' " *matCellDef="let item" (click)="(item.type == 'directory') ? browse(item.path) : 0">
-              {{ item.basename }}
-            </mat-cell>
-            <mat-footer-cell *matFooterCellDef><span *ngIf="(selection.selected.length > 0)">selected Files: {{ totalFiles}}</span></mat-footer-cell>
-          </ng-container>
+            <ng-container matColumnDef="basename">
+              <mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="click to sort column" matTooltipShowDelay="200" matTooltipHideDelay="300">
+                Name </mat-header-cell>
+              <mat-cell [ngClass]="(item.type == 'directory') ? 'folder-txt' : 'file-txt' " *matCellDef="let item" (click)="(item.type == 'directory') ? browse(item.path) : 0">
+                {{ item.basename }}
+              </mat-cell>
+              <mat-footer-cell *matFooterCellDef><span *ngIf="(selection.selected.length > 0)">selected Files: {{ totalFiles}}</span></mat-footer-cell>
+            </ng-container>
 
-          <ng-container matColumnDef="size">
-            <mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="click to sort column" matTooltipShowDelay="200" matTooltipHideDelay="300">
-              Size </mat-header-cell>
-            <mat-cell *matCellDef="let item">
-              <span *ngIf="(item.type == 'directory')"> </span>
-              <span *ngIf="(item.type == 'file')"> {{ item.size | size }}</span>
-            </mat-cell>
-            <mat-footer-cell *matFooterCellDef> <span *ngIf="(selection.selected.length > 0)">{{ totalBytes | size }}</span>
-            </mat-footer-cell>
-          </ng-container>
+            <ng-container matColumnDef="size">
+              <mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="click to sort column" matTooltipShowDelay="200" matTooltipHideDelay="300">
+                Size </mat-header-cell>
+              <mat-cell *matCellDef="let item">
+                <span *ngIf="(item.type == 'directory')"> </span>
+                <span *ngIf="(item.type == 'file')"> {{ item.size | size }}</span>
+              </mat-cell>
+              <mat-footer-cell *matFooterCellDef> <span *ngIf="(selection.selected.length > 0)">{{ totalBytes | size }}</span>
+              </mat-footer-cell>
+            </ng-container>
 
-          <ng-container matColumnDef="mtime">
-            <mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="click to sort column" matTooltipShowDelay="200" matTooltipHideDelay="300">
-              M Time </mat-header-cell>
-            <mat-cell *matCellDef="let item"> {{ item.mtime | date:'yyyy-MM-dd HH:mm:ss z' }} </mat-cell>
-            <mat-footer-cell *matFooterCellDef><span *ngIf="(selection.selected.length > 0)">+ {{totalDirs}} Directories</span></mat-footer-cell>
-          </ng-container>
+            <ng-container matColumnDef="mtime">
+              <mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="click to sort column" matTooltipShowDelay="200" matTooltipHideDelay="300">
+                M Time </mat-header-cell>
+              <mat-cell *matCellDef="let item"> {{ item.mtime | date:'yyyy-MM-dd HH:mm:ss z' }} </mat-cell>
+              <mat-footer-cell *matFooterCellDef><span *ngIf="(selection.selected.length > 0)">+ {{totalDirs}} Directories</span></mat-footer-cell>
+            </ng-container>
 
-          <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-          <mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></mat-footer-row>
-        </mat-table>
-
+            <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            <mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></mat-footer-row>
+          </mat-table>
+        </div>
         <mat-paginator #paginator [pageSize]="25" [pageSizeOptions]="[10, 20, 30, 50, 100]" showFirstLastButtons>
         </mat-paginator>
 

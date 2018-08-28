@@ -30,7 +30,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   asperaWeb: any;
   connectSettings = {
-    allow_dialogs: 'yes'
+    allow_dialogs: true
   };
 
   config: { [key: string]: any };
@@ -54,6 +54,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   isConnected = false;
   browseInProgress = false;
   hidePW = true;
+  isDragOver = false;
+
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -176,13 +178,36 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     const app_id = this.asperaWeb.initSession();
     this.log.info('Connect init App_ID: ', app_id);
-    this.asperaWeb.version({ success: (data => this.log.info('Connect version: ', data)) });
+    this.asperaWeb.version({ success: (data => this.log.info('Connect version: ', data)), error: (err => this.log.error('connect.version CB ERROR: ', err.error)) });
+
+    let dragDropEventTypeLast: string;
 
     this.asperaWeb.setDragDropTargets(
       '#dragdroparea',
-      { 'dragEnter': true, "dragLeave": true, "dragOver": true, "drop": true },
+      { 'dragEnter': false, 'dragLeave': true, 'dragOver': true, 'drop': true },
       dragDropObject => {
-        this.log.debug('DragDrop Object: ', dragDropObject);
+        if (!this.isConnected) { return; }
+        if (dragDropObject.event.type !== dragDropEventTypeLast) {
+          this.log.debug('DragDrop Event: ', dragDropObject.event.type);
+          dragDropEventTypeLast = dragDropObject.event.type;
+
+          switch (dragDropObject.event.type) {
+            case 'dragover':
+              this.isDragOver = true;
+              this.log.debug('DragDrop addClass .dragging-over-grid');
+              break;
+            case 'dragleave':
+              this.isDragOver = false;
+              this.log.debug('DragDrop removeClass .dragging-over-grid');
+              break;
+            case 'drop':
+              this.isDragOver = false;
+              this.log.debug('DragDrop removeClass .dragging-over-grid');
+              this.log.debug('DragDrop Object: ', dragDropObject);
+              this.uploadFiles(dragDropObject.files);
+              break;
+          }
+        }
       }
     );
 
@@ -197,7 +222,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   // transfer activity methods
   stopTransfer(uuid: string) {
     this.log.info('Connect stopTransfer: ', uuid);
-    this.asperaWeb.stopTransfer(uuid);
+    this.asperaWeb.stopTransfer(uuid, { error: (err => this.log.error('connect.stopTransfer CB ERROR: ', err.error)) });
   }
 
   stopAllTransfers() {
@@ -209,7 +234,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   resumeTransfer(uuid: string) {
     this.log.info('Connect resumeTransfer: ', uuid);
-    this.asperaWeb.resumeTransfer(uuid);
+    this.asperaWeb.resumeTransfer(uuid, { error: (err => this.log.error('connect.resumeTransfer CB ERROR: ', err.error)) });
   }
 
   resumeAllTransfers() {
@@ -221,7 +246,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   removeTransfer(uuid: string) {
     this.log.info('Connect removeTransfer: ', uuid);
-    this.asperaWeb.removeTransfer(uuid);
+    this.asperaWeb.removeTransfer(uuid, { error: (err => this.log.error('connect.removeTransfer CB ERROR: ', err.error)) });
   }
 
   clearInactiveTransfers() {
@@ -233,12 +258,12 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   showTransferMonitor(uuid: string) {
     this.log.info('Connect showTransferMonitor: ', uuid);
-    this.asperaWeb.showTransferMonitor(uuid);
+    this.asperaWeb.showTransferMonitor(uuid, { error: (err => this.log.error('connect.showTransferMonitor CB ERROR: ', err.error)) });
   }
 
   showTransferManager() {
     this.log.info('Connect showTransferManager!');
-    this.asperaWeb.showTransferManager();
+    this.asperaWeb.showTransferManager({ error: (err => this.log.error('connect.showTransferManager CB ERROR: ', err.error)) });
   }
 
 
@@ -327,7 +352,7 @@ export class AppComponent implements OnInit, AfterViewInit {
             this.dataSource.data = dirList.items;
             this.breadcrumbNavs = this.breadcrumb(dirList.self.path);
           } else {
-            let err = 'API call returned wrong / unexpected data'
+            const err = 'API call returned wrong / unexpected data';
             this.APIerror = err;
             this.log.error('nodeAPI browse ERROR: ', err);
             this.log.error('nodeAPI browse ERROR: ', dirList);
@@ -358,10 +383,15 @@ export class AppComponent implements OnInit, AfterViewInit {
             if (this.uiCred.useTokenAuth) { transferSpec['authentication'] = 'token'; }
 
             this.log.info('download_setup result transferSpec: ', transferSpec);
-            this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
+            this.log.debug('startTransfer connectSettings: ', this.connectSettings);
+            this.asperaWeb.startTransfer(transferSpec, this.connectSettings,
+              {
+                success: (obj => this.log.debug('startTransfer CB: ', obj)),
+                error: (err => this.log.error('startTransfer CB ERROR: ', err.error))
+              });
             this.showConnectSnackBar();
           } else {
-            let err = 'nodeAPI download_setup - API call returned wrong / unexpected data'
+            const err = 'nodeAPI download_setup - API call returned wrong / unexpected data';
             this.APIerror = err;
             this.log.error('nodeAPI download_setup ERROR: : ', err);
             this.log.error('nodeAPI download_setup:  ', transferSpecs);
@@ -442,10 +472,10 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   showSelectFileDialog() {
-    this.asperaWeb.showSelectFileDialog({ success: (data => this.uploadFiles(data)) });
+    this.asperaWeb.showSelectFileDialog({ success: (data => this.uploadFiles(data)), error: (err => this.log.error('showSelectFileDialog CB ERROR: ', err.error)) });
   }
   showSelectFolderDialog() {
-    this.asperaWeb.showSelectFolderDialog({ success: (data => this.uploadFiles(data)) });
+    this.asperaWeb.showSelectFolderDialog({ success: (data => this.uploadFiles(data)), error: (err => this.log.error('showSelectFolderDialog CB ERROR: ', err.error)) });
   }
   uploadFiles(data) {
     this.log.debug('--> action upload');
@@ -466,10 +496,15 @@ export class AppComponent implements OnInit, AfterViewInit {
             if (this.uiCred.useTokenAuth) { transferSpec['authentication'] = 'token'; }
 
             this.log.info('upload_setup result transferSpec: ', transferSpec);
-            this.asperaWeb.startTransfer(transferSpec, this.connectSettings);
+            this.log.debug('startTransfer connectSettings: ', this.connectSettings);
+            this.asperaWeb.startTransfer(transferSpec, this.connectSettings,
+              {
+                success: (obj => this.log.debug('startTransfer CB: ', obj)),
+                error: (err => this.log.error('startTransfer CB ERROR: ', err.error))
+              });
             this.showConnectSnackBar();
           } else {
-            let err = 'nodeAPI upload_setup - API call returned wrong / unexpected data'
+            const err = 'nodeAPI upload_setup - API call returned wrong / unexpected data';
             this.APIerror = err;
             this.log.error('nodeAPI upload_setup ERROR: : ', err);
             this.log.error('nodeAPI upload_setup:  ', transferSpecs);
