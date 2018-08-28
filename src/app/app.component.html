@@ -116,9 +116,9 @@
         </div>
         <div class="transfer-detail">
           <span *ngIf="ti.status !== 'completed'">{{ ti.bytes_written | size }} of {{ ti.bytes_expected | size }} </span>
+          <span *ngIf="ti.status === 'completed'">{{ ti.bytes_written | size }} in {{ ti.elapsed_usec/1000 | duration }} </span>
           <br/>
-          <span *ngIf="ti.status === 'running'">ETA: {{(ti.remaining_usec / 1000) | ETA | date:'EE HH:mm:ss'}} - {{(ti.remaining_usec
-            / 1000) | duration }} remaining</span>
+          <span *ngIf="ti.status === 'running'">ETA: {{(ti.remaining_usec/1000) | ETA | date:'EE HH:mm:ss'}} - {{(ti.remaining_usec/1000) | duration }} remaining</span>
           <span *ngIf="ti.status === 'running'"> - {{ ti.calculated_rate_kbps | rate }}</span>
         </div>
         <div class="transfer-button-row">
