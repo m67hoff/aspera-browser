@@ -1,11 +1,17 @@
 .app-sidenav {
   padding: 10px;
   min-width: 450px;
-  background-color: #f3f3f3
+  background-color: snow
 }
-  
+
 .app-toolbar-filler {
   flex: 1 1 auto;
+}
+
+.toolbar-button {
+  min-width: 36px;
+  margin: 0px;
+  padding: 0px;
 }
 
 .mat-sidenav mat-card {
@@ -27,6 +33,7 @@
   width: 24px;
   margin-right: 10px;
 }
+
 .sidenav-link {
   color: #3f51b5;
   font-size: 16px;
@@ -39,13 +46,13 @@
 .mat-card-avatar {
   height: 60px;
   width: 60px;
-}  
-
-.title{
-  font-size:  24px;
 }
 
-.mat-card-subtitle{
+.title {
+  font-size: 24px;
+}
+
+.mat-card-subtitle {
   font-size: 16px;
 }
 
@@ -53,19 +60,89 @@ button {
   margin: 5px;
 }
 
+.menu-button {
+  min-width: 100px;
+}
+
+.transfer-sidenav {
+  padding: 10px;
+  padding-left: 0px;
+  min-width: 400px;
+  background-color: snow
+}
+
+.transfer-date {
+  font-weight: 300;
+  font-size: 12px;
+  text-align: right;
+  position: relative;
+  top: -5px;
+}
+
+.transfer-title {
+  font-weight: 500;
+  padding-bottom: 0px;
+  position: relative;
+  top: -12px;
+}
+
+.transfer-icon {
+  position: relative;
+  top: 8px;
+}
+
+.transfer-subtitle {
+  font-weight: 300;
+  font-size: 14px;
+}
+
+.transfer-bar mat-progress-bar {
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+.transfer-detail {
+  font-weight: 300;
+  font-size: 14px;
+}
+
+.transfer-button {
+  min-width: 24px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.all-transfer-title {
+  font-weight: 500;
+  font-size: 12px;
+  padding-bottom: 0px;
+}
+
+.all-transfer-button-row {
+  height: 28px;
+  position: relative;
+  top: -5px;
+}
+
+.all-transfer-button {
+  min-width: 24px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.mat-progress-bar {
+  height: 6px;
+}
+
 .progressInfo {
   margin-left: 5px;
   margin-top: 10px;
 }
 
-.mat-progress-bar {
-
-}
-
 .status {
   color: #ff4081;
   font-size: 10px;
-	font-weight: 700;
+  font-weight: 700;
 }
 
 .path {
@@ -82,6 +159,11 @@ button {
 .mat-table {
   height: calc( 100vh - 435px);
   overflow: auto;
+}
+
+.dragging-over-grid mat-table {
+  background-color: #3f51b510;
+  border: 2px dashed #3f51b5;
 }
 
 .mat-header-cell.mat-sort-header-sorted {
@@ -158,6 +240,7 @@ button {
 .full-width {
   width: 90%;
 }
+
 .version-footer {
   margin-left: 20px;
   color: #BBB;
