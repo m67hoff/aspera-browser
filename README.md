@@ -23,7 +23,6 @@ To build the AsperaBrowser Angular App run `npm run build`.  This will create a 
 ### Todo / planned / ideas 
 - Docs & more Docs
 - Docker Image
-- Drag & Drop
 - setup on windows  
 - connect error cb Handling
 - own user / authorization integration for node.js server 
