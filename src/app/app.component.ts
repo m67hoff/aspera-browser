@@ -16,6 +16,7 @@ import { Config } from './config/config.module';
 import { environment } from '../environments/environment';
 
 declare var AW4: any;
+declare var moment: any;
 
 interface BreadcrumbNav { dirname: string; path: string; }
 
@@ -80,6 +81,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
 
     this.selection = new SelectionModel<any>(true, []);
+
+    this._loadLib(this.config.connectInstaller + '/asperaweb-4.min.js')
+    this._loadLib(this.config.connectInstaller + '/connectinstaller-4.min.js')
+    this._loadLib('https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js')
   }
 
   private _setConfig(c: Config) {
@@ -117,9 +122,25 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.log.info('App config: ', this.config);
   }
 
+  private _loadLib(url) {
+    console.log('preparing to load lib: ', url)
+    let node = document.createElement('script');
+    node.src = url;
+    node.type = 'text/javascript';
+    node.async = true;
+    node.charset = 'utf-8';
+    node.onload = () => {
+      console.log('loaded lib: ', url)
+    }  
+    document.getElementsByTagName('head')[0].appendChild(node);
+  }
 
   ngOnInit() {
+  }
 
+  ngAfterViewInit() {
+    
+    console.log('lib call: ', moment())
     this.asperaWeb = new AW4.Connect({ sdkLocation: this.config.connectInstaller, minVersion: '3.8.0', pollingTime: 3000, dragDropEnabled: true });
     const asperaInstaller = new AW4.ConnectInstaller({ sdkLocation: this.config.connectInstaller });
 
@@ -211,9 +232,6 @@ export class AppComponent implements OnInit, AfterViewInit {
       }
     );
 
-  }
-
-  ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
