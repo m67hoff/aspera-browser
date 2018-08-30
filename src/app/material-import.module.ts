@@ -1,80 +1,77 @@
 import { NgModule } from '@angular/core';
 import {
-    MatSidenavModule,
-    MatToolbarModule,
+    MatBadgeModule,
     MatButtonModule,
-    MatIconModule,
     MatCardModule,
-    MatInputModule,
     MatCheckboxModule,
-    MatRadioModule,
-    MatListModule,
-    MatProgressBarModule,
-    MatTabsModule,
     MatDialogModule,
+    MatIconModule,
+    MatInputModule,
+    MatListModule,
     MatMenuModule,
     MatPaginatorModule,
-    MatSortModule,
+    MatProgressBarModule,
+    MatRadioModule,
+    MatSidenavModule,
     MatSnackBarModule,
+    MatSortModule,
+    MatTableModule,
+    MatTabsModule,
+    MatToolbarModule,
+    MatTooltipModule,
 
 } from '@angular/material';
 
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {MatBadgeModule} from '@angular/material/badge';
-
-import { MatTableModule } from '@angular/material/table';
 import { CdkTableModule } from '@angular/cdk/table';
 
 @NgModule({
     imports: [
-        MatSidenavModule,
-        MatToolbarModule,
-        MatButtonModule,
-        MatIconModule,
-        MatCardModule,
-        MatInputModule,
-        MatCheckboxModule,
-        MatRadioModule,
-        MatListModule,
-        MatProgressBarModule,
-        MatTabsModule,
-        MatDialogModule,
-        MatMenuModule,
-        MatSnackBarModule,
-        MatPaginatorModule,
-        MatSortModule,
-
-        MatTooltipModule,
         MatBadgeModule,
-
+        MatButtonModule,
+        MatCardModule,
+        MatCheckboxModule,
+        MatDialogModule,
+        MatIconModule,
+        MatInputModule,
+        MatListModule,
+        MatMenuModule,
+        MatPaginatorModule,
+        MatProgressBarModule,
+        MatRadioModule,
+        MatSidenavModule,
+        MatSnackBarModule,
+        MatSortModule,
         MatTableModule,
+        MatTabsModule,
+        MatToolbarModule,
+        MatTooltipModule,
+
+
         CdkTableModule,
     ],
 
     exports: [
-        MatSidenavModule,
-        MatToolbarModule,
-        MatButtonModule,
-        MatIconModule,
-        MatCardModule,
-        MatInputModule,
-        MatCheckboxModule,
-        MatRadioModule,
-        MatListModule,
-        MatProgressBarModule,
-        MatTabsModule,
-        MatDialogModule,
-        MatMenuModule,
-        MatSnackBarModule,
-        MatPaginatorModule,
-        MatSortModule,
-
-        MatTooltipModule,
         MatBadgeModule,
-
+        MatButtonModule,
+        MatCardModule,
+        MatCheckboxModule,
+        MatDialogModule,
+        MatIconModule,
+        MatInputModule,
+        MatListModule,
+        MatMenuModule,
+        MatPaginatorModule,
+        MatProgressBarModule,
+        MatRadioModule,
+        MatSidenavModule,
+        MatSnackBarModule,
+        MatSortModule,
         MatTableModule,
+        MatTabsModule,
+        MatToolbarModule,
+        MatTooltipModule,
+
         CdkTableModule,
     ]
 })
-export class MaterialImportModule {
-}
+export class MaterialImportModule { }
