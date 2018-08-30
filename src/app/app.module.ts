@@ -4,7 +4,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { HttpClientModule } from '@angular/common/http';
 
-import 'hammerjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MaterialImportModule } from './material-import.module';
