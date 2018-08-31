@@ -221,18 +221,17 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.activatedRoute.queryParams.subscribe(params => {
       this.log.debug('URLparams (observable): ', params);
       if (params.goto) {
-        let gotoJsonStr = atob(params.goto);
-        this.log.info('URLparams --> goto: ', gotoJsonStr);
         let gotoCred: any;
         try {
+          let gotoJsonStr = atob(params.goto);
           gotoCred = JSON.parse(gotoJsonStr);
         } catch (e) { console.error('error setting "nodeAPIcred" from goto URL parameter ERROR: ', e); }
-        this.log.debug('setting cred from goto json: ', gotoCred);
+        this.log.info('setting cred from goto json: ', gotoCred);
         if (gotoCred != null) {
           if (gotoCred.nodeUrl) { this.uiCred.nodeURL = gotoCred.nodeUrl; }
           if (gotoCred.nodeUser) { this.uiCred.nodeUser = gotoCred.nodeUser; }
           if (gotoCred.nodePW) { this.uiCred.nodePW = atob(gotoCred.nodePW); }
-          this.uiCred.useTokenAuth = true; 
+          this.uiCred.useTokenAuth = true;
         }
         this.log.debug('new NodeAPI cred from goto json: : ', this.uiCred);
         this.testconnection()
