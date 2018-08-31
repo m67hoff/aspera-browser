@@ -4,7 +4,7 @@ import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar } from '@angular
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { HttpErrorResponse } from '@angular/common/http/src/response';
-
+import { ActivatedRoute } from '@angular/router';
 
 import { AsperaNodeApiService, DirList, NodeAPIcred } from './services/aspera-node-api.service';
 import { CreateDirDialogComponent } from './dialog/create-dir-dialog.component';
@@ -65,12 +65,15 @@ export class AppComponent implements OnInit, AfterViewInit {
     private configFile: Config,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar,
-    private nodeAPI: AsperaNodeApiService
+    private nodeAPI: AsperaNodeApiService,
+    private activatedRoute: ActivatedRoute
   ) {
     this._setConfig(configFile);
+
     nodeAPI.setAPIconnectProxy(this.config.apiConnectProxy);
     nodeAPI.setCred(this.config.defaultCred);
-    if (this.config.enableCredLocalStorage) {
+
+    if (this.config.enableCredLocalStorage) {   // if enableCredLocalStorage overwrite config from Localstorage
       this.uiCred = nodeAPI.loadCred();
       if (this.config.isFixedURL) { this.uiCred.nodeURL = this.config.fixedURL; }
       if (this.config.isFixedConnectAuth) { this.uiCred.useTokenAuth = this.config.fixedConnectAuth; }
@@ -214,6 +217,28 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.log.debug('URLparams (observable): ', params);
+      if (params.goto) {
+        let gotoJsonStr = atob(params.goto);
+        this.log.info('URLparams --> goto: ', gotoJsonStr);
+        let gotoCred: any;
+        try {
+          gotoCred = JSON.parse(gotoJsonStr);
+        } catch (e) { console.error('error setting "nodeAPIcred" from goto URL parameter ERROR: ', e); }
+        this.log.debug('setting cred from goto json: ', gotoCred);
+        if (gotoCred != null) {
+          if (gotoCred.nodeUrl) { this.uiCred.nodeURL = gotoCred.nodeUrl; }
+          if (gotoCred.nodeUser) { this.uiCred.nodeUser = gotoCred.nodeUser; }
+          if (gotoCred.nodePW) { this.uiCred.nodePW = atob(gotoCred.nodePW); }
+          this.uiCred.useTokenAuth = true; 
+        }
+        this.log.debug('new NodeAPI cred from goto json: : ', this.uiCred);
+        this.testconnection()
+      }
+    });
+
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }

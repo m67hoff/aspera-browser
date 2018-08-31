@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 import { HttpClientModule } from '@angular/common/http';
 
@@ -37,6 +38,11 @@ import { LoggerModule } from './logger/logger.module';
     HttpClientModule,
     MaterialImportModule,
     BrowserAnimationsModule,
+    RouterModule.forRoot([{
+      path: '',
+      component: AppComponent
+    },
+    ]),
     ConfigModule,
     LoggerModule
   ],
