@@ -110,6 +110,9 @@
           <br/> {{ ti.status === 'running' ? 'Current: ' + (ti.current_file | string) : 'Status: ' + (ti.status | status)
           }}
         </div>
+        <div class="transfer-error" *ngIf="ti.status === 'failed'">
+          Error: {{ ti.error_desc }}
+        </div>
         <div class="transfer-bar" *ngIf="ti.status !== 'completed'" matTooltip="{{ ti.percentage | percent }}" matTooltipShowDelay="200"
           matTooltipHideDelay="300">
           <mat-progress-bar mode="determinate" value="{{ti.percentage*100}}"></mat-progress-bar>

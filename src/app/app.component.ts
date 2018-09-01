@@ -182,7 +182,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     });
 
     const app_id = this.asperaWeb.initSession();
-    this.log.info('Connect init App_ID: ', app_id);
+    this.log.debug('Connect init App_ID: ', app_id);
     this.asperaWeb.version({ success: (data => this.log.info('Connect version: ', data)), error: (err => this.log.error('connect.version CB ERROR: ', err.error)) });
 
     let dragDropEventTypeLast: string;

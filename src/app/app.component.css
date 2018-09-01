@@ -96,6 +96,12 @@ button {
   font-size: 14px;
 }
 
+.transfer-error {
+  font-weight: 300;
+  font-size: 14px;
+  color: #f44336;
+}
+
 .transfer-bar mat-progress-bar {
   padding-top: 3px;
   padding-bottom: 3px;
