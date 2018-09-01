@@ -225,8 +225,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       if (params.goto) {
         let gotoCred: any;
         try {
-          let gotoJsonStr = atob(params.goto);
-          gotoCred = JSON.parse(gotoJsonStr);
+          gotoCred = this.z.b64toJson(params.goto);
         } catch (e) { console.error('error setting "nodeAPIcred" from goto URL parameter ERROR: ', e); }
         this.log.info('setting cred from goto json: ', gotoCred);
         if (gotoCred != null) {
