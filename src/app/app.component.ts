@@ -235,8 +235,11 @@ export class AppComponent implements OnInit, AfterViewInit {
           this.uiCred.useTokenAuth = true;
         }
         this.log.debug('new NodeAPI cred from goto json: : ', this.uiCred);
-        this.testconnection()
+        // this.testconnection(); // this also saves the uiCred to localstorage if enabled
+        this.nodeAPI.setCred(this.uiCred);
+        this.browse('/');
       }
+ 
     });
 
     this.dataSource.paginator = this.paginator;
