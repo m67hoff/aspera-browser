@@ -12,6 +12,7 @@ import { DeleteConfDialogComponent } from './dialog/delete-conf-dialog.component
 
 import { Logger } from './logger/logger.module';
 import { Config } from './config/config.module';
+import { ZlibB64 } from "./zlib-b64/zlib-b64.module";
 
 import { environment } from '../environments/environment';
 
@@ -63,6 +64,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   constructor(
     private log: Logger,
     private configFile: Config,
+    private z: ZlibB64,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar,
     private nodeAPI: AsperaNodeApiService,

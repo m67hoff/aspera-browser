@@ -20,7 +20,7 @@ import { DeleteConfDialogComponent } from './dialog/delete-conf-dialog.component
 
 import { ConfigModule } from './config/config.module';
 import { LoggerModule } from './logger/logger.module';
-
+import { ZlibB64Module } from "./zlib-b64/zlib-b64.module";
 
 @NgModule({
   declarations: [
@@ -44,7 +44,8 @@ import { LoggerModule } from './logger/logger.module';
     },
     ]),
     ConfigModule,
-    LoggerModule
+    LoggerModule,
+    ZlibB64Module
   ],
   entryComponents: [CreateDirDialogComponent, DeleteConfDialogComponent],
   providers: [AsperaNodeApiService],
