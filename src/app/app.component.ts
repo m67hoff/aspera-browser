@@ -229,10 +229,11 @@ export class AppComponent implements OnInit, AfterViewInit {
         } catch (e) { console.error('error setting "nodeAPIcred" from goto URL parameter ERROR: ', e); }
         this.log.info('setting cred from goto json: ', gotoCred);
         if (gotoCred != null) {
+          this.uiCred.useTokenAuth = true;
+          // foreach 
           if (gotoCred.nodeUrl) { this.uiCred.nodeURL = gotoCred.nodeUrl; }
           if (gotoCred.nodeUser) { this.uiCred.nodeUser = gotoCred.nodeUser; }
           if (gotoCred.nodePW) { this.uiCred.nodePW = atob(gotoCred.nodePW); }
-          this.uiCred.useTokenAuth = true;
         }
         this.log.debug('new NodeAPI cred from goto json: : ', this.uiCred);
         // this.testconnection(); // this also saves the uiCred to localstorage if enabled
