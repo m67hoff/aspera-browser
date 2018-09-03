@@ -72,6 +72,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   hidePW = true;
   isDragOver = false;
 
+  isLoaded = {};
+
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -86,10 +88,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.log.debug('config File & Storage: ', configFile);
     this.configFile.updateDef(this.config)
     this.log.info('App config: ', this.config);
- 
+
     nodeAPI.setAPIconnectProxy(this.config.apiConnectProxy);
     nodeAPI.setCred(this.config.defaultCred);
-    
+
     // get or load uiCred from nodeAPI
     if (this.config.enableCredLocalStorage) {
       this.uiCred = nodeAPI.loadCred();
@@ -102,30 +104,27 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.selection = new SelectionModel<any>(true, []);
 
-    this._loadLib(this.config.connectInstaller + '/asperaweb-4.min.js')
-    this._loadLib(this.config.connectInstaller + '/connectinstaller-4.min.js')
-    this._loadLib('https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js')
+    this._loadLib('asperaweb', this.config.connectInstaller + '/asperaweb-4.min.js')
+    this._loadLib('connectinstaller', this.config.connectInstaller + '/connectinstaller-4.min.js')
   }
 
-  private _loadLib(url) {
-    console.log('preparing to load lib: ', url)
+  private _loadLib(name: string, url: string) {
+    this.log.debug('preparing to load...', url);
     let node = document.createElement('script');
     node.src = url;
     node.type = 'text/javascript';
     node.async = true;
     node.charset = 'utf-8';
     node.onload = () => {
-      console.log('loaded lib: ', url)
-    }  
+      this.isLoaded[name] = true;
+      this.log.debug('loaded lib: ', url)
+      this.log.debug('isloaded: ', this.isLoaded)
+      if (this.isLoaded['asperaweb'] && this.isLoaded['connectinstaller']) { this._initAsperaconnect() }
+    }
     document.getElementsByTagName('head')[0].appendChild(node);
   }
 
-  ngOnInit() {
-  }
-
-  ngAfterViewInit() {
-    
-    console.log('lib call: ', moment())
+  private _initAsperaconnect() {
     this.asperaWeb = new AW4.Connect({ sdkLocation: this.config.connectInstaller, minVersion: '3.8.0', pollingTime: 3000, dragDropEnabled: true });
     const asperaInstaller = new AW4.ConnectInstaller({ sdkLocation: this.config.connectInstaller });
 
@@ -216,11 +215,15 @@ export class AppComponent implements OnInit, AfterViewInit {
         }
       }
     );
+  }
 
+  ngOnInit() {
+  }
+
+  ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
-
 
   // transfer activity methods
   stopTransfer(uuid: string) {
