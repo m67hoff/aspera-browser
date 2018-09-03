@@ -34,7 +34,22 @@ export class AppComponent implements OnInit, AfterViewInit {
     allow_dialogs: false
   };
 
-  config: { [key: string]: any };
+  // config file settings duplicate for supported keys & defaults
+  config = {
+    'apiConnectProxy': '',
+    'isFixedURL': false,
+    'fixedURL': '',
+    'isFixedConnectAuth': false,
+    'fixedConnectAuth': false,
+    'enableCredLocalStorage': true,
+    'defaultCred': {
+      'nodeURL': 'https://demo.asperasoft.com:9092',
+      'nodeUser': 'asperaweb',
+      'nodePW': 'demoaspera',
+      'useTokenAuth': false
+    },
+    'connectInstaller': '//d3gcli72yxqn2z.cloudfront.net/connect/v4'
+  };
 
   uiCred: NodeAPIcred;
   dirList: DirList;
@@ -70,12 +85,15 @@ export class AppComponent implements OnInit, AfterViewInit {
     private nodeAPI: AsperaNodeApiService,
     private activatedRoute: ActivatedRoute
   ) {
-    this._setConfig(configFile);
-
+    this.log.debug('config File & Storage: ', configFile);
+    this.configFile.updateDef(this.config)
+    this.log.info('App config: ', this.config);
+ 
     nodeAPI.setAPIconnectProxy(this.config.apiConnectProxy);
     nodeAPI.setCred(this.config.defaultCred);
-
-    if (this.config.enableCredLocalStorage) {   // if enableCredLocalStorage overwrite config from Localstorage
+    
+    // get or load uiCred from nodeAPI
+    if (this.config.enableCredLocalStorage) {
       this.uiCred = nodeAPI.loadCred();
       if (this.config.isFixedURL) { this.uiCred.nodeURL = this.config.fixedURL; }
       if (this.config.isFixedConnectAuth) { this.uiCred.useTokenAuth = this.config.fixedConnectAuth; }
@@ -86,42 +104,6 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.selection = new SelectionModel<any>(true, []);
   }
-
-  private _setConfig(c: Config) {
-    // config file settings duplicate for supported keys & defaults
-    this.config = {
-      'apiConnectProxy': '',
-      'isFixedURL': false,
-      'fixedURL': '',
-      'isFixedConnectAuth': false,
-      'fixedConnectAuth': false,
-      'enableCredLocalStorage': true,
-      'defaultCred': {
-        'nodeURL': 'https://demo.asperasoft.com:9092',
-        'nodeUser': 'asperaweb',
-        'nodePW': 'demoaspera',
-        'useTokenAuth': false
-      },
-      'connectInstaller': '//d3gcli72yxqn2z.cloudfront.net/connect/v4'
-    };
-    // some type checking
-    this.log.debug('config File & Storage: ', c);
-    if (typeof c.apiConnectProxy === 'string') { this.config.apiConnectProxy = c.apiConnectProxy; }
-    if (typeof c.isFixedURL === 'boolean') { this.config.isFixedURL = c.isFixedURL; }
-    if (typeof c.fixedURL === 'string') { this.config.fixedURL = c.fixedURL; }
-    if (typeof c.isFixedConnectAuth === 'boolean') { this.config.isFixedConnectAuth = c.isFixedConnectAuth; }
-    if (typeof c.fixedConnectAuth === 'boolean') { this.config.fixedConnectAuth = c.fixedConnectAuth; }
-    if (typeof c.enableCredLocalStorage === 'boolean') { this.config.enableCredLocalStorage = c.enableCredLocalStorage; }
-    if (typeof c.defaultCred === 'object') {
-      if (typeof c.defaultCred.nodeURL === 'string') { this.config.defaultCred.nodeURL = c.defaultCred.nodeURL; }
-      if (typeof c.defaultCred.nodeUser === 'string') { this.config.defaultCred.nodeUser = c.defaultCred.nodeUser; }
-      if (typeof c.defaultCred.nodePW === 'string') { this.config.defaultCred.nodePW = c.defaultCred.nodePW; }
-      if (typeof c.defaultCred.useTokenAuth === 'boolean') { this.config.defaultCred.useTokenAuth = c.defaultCred.useTokenAuth; }
-    }
-    if (typeof c.connectInstaller === 'string') { this.config.connectInstaller = c.connectInstaller; }
-    this.log.info('App config: ', this.config);
-  }
-
 
   ngOnInit() {
 
