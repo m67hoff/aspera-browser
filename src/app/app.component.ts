@@ -229,23 +229,38 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.log.debug('URLparams (observable): ', params);
       if (params.goto) {
         let gotoCred: any;
+        /* 
+          try {
+            gotoCred = this.z.b64toJson(params.goto);
+          } catch (e) { console.error('error setting "nodeAPIcred" from goto URL parameter ERROR: ', e); }
+          this.log.info('setting cred from goto json: ', gotoCred);
+          if (gotoCred != null) {
+            this.uiCred.useTokenAuth = true;
+            // foreach 
+            if (gotoCred.nodeUrl) { this.uiCred.nodeURL = gotoCred.nodeUrl; }
+            if (gotoCred.nodeUser) { this.uiCred.nodeUser = gotoCred.nodeUser; }
+            if (gotoCred.nodePW) { this.uiCred.nodePW = atob(gotoCred.nodePW); }
+          }
+         */
+
         try {
-          gotoCred = this.z.b64toJson(params.goto);
+          let b64 = this.z.reverseObfuscation(params.goto);
+          gotoCred = this.z.inflateJson(b64);
         } catch (e) { console.error('error setting "nodeAPIcred" from goto URL parameter ERROR: ', e); }
-        this.log.info('setting cred from goto json: ', gotoCred);
         if (gotoCred != null) {
+          this.log.info('setting cred from goto json: ', gotoCred);
           this.uiCred.useTokenAuth = true;
-          // foreach 
-          if (gotoCred.nodeUrl) { this.uiCred.nodeURL = gotoCred.nodeUrl; }
-          if (gotoCred.nodeUser) { this.uiCred.nodeUser = gotoCred.nodeUser; }
-          if (gotoCred.nodePW) { this.uiCred.nodePW = atob(gotoCred.nodePW); }
+          Object.keys(this.uiCred).forEach( k => {
+            if (typeof this.uiCred[k] === typeof gotoCred[k]) { this.uiCred[k] = gotoCred[k]; }
+          })
         }
+
         this.log.debug('new NodeAPI cred from goto json: : ', this.uiCred);
         // this.testconnection(); // this also saves the uiCred to localstorage if enabled
         this.nodeAPI.setCred(this.uiCred);
         this.browse('/');
       }
- 
+
     });
 
     this.dataSource.paginator = this.paginator;

@@ -35,7 +35,20 @@ export class ZlibB64 {
     let jsonstr = JSON.stringify(json)
     return this.deflateB64(jsonstr);
   }
+  
+  reverseObfuscation(str: string): string {
+    let rev = str.split("").reverse().join("")
+    // var repl = rev.replace(/[\-_]/g, m => {return {'-': '+','_': '/'}[m] });
+    let b64 = rev.replace(/-/g, '+').replace(/_/g, '/')
+    return b64
+  }
 
+  obfuscation(b64: string): string {
+    let str = b64.replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_')
+    let rev = str.split("").reverse().join("")
+    return rev
+  }
+  
 }
 
 @NgModule({
