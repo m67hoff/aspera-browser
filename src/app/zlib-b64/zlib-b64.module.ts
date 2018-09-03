@@ -1,7 +1,8 @@
 import { NgModule, Injectable } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-declare var pako: any;
+// declare var pako: any;
+import * as pako from 'pako';
 
 @Injectable()
 export class ZlibB64 {
