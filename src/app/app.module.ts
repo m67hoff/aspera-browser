@@ -20,7 +20,7 @@ import { DeleteConfDialogComponent } from './dialog/delete-conf-dialog.component
 
 import { ConfigModule } from './config/config.module';
 import { LoggerModule } from './logger/logger.module';
-import { ZlibB64Module } from "./zlib-b64/zlib-b64.module";
+import { ZlibB64Module } from './zlib-b64/zlib-b64.module';
 
 @NgModule({
   declarations: [

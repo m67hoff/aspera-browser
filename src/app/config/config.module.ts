@@ -39,13 +39,13 @@ export class Config {
   }
 
   updateDef(def: object): void {
-    this._updateObj(def, this)
+    this._updateObj(def, this);
   }
   private _updateObj(def: object, up: object): void {
-    for (let k in def) {
+    for (const k in def) {
       if (typeof def[k] === typeof up[k]) {
         if (typeof def[k] === 'object') {
-          this._updateObj(def[k], up[k])
+          this._updateObj(def[k], up[k]);
         }
         // console.log('conf update -> ' + k + ' (' + typeof up[k] + ') old: ' + def[k] + ' new: ' + up[k])
         def[k] = up[k];

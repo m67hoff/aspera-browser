@@ -12,7 +12,7 @@ import { DeleteConfDialogComponent } from './dialog/delete-conf-dialog.component
 
 import { Logger } from './logger/logger.module';
 import { Config } from './config/config.module';
-import { ZlibB64 } from "./zlib-b64/zlib-b64.module";
+import { ZlibB64 } from './zlib-b64/zlib-b64.module';
 
 import { environment } from '../environments/environment';
 
@@ -89,7 +89,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private activatedRoute: ActivatedRoute
   ) {
     this.log.debug('config File & Storage: ', configFile);
-    this.configFile.updateDef(this.config)
+    this.configFile.updateDef(this.config);
     this.log.info('App config: ', this.config);
 
     nodeAPI.setAPIconnectProxy(this.config.apiConnectProxy);
@@ -107,23 +107,23 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.selection = new SelectionModel<any>(true, []);
 
-    this._loadLib('asperaweb', this.config.connectInstaller + '/asperaweb-4.min.js')
-    this._loadLib('connectinstaller', this.config.connectInstaller + '/connectinstaller-4.min.js')
+    this._loadLib('asperaweb', this.config.connectInstaller + '/asperaweb-4.min.js');
+    this._loadLib('connectinstaller', this.config.connectInstaller + '/connectinstaller-4.min.js');
   }
 
   private _loadLib(name: string, url: string) {
     this.log.debug('preparing to load...', url);
-    let node = document.createElement('script');
+    const node = document.createElement('script');
     node.src = url;
     node.type = 'text/javascript';
     node.async = true;
     node.charset = 'utf-8';
     node.onload = () => {
       this.isLoaded[name] = true;
-      this.log.debug('loaded lib: ', url)
-      this.log.debug('isloaded: ', this.isLoaded)
-      if (this.isLoaded['asperaweb'] && this.isLoaded['connectinstaller']) { this._initAsperaconnect() }
-    }
+      this.log.debug('loaded lib: ', url);
+      this.log.debug('isloaded: ', this.isLoaded);
+      if (this.isLoaded['asperaweb'] && this.isLoaded['connectinstaller']) { this._initAsperaconnect(); }
+    };
     document.getElementsByTagName('head')[0].appendChild(node);
   }
 
@@ -229,14 +229,14 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.log.debug('URLparams (observable): ', params);
       if (params.goto) {
         let gotoCred: any;
-        /* 
+        /*
           try {
             gotoCred = this.z.b64toJson(params.goto);
           } catch (e) { console.error('error setting "nodeAPIcred" from goto URL parameter ERROR: ', e); }
           this.log.info('setting cred from goto json: ', gotoCred);
           if (gotoCred != null) {
             this.uiCred.useTokenAuth = true;
-            // foreach 
+            // foreach
             if (gotoCred.nodeUrl) { this.uiCred.nodeURL = gotoCred.nodeUrl; }
             if (gotoCred.nodeUser) { this.uiCred.nodeUser = gotoCred.nodeUser; }
             if (gotoCred.nodePW) { this.uiCred.nodePW = atob(gotoCred.nodePW); }
@@ -244,7 +244,7 @@ export class AppComponent implements OnInit, AfterViewInit {
          */
 
         try {
-          let b64 = this.z.reverseObfuscation(params.goto);
+          const b64 = this.z.reverseObfuscation(params.goto);
           gotoCred = this.z.inflateJson(b64);
         } catch (e) { console.error('error setting "nodeAPIcred" from goto URL parameter ERROR: ', e); }
         if (gotoCred != null) {
@@ -252,7 +252,7 @@ export class AppComponent implements OnInit, AfterViewInit {
           this.uiCred.useTokenAuth = true;
           Object.keys(this.uiCred).forEach( k => {
             if (typeof this.uiCred[k] === typeof gotoCred[k]) { this.uiCred[k] = gotoCred[k]; }
-          })
+          });
         }
 
         this.log.debug('new NodeAPI cred from goto json: : ', this.uiCred);
