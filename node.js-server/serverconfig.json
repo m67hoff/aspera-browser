@@ -4,7 +4,7 @@
     "FIXED_NODEAPI_URL": "",
     "FIXED_NODEAPI_USER": "",
     "FIXED_NODEAPI_PASS": "",
-    "ENABLE_CORS": true,
+    "ENABLE_CORS": false,
     "CORS_ORIGIN": "",
     "HTTPS_PORT": 44344,
     "USE_HTTPS": false

@@ -4,6 +4,17 @@
   background-color: snow
 }
 
+.app-backdrop {
+  top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+    display: block;
+    background-color: rgba(0,0,0,.6);
+    z-index: 999;
+}
+
 .app-toolbar-filler {
   flex: 1 1 auto;
 }
@@ -24,19 +35,6 @@
   margin: 20px;
   padding: 20px;
   margin-bottom: 10px;
-}
-
-.sidenav-icon {
-  font-size: 24px;
-  vertical-align: middle;
-  height: 24px;
-  width: 24px;
-  margin-right: 10px;
-}
-
-.sidenav-link {
-  color: #3f51b5;
-  font-size: 16px;
 }
 
 .mat-radio-button {
@@ -96,6 +94,12 @@ button {
   font-size: 14px;
 }
 
+.transfer-error {
+  font-weight: 300;
+  font-size: 14px;
+  color: #f44336;
+}
+
 .transfer-bar mat-progress-bar {
   padding-top: 3px;
   padding-bottom: 3px;
@@ -135,8 +139,9 @@ button {
 }
 
 .progressInfo {
+  min-height: 6px;
   margin-left: 5px;
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
 .status {
@@ -148,7 +153,7 @@ button {
 .path {
   margin: 5px;
   margin-left: 10px;
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
 .filter {

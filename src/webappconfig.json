@@ -6,6 +6,7 @@
         "fixedURL": "https://demo.asperasoft.com:9092",
         "isFixedConnectAuth": false,
         "fixedConnectAuth": false,
+        "enableGoto": true,
         "enableCredLocalStorage": true,
         "defaultCred": {
             "nodeURL": "https://demo.asperasoft.com:9092",
@@ -18,8 +19,7 @@
     "config": {
         "enableLocalConfig": true,
         "localConfigKeys": [
-            "logLevel",
-            "apiConnectProxy"
+            "logLevel"
         ]
     }
 }
