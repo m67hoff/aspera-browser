@@ -147,7 +147,7 @@ if (ENABLE_CORS) {
       'Access-Control-Allow-Headers': 'Authorization, Content-Type, nodeURL'
     })
     res.sendStatus(200)
-    log.verbose('express', 'preflight response:\n', json2s(res._headers))
+    log.verbose('express', 'preflight response:\n', json2s(res._headers))  
   })
 }
 
@@ -172,7 +172,11 @@ app.get(['/config', '/webappconfig.json'], (req, res) => {
 })
 
 // serve static files / angular web client
-log.http('express', 'static_file_path:', path.join(__dirname, '/webapp'))
+log.http('express', 'static_file_path: ', path.join(__dirname, '/webapp'))
+app.use(function (req, res, next) {
+  log.verbose('express', 'serve static: ', req.url)
+  next();
+});
 app.use(express.static(path.join(__dirname, '/webapp')))
 
 
