@@ -18,7 +18,7 @@ const app = express()
 const bodyParser = require('body-parser')
 const helmet = require('helmet')
 
-// duplicate config file settings 
+// duplicate config file settings
 var LOGLEVEL = 'info'
 var FIXED_NODEAPI_URL = ''
 var FIXED_NODEAPI_USER = ''
@@ -30,21 +30,20 @@ var PORT = 8888
 var HTTPS_PORT = 44344
 var USE_HTTPS = false
 
-
 /**************************************************************/
 /*                      Main                                  */
 /**************************************************************/
 log.stream = C.LOGOUTPUT
 log.level = LOGLEVEL
 
-// cli options 
+// cli options
 program
   .option('--config', 'configure and start the service. Enable auto restart')
   .option('--defaults', 'copy default config files')
   .option('-s, --status', 'show service status')
   .option('-r, --restart', 'restart service')
   .version(packagejson.version, '-v, --version')
-  .parse(process.argv);
+  .parse(process.argv)
 
 if (program.config) {
   loadConf()
@@ -70,8 +69,7 @@ if (program.defaults) {
   process.exit(0)
 }
 
-
-// start asperabrowser 
+// start asperabrowser
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0' // accept untrusted certificates
 log.notice('main', 'Moin Moin from asperabrowser v' + packagejson.version)
 
@@ -88,17 +86,17 @@ if (process.env.PORT) {
 
 // service reload request
 process.on('SIGHUP', () => {
-  log.warn('main', 'Received SIGHUP -> reload config files');
+  log.warn('main', 'Received SIGHUP -> reload config files')
   loadConf()
   webappconfig = JSON.parse(readConfig(C.WEBAPPCONFIG, C.DEFAULT_WEBAPPCONFIG))
-});
+})
 
 app.use(helmet())
 app.use(bodyParser.json())
 
 if (
-  (PORT <= 1024 || (USE_HTTPS && HTTPS_PORT <= 1024))
-  && !isAdmin()
+  (PORT <= 1024 || (USE_HTTPS && HTTPS_PORT <= 1024)) &&
+  !isAdmin()
 ) {
   log.error('main', 'Error: only root can run with ports below 1024')
   log.error('main', 'PORT: ' + PORT + ' HTTPS_PORT: ' + HTTPS_PORT)
@@ -110,29 +108,29 @@ if (USE_HTTPS) {
   const httpsOptions = {
     key: readConfig(C.HTTPS_KEY, C.DEFAULT_HTTPS_KEY),
     cert: readConfig(C.HTTPS_CERT, C.DEFAULT_HTTPS_CERT)
-  };
+  }
 
   var httpsApp = https.createServer(httpsOptions, app)
 
-  httpsApp.listen(HTTPS_PORT, function() {
+  httpsApp.listen(HTTPS_PORT, function () {
     log.http('https', 'https server starting on ' + HTTPS_PORT)
   })
 
-  app.use(function(req, res, next) {
+  app.use(function (req, res, next) {
     if (req.secure) {
-      next();
+      next()
     } else {
-      var https_url = 'https://' + req.hostname + ':' + HTTPS_PORT + req.url
-      log.http('https', 'redirect to: ' + https_url)
-      res.redirect(https_url);
+      var httpsUrl = 'https://' + req.hostname + ':' + HTTPS_PORT + req.url
+      log.http('https', 'redirect to: ' + httpsUrl)
+      res.redirect(httpsUrl)
     }
   })
 }
 
 // start http server
-app.listen(PORT, function() {
+app.listen(PORT, function () {
   log.http('express', 'server starting on ' + PORT)
-  drop_root()
+  dropRoot()
 })
 
 // enable CORS with preflight
@@ -172,16 +170,18 @@ app.get(['/config', '/webappconfig.json'], (req, res) => {
 })
 
 // serve static files / angular web client
-log.http('express', 'static_file_path:', path.join(__dirname, '/webapp'))
+log.http('express', 'static_file_path: ', path.join(__dirname, '/webapp'))
+app.use(function (req, res, next) {
+  log.verbose('express', 'serve static: ', req.url)
+  next()
+})
 app.use(express.static(path.join(__dirname, '/webapp')))
-
-
 
 /**************************************************************/
 /*                      Functions                             */
 /**************************************************************/
 
-function createNodeRequest(localReq, localRes) {
+function createNodeRequest (localReq, localRes) {
   const options = {}
   options.url = (localReq.headers.nodeurl) ? localReq.headers.nodeurl : 'https://demo.asperasoft.com:9092'
   if (FIXED_NODEAPI_URL !== '') {
@@ -231,12 +231,12 @@ function createNodeRequest(localReq, localRes) {
   })
 }
 
-function json2s(obj) { return JSON.stringify(obj, null, 2) }  // format JSON payload for log
-function btoa(str) { return Buffer.from(str).toString('base64') } // like Browser btoa
-function atob(b64) { return Buffer.from(b64, 'base64').toString() } // like Browser atob
+function json2s (obj) { return JSON.stringify(obj, null, 2) } // format JSON payload for log
+function btoa (str) { return Buffer.from(str).toString('base64') } // like Browser btoa
+function atob (b64) { return Buffer.from(b64, 'base64').toString() } // like Browser atob
 
-// read custom config file  if not there, than read default config file 
-function readConfig(cust, def) {
+// read custom config file  if not there, than read default config file
+function readConfig (cust, def) {
   try {
     var f = fs.readFileSync(cust)
     return f
@@ -255,7 +255,7 @@ function readConfig(cust, def) {
 }
 
 // read in the config file and set log.level
-function loadConf() {
+function loadConf () {
   var c = JSON.parse(readConfig(C.SERVERCONFIG, C.DEFAULT_SERVERCONFIG))
   if (c.LOGLEVEL) { log.level = c.LOGLEVEL }
   log.notice('log  ', 'Read Config - Set LOGLEVEL to %j', c.LOGLEVEL)
@@ -272,13 +272,13 @@ function loadConf() {
 }
 
 // portable version for process.getuid() == 0
-function isAdmin() {
+function isAdmin () {
   switch (process.platform) {
-    case "darwin":
-    case "linux":
-      if (process.getuid() == 0) return true
+    case 'darwin':
+    case 'linux':
+      if (process.getuid() === 0) return true
       break
-    case "win32":
+    case 'win32':
       log.warn('main', 'currently checking for admin rights is not supported on Microsoft Windows')
       break
     default:
@@ -289,17 +289,17 @@ function isAdmin() {
 }
 
 // set the user to nobody if running as root
-function drop_root() {
+function dropRoot () {
   switch (process.platform) {
-    case "darwin":
-    case "linux":
-      if (process.getuid() == 0) {
-        log.notice('main', 'drop root - new user id:', process.getuid() + ', Group ID:', process.getgid());
+    case 'darwin':
+    case 'linux':
+      if (process.getuid() === 0) {
+        log.notice('main', 'drop root - new user id:', process.getuid() + ', Group ID:', process.getgid())
         process.setgid('nobody')
         process.setuid('nobody')
       }
       break
-    case "win32":
+    case 'win32':
       log.warn('main', 'currently dropping process rights is not supported on Microsoft Windows')
       log.warn('main', 'still running under same user')
       break
@@ -310,4 +310,3 @@ function drop_root() {
       break
   }
 }
-

@@ -18,12 +18,13 @@
   &nbsp;&nbsp;
 </mat-toolbar>
 
+<div class="app-backdrop" *ngIf="browseInProgress"></div>
 <mat-sidenav-container autosize class="app-sidenav-container">
-
+  
   <!-- side nav setteings -->
   <mat-sidenav #sidenav_set position="start" mode="over" class="app-sidenav">
     <mat-card>
-      <h3> Node API Settings: </h3>
+      <h3>Node API Settings:</h3>
       <form #settings="ngForm">
 
         <div *ngIf="! config.isFixedURL">
@@ -74,25 +75,17 @@
         </p>
       </form>
     </mat-card>
-
     <mat-card>
-      <h3> Useful Info: </h3>
-      <mat-nav-list dense>
-        <a mat-list-item target="_blank" href="https://demo.asperasoft.com">
-          <mat-icon color='primary' class="sidenav-icon">link</mat-icon>
-          <span class="sidenav-link">Aspera Demoserver</span>
-        </a>
-      </mat-nav-list>
+      <app-info></app-info>
     </mat-card>
   </mat-sidenav>
 
   <!-- side nav transfers -->
   <mat-sidenav #sidenav_trans position="end" mode="side" opened="false" class="transfer-sidenav">
-    <!-- <mat-toolbar color="primary">Transfers</mat-toolbar> -->
-    <!-- <h3 align="center">Transfer Activity</h3> -->
     <span *ngFor="let ti of allTransfersList">
       <mat-card>
-        <div class="transfer-date"> {{ config.isFixedURL ? '' : ti.transfer_spec.remote_host + ' -' }} {{ ti.start_time | date:'EE HH:mm' }} </div>
+        <div class="transfer-date"> {{ config.isFixedURL ? '' : ti.transfer_spec.remote_host + ' -' }} {{ ti.start_time |
+          date:'EE HH:mm' }} </div>
         <div class="transfer-title" matTooltip="{{ ti.title.length > 30 ? ti.title : '' }}" matTooltipShowDelay="200" matTooltipHideDelay="300">
           <mat-icon class="transfer-icon" *ngIf="ti.status === 'cancelled'" color="primary">pause_circle_filled</mat-icon>
           <mat-icon class="transfer-icon" *ngIf="ti.status === 'completed'" style="color: green">check_circle</mat-icon>
@@ -137,11 +130,7 @@
           </button>
           <button mat-button class="transfer-button" color="accent" (click)="removeTransfer(ti.uuid)" [disabled]="(ti.status === 'running') || (ti.status === 'initiating')  || (ti.status === 'queued')  ? true : false"
             matTooltip="cancel & remove" matTooltipShowDelay="200" matTooltipHideDelay="300">
-            <mat-icon> <svg viewBox="0 0 24 24">
-                <path d="M12,2C6.47,2,2,6.47,2,12c0,5.53,4.47,10,10,10c5.53,0,10-4.47,10-10C22,6.47,17.53,2,12,2z 
-              M12,20c-4.41,0-8-3.59-8-8,s3.59-8,8-8s8,3.59,8,8S16.41,20,12,20z" />
-                <polygon points="15.59,7 12,10.59 8.41,7 7,8.41 10.59,12 7,15.59 8.41,17 12,13.41 15.59,17 17,15.59 13.41,12 17,8.41" /></svg>
-            </mat-icon>
+            <mat-icon>highlight_off</mat-icon>
           </button>
           &nbsp;&nbsp;&nbsp;
           <button mat-button class="transfer-button" color="primary" (click)="showTransferMonitor(ti.uuid)" [disabled]="(ti.status === 'completed')  ? true : false"
@@ -168,11 +157,7 @@
         </button>
         <button mat-button class="all-transfer-button" color="accent" (click)="clearInactiveTransfers()" matTooltip="remove all incative transfers"
           matTooltipShowDelay="200" matTooltipHideDelay="300">
-          <mat-icon> <svg viewBox="0 0 24 24">
-              <path d="M12,2C6.47,2,2,6.47,2,12c0,5.53,4.47,10,10,10c5.53,0,10-4.47,10-10C22,6.47,17.53,2,12,2z 
-              M12,20c-4.41,0-8-3.59-8-8,s3.59-8,8-8s8,3.59,8,8S16.41,20,12,20z" />
-              <polygon points="15.59,7 12,10.59 8.41,7 7,8.41 10.59,12 7,15.59 8.41,17 12,13.41 15.59,17 17,15.59 13.41,12 17,8.41" /></svg>
-          </mat-icon>
+          <mat-icon>highlight_off</mat-icon>
         </button>
         &nbsp;&nbsp;&nbsp;
         <button mat-button class="all-transfer-button" color="primary" (click)="showTransferManager()" matTooltip="show AsperaConnect"
@@ -249,8 +234,6 @@
             <span class="home-slash"> / </span>
             <span class="home-txt" (click)="browse(ele.path)"> {{ ele.dirname }} </span>
           </span>
-          <!-- <mat-icon color="accent" *ngIf="(dirList.self.permissions[1].name != 'edit')">lock_outline</mat-icon> -->
-          <!-- <mat-icon color="blue"   *ngIf="(dirList.self.permissions[1].name == 'edit')">lock_open</mat-icon> -->
         </p>
 
         <mat-form-field class="filter">

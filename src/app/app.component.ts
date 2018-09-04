@@ -37,11 +37,13 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   // config file settings duplicate for supported keys & defaults
   config = {
+    'logLevel': 'WARN',
     'apiConnectProxy': '',
     'isFixedURL': false,
     'fixedURL': '',
     'isFixedConnectAuth': false,
     'fixedConnectAuth': false,
+    'enableGoto': false,
     'enableCredLocalStorage': true,
     'defaultCred': {
       'nodeURL': 'https://demo.asperasoft.com:9092',
@@ -227,22 +229,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.activatedRoute.queryParams.subscribe(params => {
       this.log.debug('URLparams (observable): ', params);
-      if (params.goto) {
+      if (params.goto && this.config.enableGoto) {
         let gotoCred: any;
-        /*
-          try {
-            gotoCred = this.z.b64toJson(params.goto);
-          } catch (e) { console.error('error setting "nodeAPIcred" from goto URL parameter ERROR: ', e); }
-          this.log.info('setting cred from goto json: ', gotoCred);
-          if (gotoCred != null) {
-            this.uiCred.useTokenAuth = true;
-            // foreach
-            if (gotoCred.nodeUrl) { this.uiCred.nodeURL = gotoCred.nodeUrl; }
-            if (gotoCred.nodeUser) { this.uiCred.nodeUser = gotoCred.nodeUser; }
-            if (gotoCred.nodePW) { this.uiCred.nodePW = atob(gotoCred.nodePW); }
-          }
-         */
-
         try {
           const b64 = this.z.reverseObfuscation(params.goto);
           gotoCred = this.z.inflateJson(b64);

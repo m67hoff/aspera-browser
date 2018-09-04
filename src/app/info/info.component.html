@@ -1,0 +1,14 @@
+<h3 class="info-header">Info</h3>
+<mat-nav-list>
+  <div *ngFor="let item of links">
+
+    <mat-list-item>
+      <a target="_blank" href="{{item.url}}">
+        <mat-icon color='primary' class="info-icon">link</mat-icon>
+        <span class="info-link">{{item.name}}</span>
+        <div class="info-detail">{{item.detail}}</div>
+      </a>
+    </mat-list-item>
+
+  </div>
+</mat-nav-list>
