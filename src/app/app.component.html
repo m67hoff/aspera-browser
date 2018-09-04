@@ -23,7 +23,7 @@
   <!-- side nav setteings -->
   <mat-sidenav #sidenav_set position="start" mode="over" class="app-sidenav">
     <mat-card>
-      <h3> Node API Settings: </h3>
+      <h3>Node API Settings:</h3>
       <form #settings="ngForm">
 
         <div *ngIf="! config.isFixedURL">
@@ -74,15 +74,8 @@
         </p>
       </form>
     </mat-card>
-
     <mat-card>
-      <h3> Useful Info: </h3>
-      <mat-nav-list dense>
-        <a mat-list-item target="_blank" href="https://demo.asperasoft.com">
-          <mat-icon color='primary' class="sidenav-icon">link</mat-icon>
-          <span class="sidenav-link">Aspera Demoserver</span>
-        </a>
-      </mat-nav-list>
+      <app-info></app-info>
     </mat-card>
   </mat-sidenav>
 
@@ -90,7 +83,8 @@
   <mat-sidenav #sidenav_trans position="end" mode="side" opened="false" class="transfer-sidenav">
     <span *ngFor="let ti of allTransfersList">
       <mat-card>
-        <div class="transfer-date"> {{ config.isFixedURL ? '' : ti.transfer_spec.remote_host + ' -' }} {{ ti.start_time | date:'EE HH:mm' }} </div>
+        <div class="transfer-date"> {{ config.isFixedURL ? '' : ti.transfer_spec.remote_host + ' -' }} {{ ti.start_time |
+          date:'EE HH:mm' }} </div>
         <div class="transfer-title" matTooltip="{{ ti.title.length > 30 ? ti.title : '' }}" matTooltipShowDelay="200" matTooltipHideDelay="300">
           <mat-icon class="transfer-icon" *ngIf="ti.status === 'cancelled'" color="primary">pause_circle_filled</mat-icon>
           <mat-icon class="transfer-icon" *ngIf="ti.status === 'completed'" style="color: green">check_circle</mat-icon>
