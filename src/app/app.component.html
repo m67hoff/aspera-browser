@@ -7,8 +7,9 @@
     <mat-icon>settings</mat-icon>
   </button>
   &nbsp;&nbsp;
-  <button mat-button class="toolbar-button" (click)="sidenav_trans.toggle()" matTooltip="Show tansfer activity" matTooltipShowDelay="500"
-    matTooltipHideDelay="500" matBadge="{{ runningTransfers }}" [matBadgeHidden]="!runningTransfers" matBadgeColor="accent">
+  <button mat-button class="toolbar-button" (click)="!showHelp ? sidenav_trans.toggle() : showHelp=false && sidenav_trans.open()"
+    matTooltip="Show tansfer activity" matTooltipShowDelay="500" matTooltipHideDelay="500" matBadge="{{ runningTransfers }}"
+    [matBadgeHidden]="!runningTransfers" matBadgeColor="accent">
     <mat-icon>
       <svg viewBox="0 0 24 24">
         <polygon points="8.29 20.51 5.39 13.26 1 13.26 1 11.8 6.38 11.8 8.38 16.77 14.41 3.49 18.57 11.8 23 11.8 23 13.26 17.66 13.26 14.48 6.9 8.29 20.51"></polygon>
@@ -16,6 +17,10 @@
     </mat-icon>
   </button>
   &nbsp;&nbsp;
+  <button mat-button class="toolbar-button" (click)="showHelp ? sidenav_trans.toggle() : showHelp=true && sidenav_trans.open()"
+    matTooltip="Show Help" matTooltipShowDelay="500" matTooltipHideDelay="500">
+    <mat-icon>help</mat-icon>
+  </button>
 </mat-toolbar>
 
 <mat-sidenav-container autosize class="app-sidenav-container">
@@ -81,90 +86,95 @@
 
   <!-- side nav transfers -->
   <mat-sidenav #sidenav_trans position="end" mode="side" opened="false" class="transfer-sidenav">
-    <span *ngFor="let ti of allTransfersList">
-      <mat-card>
-        <div class="transfer-date"> {{ config.isFixedURL ? '' : ti.transfer_spec.remote_host + ' -' }} {{ ti.start_time |
-          date:'EE HH:mm' }} </div>
-        <div class="transfer-title" matTooltip="{{ ti.title.length > 30 ? ti.title : '' }}" matTooltipShowDelay="200" matTooltipHideDelay="300">
-          <mat-icon class="transfer-icon" *ngIf="ti.status === 'cancelled'" color="primary">pause_circle_filled</mat-icon>
-          <mat-icon class="transfer-icon" *ngIf="ti.status === 'completed'" style="color: green">check_circle</mat-icon>
-          <mat-icon class="transfer-icon" *ngIf="ti.status === 'failed'" color="warn">error</mat-icon>
-          <mat-icon class="transfer-icon" *ngIf="ti.status === 'initiating'" style="color: lightgreen">launch</mat-icon>
-          <mat-icon class="transfer-icon" *ngIf="ti.status === 'queued'" color="accent">av_timer</mat-icon>
-          <mat-icon class="transfer-icon" *ngIf="ti.status === 'removed'" color="warn">cancel</mat-icon>
-          <mat-icon class="transfer-icon" *ngIf="ti.status === 'running'" style="color: green">loop</mat-icon>
-          <mat-icon class="transfer-icon" *ngIf="ti.status === 'willretry'" color="accent">replay</mat-icon>
-          {{ ti.transfer_spec.direction === 'send' ? 'upload' : 'download' }}: {{ ti.title | string}}
+    <mat-card *ngIf="showHelp">
+      user help goes here
+    </mat-card>
+    <div *ngIf="!showHelp">
+      <span *ngFor="let ti of allTransfersList">
+        <mat-card>
+          <div class="transfer-date"> {{ config.isFixedURL ? '' : ti.transfer_spec.remote_host + ' -' }} {{ ti.start_time
+            | date:'EE HH:mm' }} </div>
+          <div class="transfer-title" matTooltip="{{ ti.title.length > 30 ? ti.title : '' }}" matTooltipShowDelay="200" matTooltipHideDelay="300">
+            <mat-icon class="transfer-icon" *ngIf="ti.status === 'cancelled'" color="primary">pause_circle_filled</mat-icon>
+            <mat-icon class="transfer-icon" *ngIf="ti.status === 'completed'" style="color: green">check_circle</mat-icon>
+            <mat-icon class="transfer-icon" *ngIf="ti.status === 'failed'" color="warn">error</mat-icon>
+            <mat-icon class="transfer-icon" *ngIf="ti.status === 'initiating'" style="color: lightgreen">launch</mat-icon>
+            <mat-icon class="transfer-icon" *ngIf="ti.status === 'queued'" color="accent">av_timer</mat-icon>
+            <mat-icon class="transfer-icon" *ngIf="ti.status === 'removed'" color="warn">cancel</mat-icon>
+            <mat-icon class="transfer-icon" *ngIf="ti.status === 'running'" style="color: green">loop</mat-icon>
+            <mat-icon class="transfer-icon" *ngIf="ti.status === 'willretry'" color="accent">replay</mat-icon>
+            {{ ti.transfer_spec.direction === 'send' ? 'upload' : 'download' }}: {{ ti.title | string}}
+          </div>
+          <div class="transfer-subtitle" matTooltip="{{ ti.status === 'running' && ti.current_file.length > 30 ? ti.current_file : '' }}"
+            matTooltipShowDelay="200" matTooltipHideDelay="300">
+            Files: {{ ti.files ? ti.files.length : '?'}}
+            <br/> {{ ti.status === 'running' ? 'Current: ' + (ti.current_file | string) : 'Status: ' + (ti.status | status)
+            }}
+          </div>
+          <div class="transfer-error" *ngIf="ti.status === 'failed'">
+            Error: {{ ti.error_desc }}
+          </div>
+          <div class="transfer-bar" *ngIf="ti.status !== 'completed'" matTooltip="{{ ti.percentage | percent }}" matTooltipShowDelay="200"
+            matTooltipHideDelay="300">
+            <mat-progress-bar mode="determinate" value="{{ti.percentage*100}}"></mat-progress-bar>
+          </div>
+          <div class="transfer-detail">
+            <span *ngIf="ti.status !== 'completed'">{{ ti.bytes_written | size }} of {{ ti.bytes_expected | size }} </span>
+            <span *ngIf="ti.status === 'completed'">{{ ti.bytes_written | size }} in {{ ti.elapsed_usec/1000 | duration }}
+            </span>
+            <br/>
+            <span *ngIf="ti.status === 'running'">ETA: {{(ti.remaining_usec/1000) | ETA | date:'EE HH:mm:ss'}} - {{(ti.remaining_usec/1000)
+              | duration }} remaining</span>
+            <span *ngIf="ti.status === 'running'"> - {{ ti.calculated_rate_kbps | rate }}</span>
+          </div>
+          <div class="transfer-button-row">
+            <button mat-button class="transfer-button" color="primary" (click)="stopTransfer(ti.uuid)" [disabled]="(ti.status === 'running') || (ti.status === 'initiating')  || (ti.status === 'queued')    ? false : true"
+              matTooltip="pause" matTooltipShowDelay="200" matTooltipHideDelay="300">
+              <mat-icon>pause_circle_outline</mat-icon>
+            </button>
+            <button mat-button class="transfer-button" color="primary" (click)="resumeTransfer(ti.uuid)" [disabled]="(ti.status === 'running') || (ti.status === 'completed')  ? true : false"
+              matTooltip="restart" matTooltipShowDelay="200" matTooltipHideDelay="300">
+              <mat-icon>play_circle_outline</mat-icon>
+            </button>
+            <button mat-button class="transfer-button" color="accent" (click)="removeTransfer(ti.uuid)" [disabled]="(ti.status === 'running') || (ti.status === 'initiating')  || (ti.status === 'queued')  ? true : false"
+              matTooltip="cancel & remove" matTooltipShowDelay="200" matTooltipHideDelay="300">
+              <mat-icon>highlight_off</mat-icon>
+            </button>
+            &nbsp;&nbsp;&nbsp;
+            <button mat-button class="transfer-button" color="primary" (click)="showTransferMonitor(ti.uuid)" [disabled]="(ti.status === 'completed')  ? true : false"
+              matTooltip="show AsperaConnect Transfer Mointor" matTooltipShowDelay="200" matTooltipHideDelay="300">
+              <mat-icon>insert_chart_outlined</mat-icon>
+            </button>
+          </div>
+
+        </mat-card>
+      </span>
+
+      <mat-card class="all-transfer-card">
+        <div class="all-transfer-title">
+          All Transfer Activity
         </div>
-        <div class="transfer-subtitle" matTooltip="{{ ti.status === 'running' && ti.current_file.length > 30 ? ti.current_file : '' }}"
-          matTooltipShowDelay="200" matTooltipHideDelay="300">
-          Files: {{ ti.files ? ti.files.length : '?'}}
-          <br/> {{ ti.status === 'running' ? 'Current: ' + (ti.current_file | string) : 'Status: ' + (ti.status | status)
-          }}
-        </div>
-        <div class="transfer-error" *ngIf="ti.status === 'failed'">
-          Error: {{ ti.error_desc }}
-        </div>
-        <div class="transfer-bar" *ngIf="ti.status !== 'completed'" matTooltip="{{ ti.percentage | percent }}" matTooltipShowDelay="200"
-          matTooltipHideDelay="300">
-          <mat-progress-bar mode="determinate" value="{{ti.percentage*100}}"></mat-progress-bar>
-        </div>
-        <div class="transfer-detail">
-          <span *ngIf="ti.status !== 'completed'">{{ ti.bytes_written | size }} of {{ ti.bytes_expected | size }} </span>
-          <span *ngIf="ti.status === 'completed'">{{ ti.bytes_written | size }} in {{ ti.elapsed_usec/1000 | duration }}
-          </span>
-          <br/>
-          <span *ngIf="ti.status === 'running'">ETA: {{(ti.remaining_usec/1000) | ETA | date:'EE HH:mm:ss'}} - {{(ti.remaining_usec/1000)
-            | duration }} remaining</span>
-          <span *ngIf="ti.status === 'running'"> - {{ ti.calculated_rate_kbps | rate }}</span>
-        </div>
-        <div class="transfer-button-row">
-          <button mat-button class="transfer-button" color="primary" (click)="stopTransfer(ti.uuid)" [disabled]="(ti.status === 'running') || (ti.status === 'initiating')  || (ti.status === 'queued')    ? false : true"
-            matTooltip="pause" matTooltipShowDelay="200" matTooltipHideDelay="300">
+        <div class="all-transfer-button-row">
+          <button mat-button class="all-transfer-button" color="primary" (click)="stopAllTransfers()" matTooltip="pause all transfers"
+            matTooltipShowDelay="200" matTooltipHideDelay="300">
             <mat-icon>pause_circle_outline</mat-icon>
           </button>
-          <button mat-button class="transfer-button" color="primary" (click)="resumeTransfer(ti.uuid)" [disabled]="(ti.status === 'running') || (ti.status === 'completed')  ? true : false"
-            matTooltip="restart" matTooltipShowDelay="200" matTooltipHideDelay="300">
+          <button mat-button class="all-transfer-button" color="primary" (click)="resumeAllTransfers()" matTooltip="restart all transfers"
+            matTooltipShowDelay="200" matTooltipHideDelay="300">
             <mat-icon>play_circle_outline</mat-icon>
           </button>
-          <button mat-button class="transfer-button" color="accent" (click)="removeTransfer(ti.uuid)" [disabled]="(ti.status === 'running') || (ti.status === 'initiating')  || (ti.status === 'queued')  ? true : false"
-            matTooltip="cancel & remove" matTooltipShowDelay="200" matTooltipHideDelay="300">
+          <button mat-button class="all-transfer-button" color="accent" (click)="clearInactiveTransfers()" matTooltip="remove all incative transfers"
+            matTooltipShowDelay="200" matTooltipHideDelay="300">
             <mat-icon>highlight_off</mat-icon>
           </button>
           &nbsp;&nbsp;&nbsp;
-          <button mat-button class="transfer-button" color="primary" (click)="showTransferMonitor(ti.uuid)" [disabled]="(ti.status === 'completed')  ? true : false"
-            matTooltip="show AsperaConnect Transfer Mointor" matTooltipShowDelay="200" matTooltipHideDelay="300">
-            <mat-icon>insert_chart_outlined</mat-icon>
+          <button mat-button class="all-transfer-button" color="primary" (click)="showTransferManager()" matTooltip="show AsperaConnect"
+            matTooltipShowDelay="200" matTooltipHideDelay="300">
+            <mat-icon>dvr</mat-icon>
           </button>
         </div>
-
       </mat-card>
-    </span>
-
-    <mat-card class="all-transfer-card">
-      <div class="all-transfer-title">
-        All Transfer Activity
-      </div>
-      <div class="all-transfer-button-row">
-        <button mat-button class="all-transfer-button" color="primary" (click)="stopAllTransfers()" matTooltip="pause all transfers"
-          matTooltipShowDelay="200" matTooltipHideDelay="300">
-          <mat-icon>pause_circle_outline</mat-icon>
-        </button>
-        <button mat-button class="all-transfer-button" color="primary" (click)="resumeAllTransfers()" matTooltip="restart all transfers"
-          matTooltipShowDelay="200" matTooltipHideDelay="300">
-          <mat-icon>play_circle_outline</mat-icon>
-        </button>
-        <button mat-button class="all-transfer-button" color="accent" (click)="clearInactiveTransfers()" matTooltip="remove all incative transfers"
-          matTooltipShowDelay="200" matTooltipHideDelay="300">
-          <mat-icon>highlight_off</mat-icon>
-        </button>
-        &nbsp;&nbsp;&nbsp;
-        <button mat-button class="all-transfer-button" color="primary" (click)="showTransferManager()" matTooltip="show AsperaConnect"
-          matTooltipShowDelay="200" matTooltipHideDelay="300">
-          <mat-icon>dvr</mat-icon>
-        </button>
-      </div>
-    </mat-card>
+    </div>
 
   </mat-sidenav>
 
