@@ -4,7 +4,7 @@ import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar } from '@angular
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { HttpErrorResponse } from '@angular/common/http/src/response';
-
+import { ActivatedRoute } from '@angular/router';
 
 import { AsperaNodeApiService, DirList, NodeAPIcred } from './services/aspera-node-api.service';
 import { CreateDirDialogComponent } from './dialog/create-dir-dialog.component';
@@ -12,10 +12,12 @@ import { DeleteConfDialogComponent } from './dialog/delete-conf-dialog.component
 
 import { Logger } from './logger/logger.module';
 import { Config } from './config/config.module';
+import { ZlibB64 } from './zlib-b64/zlib-b64.module';
 
 import { environment } from '../environments/environment';
 
 declare var AW4: any;
+declare var moment: any;
 
 interface BreadcrumbNav { dirname: string; path: string; }
 
@@ -33,7 +35,24 @@ export class AppComponent implements OnInit, AfterViewInit {
     allow_dialogs: false
   };
 
-  config: { [key: string]: any };
+  // config file settings duplicate for supported keys & defaults
+  config = {
+    'logLevel': 'WARN',
+    'apiConnectProxy': '',
+    'isFixedURL': false,
+    'fixedURL': '',
+    'isFixedConnectAuth': false,
+    'fixedConnectAuth': false,
+    'enableGoto': false,
+    'enableCredLocalStorage': true,
+    'defaultCred': {
+      'nodeURL': 'https://demo.asperasoft.com:9092',
+      'nodeUser': 'asperaweb',
+      'nodePW': 'demoaspera',
+      'useTokenAuth': false
+    },
+    'connectInstaller': '//d3gcli72yxqn2z.cloudfront.net/connect/v4'
+  };
 
   uiCred: NodeAPIcred;
   dirList: DirList;
@@ -56,6 +75,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   hidePW = true;
   isDragOver = false;
 
+  isLoaded = {};
+
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -63,13 +84,20 @@ export class AppComponent implements OnInit, AfterViewInit {
   constructor(
     private log: Logger,
     private configFile: Config,
+    private z: ZlibB64,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar,
-    private nodeAPI: AsperaNodeApiService
+    private nodeAPI: AsperaNodeApiService,
+    private activatedRoute: ActivatedRoute
   ) {
-    this._setConfig(configFile);
+    this.log.debug('config File & Storage: ', configFile);
+    this.configFile.updateDef(this.config);
+    this.log.info('App config: ', this.config);
+
     nodeAPI.setAPIconnectProxy(this.config.apiConnectProxy);
     nodeAPI.setCred(this.config.defaultCred);
+
+    // get or load uiCred from nodeAPI
     if (this.config.enableCredLocalStorage) {
       this.uiCred = nodeAPI.loadCred();
       if (this.config.isFixedURL) { this.uiCred.nodeURL = this.config.fixedURL; }
@@ -80,46 +108,28 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
 
     this.selection = new SelectionModel<any>(true, []);
+
+    this._loadLib('asperaweb', this.config.connectInstaller + '/asperaweb-4.min.js');
+    this._loadLib('connectinstaller', this.config.connectInstaller + '/connectinstaller-4.min.js');
   }
 
-  private _setConfig(c: Config) {
-    // config file settings duplicate for supported keys & defaults
-    this.config = {
-      'apiConnectProxy': '',
-      'isFixedURL': false,
-      'fixedURL': '',
-      'isFixedConnectAuth': false,
-      'fixedConnectAuth': false,
-      'enableCredLocalStorage': true,
-      'defaultCred': {
-        'nodeURL': 'https://demo.asperasoft.com:9092',
-        'nodeUser': 'asperaweb',
-        'nodePW': 'demoaspera',
-        'useTokenAuth': false
-      },
-      'connectInstaller': '//d3gcli72yxqn2z.cloudfront.net/connect/v4'
+  private _loadLib(name: string, url: string) {
+    this.log.debug('preparing to load...', url);
+    const node = document.createElement('script');
+    node.src = url;
+    node.type = 'text/javascript';
+    node.async = true;
+    node.charset = 'utf-8';
+    node.onload = () => {
+      this.isLoaded[name] = true;
+      this.log.debug('loaded lib: ', url);
+      this.log.debug('isloaded: ', this.isLoaded);
+      if (this.isLoaded['asperaweb'] && this.isLoaded['connectinstaller']) { this._initAsperaconnect(); }
     };
-    // some type checking
-    this.log.debug('config File & Storage: ', c);
-    if (typeof c.apiConnectProxy === 'string') { this.config.apiConnectProxy = c.apiConnectProxy; }
-    if (typeof c.isFixedURL === 'boolean') { this.config.isFixedURL = c.isFixedURL; }
-    if (typeof c.fixedURL === 'string') { this.config.fixedURL = c.fixedURL; }
-    if (typeof c.isFixedConnectAuth === 'boolean') { this.config.isFixedConnectAuth = c.isFixedConnectAuth; }
-    if (typeof c.fixedConnectAuth === 'boolean') { this.config.fixedConnectAuth = c.fixedConnectAuth; }
-    if (typeof c.enableCredLocalStorage === 'boolean') { this.config.enableCredLocalStorage = c.enableCredLocalStorage; }
-    if (typeof c.defaultCred === 'object') {
-      if (typeof c.defaultCred.nodeURL === 'string') { this.config.defaultCred.nodeURL = c.defaultCred.nodeURL; }
-      if (typeof c.defaultCred.nodeUser === 'string') { this.config.defaultCred.nodeUser = c.defaultCred.nodeUser; }
-      if (typeof c.defaultCred.nodePW === 'string') { this.config.defaultCred.nodePW = c.defaultCred.nodePW; }
-      if (typeof c.defaultCred.useTokenAuth === 'boolean') { this.config.defaultCred.useTokenAuth = c.defaultCred.useTokenAuth; }
-    }
-    if (typeof c.connectInstaller === 'string') { this.config.connectInstaller = c.connectInstaller; }
-    this.log.info('App config: ', this.config);
+    document.getElementsByTagName('head')[0].appendChild(node);
   }
 
-
-  ngOnInit() {
-
+  private _initAsperaconnect() {
     this.asperaWeb = new AW4.Connect({ sdkLocation: this.config.connectInstaller, minVersion: '3.8.0', pollingTime: 3000, dragDropEnabled: true });
     const asperaInstaller = new AW4.ConnectInstaller({ sdkLocation: this.config.connectInstaller });
 
@@ -177,7 +187,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     });
 
     const app_id = this.asperaWeb.initSession();
-    this.log.info('Connect init App_ID: ', app_id);
+    this.log.debug('Connect init App_ID: ', app_id);
     this.asperaWeb.version({ success: (data => this.log.info('Connect version: ', data)), error: (err => this.log.error('connect.version CB ERROR: ', err.error)) });
 
     let dragDropEventTypeLast: string;
@@ -210,14 +220,40 @@ export class AppComponent implements OnInit, AfterViewInit {
         }
       }
     );
+  }
 
+  ngOnInit() {
   }
 
   ngAfterViewInit() {
+
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.log.debug('URLparams (observable): ', params);
+      if (params.goto && this.config.enableGoto) {
+        let gotoCred: any;
+        try {
+          const b64 = this.z.reverseObfuscation(params.goto);
+          gotoCred = this.z.inflateJson(b64);
+        } catch (e) { console.error('error setting "nodeAPIcred" from goto URL parameter ERROR: ', e); }
+        if (gotoCred != null) {
+          this.log.info('setting cred from goto json: ', gotoCred);
+          this.uiCred.useTokenAuth = true;
+          Object.keys(this.uiCred).forEach( k => {
+            if (typeof this.uiCred[k] === typeof gotoCred[k]) { this.uiCred[k] = gotoCred[k]; }
+          });
+        }
+
+        this.log.debug('new NodeAPI cred from goto json: : ', this.uiCred);
+        // this.testconnection(); // this also saves the uiCred to localstorage if enabled
+        this.nodeAPI.setCred(this.uiCred);
+        this.browse('/');
+      }
+
+    });
+
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
-
 
   // transfer activity methods
   stopTransfer(uuid: string) {

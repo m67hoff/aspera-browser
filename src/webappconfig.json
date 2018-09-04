@@ -6,6 +6,7 @@
         "fixedURL": "https://localhost:9092",
         "isFixedConnectAuth": false,
         "fixedConnectAuth": false,
+        "enableGoto": true,
         "enableCredLocalStorage": true,
         "defaultCred": {
             "nodeURL": "",
