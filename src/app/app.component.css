@@ -4,6 +4,17 @@
   background-color: snow
 }
 
+.app-backdrop {
+  top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+    display: block;
+    background-color: rgba(0,0,0,.6);
+    z-index: 999;
+}
+
 .app-toolbar-filler {
   flex: 1 1 auto;
 }
