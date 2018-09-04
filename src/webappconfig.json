@@ -4,15 +4,15 @@
         "apiConnectProxy": "",
         "isFixedURL": true,
         "fixedURL": "https://localhost:9092",
-        "isFixedConnectAuth": false,
-        "fixedConnectAuth": false,
-        "enableGoto": true,
+        "isFixedConnectAuth": true,
+        "fixedConnectAuth": true,
+        "enableGoto": false,
         "enableCredLocalStorage": true,
         "defaultCred": {
             "nodeURL": "",
             "nodeUser": "",
             "nodePW": "",
-            "useTokenAuth": false
+            "useTokenAuth": true
         },
         "connectInstaller": "//d3gcli72yxqn2z.cloudfront.net/connect/v4"
     },
