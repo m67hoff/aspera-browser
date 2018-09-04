@@ -87,7 +87,7 @@
   <!-- side nav transfers -->
   <mat-sidenav #sidenav_trans position="end" mode="side" opened="false" class="transfer-sidenav">
     <mat-card *ngIf="showHelp">
-      user help goes here
+      <app-help></app-help>
     </mat-card>
     <div *ngIf="!showHelp">
       <span *ngFor="let ti of allTransfersList">
