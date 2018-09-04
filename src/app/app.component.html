@@ -23,8 +23,9 @@
   </button>
 </mat-toolbar>
 
+<div class="app-backdrop" *ngIf="browseInProgress"></div>
 <mat-sidenav-container autosize class="app-sidenav-container">
-
+  
   <!-- side nav setteings -->
   <mat-sidenav #sidenav_set position="start" mode="over" class="app-sidenav">
     <mat-card>
