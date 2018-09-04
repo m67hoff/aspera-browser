@@ -128,8 +128,9 @@ button {
 }
 
 .progressInfo {
+  min-height: 6px;
   margin-left: 5px;
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
 .status {
@@ -141,7 +142,7 @@ button {
 .path {
   margin: 5px;
   margin-left: 10px;
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
 .filter {
