@@ -1,13 +1,18 @@
-node_modules
-npm-debug.log
-Dockerfile*
-docker-compose*
+.cfignore
 .dockerignore
+.DS_Store
 .git
 .gitignore
-README.md
-LICENSE
-.vscode
+.npmignore
+.vscode/
 
-manifest.yml
 asperabrowser.service
+docker-compose*
+Dockerfile*
+launchConfigurations/
+LICENSE
+README.md
+manifest.yml
+node_modules/
+npm-debug.log
+Thumbs.db
