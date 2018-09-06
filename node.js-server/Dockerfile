@@ -1,19 +1,21 @@
 FROM node:8
 
+ENV PLATFORM docker
 ENV NODE_ENV production
-ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
-ENV PATH=$PATH:${NPM_CONFIG_PREFIX}/bin
+ENV BASE_DIR /opt/asperabrowser
 
-RUN npm install -g asperabrowser 
+WORKDIR ${BASE_DIR}/app
 
-COPY serverconfig.json ${NPM_CONFIG_PREFIX}/lib/node_modules/asperabrowser/
-COPY webapp/webappconfig.json ${NPM_CONFIG_PREFIX}/lib/node_modules/asperabrowser/webapp/
+COPY package*.json ./
+RUN npm install 
 
-WORKDIR /opt/asperabrowser
-COPY serverconfig.json .
-COPY webapp/webappconfig.json .
-COPY ssl.cert .
-COPY ssl.key .
+COPY . .
+RUN ln -s /opt/asperabrowser/app/server.js /usr/bin/asperabrowser
+
+WORKDIR ${BASE_DIR}/etc
+COPY serverconfig.json ./
+COPY webapp/webappconfig.json ./
+COPY ssl.* ./ 
 
 EXPOSE 8888
 EXPOSE 44344
