@@ -172,7 +172,7 @@ app.get(['/config', '/webappconfig.json'], (req, res) => {
 // serve static files / angular web client
 log.http('express', 'static_file_path: ', path.join(__dirname, '/webapp'))
 app.use(function (req, res, next) {
-  log.verbose('express', 'serve static: ', req.url)
+  log.http('express', 'Static ' + req.method + ' ' + req.originalUrl)
   next()
 })
 app.use(express.static(path.join(__dirname, '/webapp')))
