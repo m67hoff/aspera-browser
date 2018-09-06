@@ -1,11 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-info',
-  templateUrl: './info.component.html',
-  styleUrls: ['./info.component.css']
+  selector: 'app-help',
+  templateUrl: './help.component.html',
+  styleUrls: ['./help.component.css']
 })
-export class InfoComponent {
+export class HelpComponent implements OnInit {
+
+  constructor() { }
 
   links = [
     {url: 'https://www.asperasoft.com', name: 'Aspera Homepage', detail: 'move the world’s data at maximum speed'},
@@ -14,6 +16,8 @@ export class InfoComponent {
     {url: 'https://www.rubydoc.info/gems/asperalm', name: 'Laurents Aspera Command Line Interface', detail: 'aslmcli - command line interface to Aspera Applications and Rest API'}
   ];
 
-  constructor() { }
+
+  ngOnInit() {
+  }
 
 }
