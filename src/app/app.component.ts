@@ -73,6 +73,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   isConnected = false;
   browseInProgress = false;
   hidePW = true;
+  showHelp = false;
   isDragOver = false;
 
   isLoaded = {};
