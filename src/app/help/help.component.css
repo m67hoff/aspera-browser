@@ -1,4 +1,30 @@
+.mat-card {
+    width: 400px;
+    margin: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    margin-left: 0px;
+  }
+ 
+
 .help-header {
     margin-top: 0px;
     margin-bottom: 0px;
+}
+
+.help-icon {
+    font-size: 24px;
+    vertical-align: middle;
+    height: 24px;
+    width: 24px;
+    margin-right: 10px;
+}
+
+.help-link {
+    font-size: 16px;
+}
+
+.help-detail {
+    font-weight: 300;
+    font-size: 12px;
 }

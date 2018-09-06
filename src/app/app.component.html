@@ -2,8 +2,8 @@
 <mat-toolbar color="primary" class="app-toolbar">
   <p>AsperaBrowser - Angular Sample App to Aspera API</p>
   <span class="app-toolbar-filler"></span>
-  <button mat-button class="toolbar-button" (click)="sidenav_set.toggle()" matTooltip="User Login and NodeAPI Settings" matTooltipShowDelay="500"
-    matTooltipHideDelay="500">
+  <button mat-button class="toolbar-button" (click)="sidenav_set.toggle()" matTooltip="User Login and NodeAPI Settings"
+    matTooltipShowDelay="500" matTooltipHideDelay="500">
     <mat-icon>settings</mat-icon>
   </button>
   &nbsp;&nbsp;
@@ -39,7 +39,7 @@
             </mat-placeholder>
             <input matInput #url name="url" [(ngModel)]="uiCred.nodeURL" type="url" required>
           </mat-form-field>
-          <br/>
+          <br />
         </div>
 
         <mat-form-field class="full-width">
@@ -48,7 +48,7 @@
           </mat-placeholder>
           <input matInput #user autocomplete="username" name="user" [(ngModel)]="uiCred.nodeUser" type="text" required>
         </mat-form-field>
-        <br/>
+        <br />
 
         <mat-form-field class="full-width">
           <mat-placeholder>
@@ -73,9 +73,11 @@
           <button mat-raised-button class="test-button" (click)="testconnection()" [disabled]="!settings.valid || !settings.dirty">
             Apply & Save
           </button>
-          <mat-icon color="warn" class="test-icon" [ngStyle]=" isConnected ? {color: 'green'} : {} ">{{ isConnected ? 'check_circle'
+          <mat-icon color="warn" class="test-icon" [ngStyle]=" isConnected ? {color: 'green'} : {} ">{{ isConnected ?
+            'check_circle'
             : 'error' }}</mat-icon>
-          <span class="status" *ngIf="HTTPerror">Error: {{ HTTPerror.status }} - {{ HTTPerror.statusText }} - {{ HTTPerror.message
+          <span class="status" *ngIf="HTTPerror">Error: {{ HTTPerror.status }} - {{ HTTPerror.statusText }} - {{
+            HTTPerror.message
             }} - {{ HTTPerror.error?.code }} - {{ HTTPerror.error?.host }}</span>
         </p>
       </form>
@@ -86,19 +88,16 @@
   <!-- side nav transfers -->
   <mat-sidenav #sidenav_trans position="end" mode="side" opened="false" class="transfer-sidenav">
     <div *ngIf="showHelp">
-      <mat-card>
-        <app-help></app-help>
-      </mat-card>
-      <mat-card>
-        <app-info></app-info>
-      </mat-card>
+      <app-help></app-help>
     </div>
     <div *ngIf="!showHelp">
       <span *ngFor="let ti of allTransfersList">
         <mat-card>
-          <div class="transfer-date"> {{ config.isFixedURL ? '' : ti.transfer_spec.remote_host + ' -' }} {{ ti.start_time
+          <div class="transfer-date"> {{ config.isFixedURL ? '' : ti.transfer_spec.remote_host + ' -' }} {{
+            ti.start_time
             | date:'EE HH:mm' }} </div>
-          <div class="transfer-title" matTooltip="{{ ti.title.length > 30 ? ti.title : '' }}" matTooltipShowDelay="200" matTooltipHideDelay="300">
+          <div class="transfer-title" matTooltip="{{ ti.title.length > 30 ? ti.title : '' }}" matTooltipShowDelay="200"
+            matTooltipHideDelay="300">
             <mat-icon class="transfer-icon" *ngIf="ti.status === 'cancelled'" color="primary">pause_circle_filled</mat-icon>
             <mat-icon class="transfer-icon" *ngIf="ti.status === 'completed'" style="color: green">check_circle</mat-icon>
             <mat-icon class="transfer-icon" *ngIf="ti.status === 'failed'" color="warn">error</mat-icon>
@@ -112,22 +111,26 @@
           <div class="transfer-subtitle" matTooltip="{{ ti.status === 'running' && ti.current_file.length > 30 ? ti.current_file : '' }}"
             matTooltipShowDelay="200" matTooltipHideDelay="300">
             Files: {{ ti.files ? ti.files.length : '?'}}
-            <br/> {{ ti.status === 'running' ? 'Current: ' + (ti.current_file | string) : 'Status: ' + (ti.status | status)
+            <br /> {{ ti.status === 'running' ? 'Current: ' + (ti.current_file | string) : 'Status: ' + (ti.status |
+            status)
             }}
           </div>
           <div class="transfer-error" *ngIf="ti.status === 'failed'">
             Error: {{ ti.error_desc }}
           </div>
-          <div class="transfer-bar" *ngIf="ti.status !== 'completed'" matTooltip="{{ ti.percentage | percent }}" matTooltipShowDelay="200"
-            matTooltipHideDelay="300">
+          <div class="transfer-bar" *ngIf="ti.status !== 'completed'" matTooltip="{{ ti.percentage | percent }}"
+            matTooltipShowDelay="200" matTooltipHideDelay="300">
             <mat-progress-bar mode="determinate" value="{{ti.percentage*100}}"></mat-progress-bar>
           </div>
           <div class="transfer-detail">
-            <span *ngIf="ti.status !== 'completed'">{{ ti.bytes_written | size }} of {{ ti.bytes_expected | size }} </span>
-            <span *ngIf="ti.status === 'completed'">{{ ti.bytes_written | size }} in {{ ti.elapsed_usec/1000 | duration }}
+            <span *ngIf="ti.status !== 'completed'">{{ ti.bytes_written | size }} of {{ ti.bytes_expected | size }}
             </span>
-            <br/>
-            <span *ngIf="ti.status === 'running'">ETA: {{(ti.remaining_usec/1000) | ETA | date:'EE HH:mm:ss'}} - {{(ti.remaining_usec/1000)
+            <span *ngIf="ti.status === 'completed'">{{ ti.bytes_written | size }} in {{ ti.elapsed_usec/1000 | duration
+              }}
+            </span>
+            <br />
+            <span *ngIf="ti.status === 'running'">ETA: {{(ti.remaining_usec/1000) | ETA | date:'EE HH:mm:ss'}} -
+              {{(ti.remaining_usec/1000)
               | duration }} remaining</span>
             <span *ngIf="ti.status === 'running'"> - {{ ti.calculated_rate_kbps | rate }}</span>
           </div>
@@ -145,8 +148,9 @@
               <mat-icon>highlight_off</mat-icon>
             </button>
             &nbsp;&nbsp;&nbsp;
-            <button mat-button class="transfer-button" color="primary" (click)="showTransferMonitor(ti.uuid)" [disabled]="(ti.status === 'completed')  ? true : false"
-              matTooltip="show AsperaConnect Transfer Mointor" matTooltipShowDelay="200" matTooltipHideDelay="300">
+            <button mat-button class="transfer-button" color="primary" (click)="showTransferMonitor(ti.uuid)"
+              [disabled]="(ti.status === 'completed')  ? true : false" matTooltip="show AsperaConnect Transfer Mointor"
+              matTooltipShowDelay="200" matTooltipHideDelay="300">
               <mat-icon>insert_chart_outlined</mat-icon>
             </button>
           </div>
@@ -201,12 +205,14 @@
           <mat-icon>{{ isConnected ? 'refresh' : 'lock_open' }}</mat-icon>
           {{ isConnected ? 'Refresh' : 'Login ' }}
         </button>
-        <button mat-raised-button color="primary" [disabled]="(dirList && selection.selected.length !== 0) ? false : true" (click)="download()">
+        <button mat-raised-button color="primary" [disabled]="(dirList && selection.selected.length !== 0) ? false : true"
+          (click)="download()">
           <mat-icon>file_download</mat-icon>
           Download
         </button>
 
-        <button mat-raised-button color="primary" [disabled]="(dirList && selection.selected.length === 0) ? false : true" [matMenuTriggerFor]="uploadMenu">
+        <button mat-raised-button color="primary" [disabled]="(dirList && selection.selected.length === 0) ? false : true"
+          [matMenuTriggerFor]="uploadMenu">
           <mat-icon>cloud_upload</mat-icon>
           Upload
         </button>
@@ -215,28 +221,32 @@
             <mat-icon>file_upload</mat-icon>
             File
           </button>
-          <br/>
+          <br />
           <button mat-raised-button class="menu-button" color="primary" (click)="showSelectFolderDialog()">
             <mat-icon>open_in_browser</mat-icon>
             Folder
           </button>
         </mat-menu>
 
-        <button mat-raised-button color="primary" [disabled]="(dirList && selection.selected.length !== 0) ? false : true" (click)="selection.clear()">
+        <button mat-raised-button color="primary" [disabled]="(dirList && selection.selected.length !== 0) ? false : true"
+          (click)="selection.clear()">
           <mat-icon>clear</mat-icon>
           Clear
         </button>
-        <button mat-raised-button color="primary" [disabled]="(dirList && selection.selected.length === 0) ? false : true" (click)="createDirDialog()">
+        <button mat-raised-button color="primary" [disabled]="(dirList && selection.selected.length === 0) ? false : true"
+          (click)="createDirDialog()">
           <mat-icon>folder</mat-icon>
           New Dir
         </button>
-        <button mat-raised-button color="accent" [disabled]="(dirList && selection.selected.length !== 0) ? false : true" (click)="deleteDialog()">
+        <button mat-raised-button color="accent" [disabled]="(dirList && selection.selected.length !== 0) ? false : true"
+          (click)="deleteDialog()">
           <mat-icon>delete</mat-icon>
           Delete Files
         </button>
         <div class="progressInfo">
           <mat-progress-bar mode="indeterminate" *ngIf="browseInProgress"></mat-progress-bar>
-          <span class="status" *ngIf="HTTPerror">Error: {{ HTTPerror.status }} - {{ HTTPerror.statusText }} - {{ HTTPerror.message
+          <span class="status" *ngIf="HTTPerror">Error: {{ HTTPerror.status }} - {{ HTTPerror.statusText }} - {{
+            HTTPerror.message
             }} - {{ HTTPerror.error?.code }} - {{ HTTPerror.error?.host }}</span>
           <span class="status" *ngIf="APIerror">Error: {{ APIerror }}</span>
         </div>
@@ -257,7 +267,8 @@
           <mat-table #table [dataSource]="dataSource" matSort>
 
             <ng-container matColumnDef="select">
-              <mat-header-cell *matHeaderCellDef matTooltip="click to toggle selection" matTooltipShowDelay="200" matTooltipHideDelay="300">
+              <mat-header-cell *matHeaderCellDef matTooltip="click to toggle selection" matTooltipShowDelay="200"
+                matTooltipHideDelay="300">
                 <mat-checkbox *ngIf="dirList" (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
                   [indeterminate]="selection.hasValue() && !isAllSelected()">
                 </mat-checkbox>
@@ -270,7 +281,8 @@
             </ng-container>
 
             <ng-container matColumnDef="type">
-              <mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="click to sort column" matTooltipShowDelay="200" matTooltipHideDelay="300">
+              <mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="click to sort column" matTooltipShowDelay="200"
+                matTooltipHideDelay="300">
                 Type </mat-header-cell>
               <mat-cell *matCellDef="let item" (click)="(item.type == 'directory') ? browse(item.path) : 0">
                 <mat-icon color="primary" class="folder-icon" *ngIf="(item.type == 'directory')" mat-list-icon>folder</mat-icon>
@@ -280,16 +292,20 @@
             </ng-container>
 
             <ng-container matColumnDef="basename">
-              <mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="click to sort column" matTooltipShowDelay="200" matTooltipHideDelay="300">
+              <mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="click to sort column" matTooltipShowDelay="200"
+                matTooltipHideDelay="300">
                 Name </mat-header-cell>
-              <mat-cell [ngClass]="(item.type == 'directory') ? 'folder-txt' : 'file-txt' " *matCellDef="let item" (click)="(item.type == 'directory') ? browse(item.path) : 0">
+              <mat-cell [ngClass]="(item.type == 'directory') ? 'folder-txt' : 'file-txt' " *matCellDef="let item"
+                (click)="(item.type == 'directory') ? browse(item.path) : 0">
                 {{ item.basename }}
               </mat-cell>
-              <mat-footer-cell *matFooterCellDef><span *ngIf="(selection.selected.length > 0)">selected Files: {{ totalFiles}}</span></mat-footer-cell>
+              <mat-footer-cell *matFooterCellDef><span *ngIf="(selection.selected.length > 0)">selected Files: {{
+                  totalFiles}}</span></mat-footer-cell>
             </ng-container>
 
             <ng-container matColumnDef="size">
-              <mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="click to sort column" matTooltipShowDelay="200" matTooltipHideDelay="300">
+              <mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="click to sort column" matTooltipShowDelay="200"
+                matTooltipHideDelay="300">
                 Size </mat-header-cell>
               <mat-cell *matCellDef="let item">
                 <span *ngIf="(item.type == 'directory')"> </span>
@@ -300,10 +316,12 @@
             </ng-container>
 
             <ng-container matColumnDef="mtime">
-              <mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="click to sort column" matTooltipShowDelay="200" matTooltipHideDelay="300">
+              <mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="click to sort column" matTooltipShowDelay="200"
+                matTooltipHideDelay="300">
                 M Time </mat-header-cell>
               <mat-cell *matCellDef="let item"> {{ item.mtime | date:'yyyy-MM-dd HH:mm:ss z' }} </mat-cell>
-              <mat-footer-cell *matFooterCellDef><span *ngIf="(selection.selected.length > 0)">+ {{totalDirs}} Directories</span></mat-footer-cell>
+              <mat-footer-cell *matFooterCellDef><span *ngIf="(selection.selected.length > 0)">+ {{totalDirs}}
+                  Directories</span></mat-footer-cell>
             </ng-container>
 
             <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
