@@ -1,5 +1,5 @@
 {
-    "LOGLEVEL": "verbose",
+    "LOGLEVEL": "info",
     "PORT": 8888,
     "FIXED_NODEAPI_URL": "",
     "FIXED_NODEAPI_USER": "",
