@@ -1,10 +1,25 @@
 ![](doc/img/aspera.png)
-## AsperaBrowser -  Angular Sample App to Aspera Connect & Node API  
+## AsperaBrowser -  Angular SPA for Aspera Connect & Node API  
 
 Angular App using Aspera Connect API and Node API for file and folder upload & download.
 UI using Angular Material components.
 
 (:exclamation: At the moment this is just a personal project for me to get familiar with the Aspera APIs and technology, and not an "official" open source project from IBM / Aspera)
+
+#### Features:
+- modern. fast & intuitive to use WebUI
+- works with any Aspera Transfer Server or ATS / Folder Access-Key local or remote
+- cloud or on-prem
+- separate or on same system as Transfer Server
+- support for HTTPS 
+- runs everywhere: Linux, Mac, Windows  
+- can be hosted in cloud  (docker, cloud-foundry) 
+- Docker Image available  
+- highly configurable
+- just uses Aspera Connect and NodeAPI
+- Angular SPA can also run separate from the node.js server
+- "goto" feature together with aslmcli
+- opensource
 
 ### See it live:
 A sample is deployed on IBM Cloud:
@@ -22,11 +37,12 @@ To build the AsperaBrowser Angular App run `npm run build`.  This will create a 
 
 ### Todo / planned / ideas 
 - Docs & more Docs
-- Docker Image
-- setup on windows  
-- connect error cb Handling
-- own user / authorization integration for node.js server 
+- unittests & e2e 
+- setting to load icon fonts local
+- run as windows service   
+- authorization integration for node.js server 
 - sharing via access keys  (as suggested by Laurent)  
+- more connect error Handling
 
 ### Screenshots 
 
@@ -35,8 +51,3 @@ To build the AsperaBrowser Angular App run `npm run build`.  This will create a 
 
 ##### Settings panel:
 ![](doc/img/settings.jpg)
-
-
----
-
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) 
