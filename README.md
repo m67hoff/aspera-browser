@@ -7,13 +7,12 @@ UI using Angular Material components.
 (:exclamation: At the moment this is just a personal project for me to get familiar with the Aspera APIs and technology, and not an "official" open source project from IBM / Aspera)
 
 #### Features:
-- modern. fast & intuitive to use WebUI
-- works with any Aspera Transfer Server or ATS / Folder Access-Key local or remote
+- modern, fast & intuitive to use WebUI
+- works with any Aspera Transfer Server or ATS/Folder Access-Key - local or remote
 - cloud or on-prem
 - separate or on same system as Transfer Server
 - support for HTTPS 
-- runs everywhere: Linux, Mac, Windows  
-- can be hosted in cloud  (docker, cloud-foundry) 
+- runs everywhere: Linux, Mac, Windows (node.js)   
 - Docker Image available  
 - highly configurable
 - just uses Aspera Connect and NodeAPI
