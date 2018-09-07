@@ -38,10 +38,10 @@ log.level = LOGLEVEL
 
 // cli options
 program
-  .option('--config', 'configure and start the service. Enable auto restart')
+  .option('--config', 'configure and start the service. Enable auto restart (linux)')
   .option('--defaults', 'copy default config files')
-  .option('-s, --status', 'show service status')
-  .option('-r, --restart', 'restart service')
+  .option('-s, --status', 'show service status (linux)')
+  .option('-r, --restart', 'restart service (linux)')
   .version(packagejson.version, '-v, --version')
   .parse(process.argv)
 

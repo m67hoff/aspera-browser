@@ -1,4 +1,8 @@
+.DS_Store
 .vscode/
-node_modules/
-webapp/
+
 launchConfigurations/
+node_modules/
+npm-debug.log
+Thumbs.db
+webapp/

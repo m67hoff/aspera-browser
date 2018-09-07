@@ -3,7 +3,7 @@
         "logLevel": "WARN",
         "apiConnectProxy": "",
         "isFixedURL": false,
-        "fixedURL": "https://demo.asperasoft.com:9092",
+        "fixedURL": "",
         "isFixedConnectAuth": false,
         "fixedConnectAuth": false,
         "enableGoto": true,
