@@ -14,4 +14,3 @@ manifest.yml
 node_modules/
 npm-debug.log
 Thumbs.db
-webapp/
