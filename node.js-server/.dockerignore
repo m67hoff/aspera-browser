@@ -6,12 +6,13 @@
 .npmignore
 .vscode/
 
+asperabrowser.service
 docker-compose*
 Dockerfile*
 launchConfigurations/
 LICENSE
+README.md
 manifest.yml
 node_modules/
 npm-debug.log
 Thumbs.db
-webapp/

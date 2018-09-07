@@ -6,13 +6,13 @@
 
 .app-backdrop {
   top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    position: absolute;
-    display: block;
-    background-color: rgba(0,0,0,.6);
-    z-index: 999;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  display: block;
+  background-color: rgba(0, 0, 0, .6);
+  z-index: 999;
 }
 
 .app-toolbar-filler {
@@ -65,8 +65,12 @@ button {
 .transfer-sidenav {
   padding: 10px;
   padding-left: 0px;
-  min-width: 400px;
   background-color: snow
+}
+
+.transfer-sidenav mat-card {
+  width: 400px;
+  margin-left: 0px;
 }
 
 .transfer-date {
@@ -227,6 +231,12 @@ button {
 .mat-header-cell {
   font-size: 14px;
   font-weight: 900;
+}
+
+.mat-footer-cell {
+  font-size: 14px;
+  font-weight: 900;
+  color: rgba(0, 0, 0, 0.54);
 }
 
 .mat-column-select {

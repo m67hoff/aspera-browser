@@ -17,7 +17,7 @@ import { DurationPipe, ETAPipe } from './pipes/duration.pipe';
 import { StatusPipe, StringPipe } from './pipes/status.pipe';
 import { CreateDirDialogComponent } from './dialog/create-dir-dialog.component';
 import { DeleteConfDialogComponent } from './dialog/delete-conf-dialog.component';
-import { InfoComponent } from './info/info.component';
+import { HelpComponent } from './help/help.component';
 
 
 import { ConfigModule } from './config/config.module';
@@ -32,7 +32,7 @@ import { ZlibB64Module } from './zlib-b64/zlib-b64.module';
     StatusPipe, StringPipe,
     CreateDirDialogComponent,
     DeleteConfDialogComponent,
-    InfoComponent
+    HelpComponent
   ],
   imports: [
     BrowserModule,
