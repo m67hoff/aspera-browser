@@ -12,9 +12,12 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --prod --aot",
+    "build_all": "npm run merge_npm; npm run merge_blue; npm run merge_docker; git push --all; git push --tags; npm run build_docker; git checkout master",
+    "build_docker": "git checkout docker; ng build --prod --aot; cd node.js-server; docker build -t mhoff/asperabrowser . ; cd ..",
     "version": "v=$(jq .version package.json) ; echo $v ; jq .version=$v node.js-server/package.json > p$$.json ; mv p$$.json node.js-server/package.json; git add node.js-server/package* ",
     "merge_npm": "git checkout npm_package ; git merge -m 'merge master' master ; git checkout master",
     "merge_blue": "git checkout bluemix_deploy ; git merge -m 'merge master' master ; git checkout master",
+    "merge_docker": "git checkout docker ; git merge -m 'merge master' master ; git checkout master",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
