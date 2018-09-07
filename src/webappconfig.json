@@ -1,7 +1,7 @@
 {
     "app": {
-        "logLevel": "WARN",
-        "apiConnectProxy": "",
+        "logLevel": "INFO",
+        "apiConnectProxy": "http://localhost:8888",
         "isFixedURL": false,
         "fixedURL": "",
         "isFixedConnectAuth": false,
