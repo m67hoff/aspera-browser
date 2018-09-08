@@ -1,1 +1,8 @@
-theme: jekyll-theme-minimal
+markdown_ext: "md"
+markdown: kramdown
+exclude: [README.md]
+
+defaults:
+  -
+    values:
+      layout: "default"
