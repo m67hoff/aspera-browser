@@ -5,7 +5,7 @@ title: Introduction
 
 # Introduction
 
-This handbook is designed [Architecture Overview](doc/Architecture.md) 
+This handbook is designed [Architecture Overview](doc/Architecture.html) 
 
 ## Using This Handbook
 

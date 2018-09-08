@@ -1,3 +1,6 @@
+---
+title: Installation
+---
 ## AsperaBrowser -  Installation Guide
 
 ### run & test local development version

@@ -1,3 +1,7 @@
+---
+title: Architecture
+---
+
 ![](img/aspera.png)
 ## AsperaBrowser -  Architecture  
 
