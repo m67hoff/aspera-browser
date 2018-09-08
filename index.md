@@ -1,7 +1,7 @@
 ---
 title: Introduction
 ---
-![](img/aspera.png)
+![](doc/img/aspera.png)
 
 # Introduction
 
