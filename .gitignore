@@ -4,6 +4,9 @@
 /dist
 /tmp
 /out-tsc
+
+#jekyll
+.jekyll-metadata
 /_site
 
 # dependencies
