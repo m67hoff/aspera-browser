@@ -1,6 +1,7 @@
 markdown_ext: "md"
 exclude: [README.md]
-
+plugins:
+  - jekyll-relative-links
 defaults:
   -
     values:

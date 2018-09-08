@@ -3,13 +3,13 @@
 ---
 
 @import 'colors';
-@import 'pages';
+// @import 'pages';
 
-$primary-font: "Helvetica Neue", Helvetica, sans-serif;
+$primary-font: "Helvetica Neue", Roboto, sans-serif;
 $monospace-font: "Source Code Pro", monospace;
 
 body {
-    background: $gray-80;
+    background: snow;
     color: $gray-60;
     font-family: $primary-font;
     font-size: 16px;
@@ -25,16 +25,16 @@ main {
 }
 
 header {
-    background: $gray-80;
+    background: #3f51b5;
     padding: 20px 0;
     position: fixed;
     width: 100%;
     z-index: 100;
 
     h1 {
-        color: $gray-10;
-        font-size: 16px;
-        font-weight: 200;
+        color: #fff;
+        font-size: 20px;
+        font-weight: 500;
         line-height: 30px;
         margin: 0 auto;
         max-width: 1064px;
@@ -59,6 +59,10 @@ nav {
     padding: 20px 0;
     float: left;
     width: 220px;
+   
+    h3 {
+        color: $gray-60;
+    }
 
     ul {
         list-style-type: none;

@@ -1,8 +1,0 @@
-.DS_Store
-.vscode/
-
-launchConfigurations/
-node_modules/
-npm-debug.log
-Thumbs.db
-webapp/
