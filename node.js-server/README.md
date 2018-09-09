@@ -16,43 +16,22 @@ A sample is deployed on IBM Cloud:
 #### AsperaBrowser WebApp:
 this node.js server is just a server side "helper" to provide the AsperaBrowser WebApp. The Angular App (source) is maintained on [GitHub aspera-browser project](https://github.com/m67hoff/aspera-browser)
 
-### Install and run it on you own Server
+#### Features:
+- modern, fast & intuitive to use WebUI
+- browse, upload, download to any Aspera Transfer Server or ATS/Folder Access-Key - local or remote
+- drag-and-drop to upload
+- see and manage your transfer activity
+- "goto" feature together with aslmcli
+- cloud or on-prem
+- separate or on same system as Transfer Server
+- support for HTTPS 
+- runs everywhere: Linux, Mac, Windows (node.js)   
+- Docker Image available  
+- highly configurable
+- just uses Aspera Connect and NodeAPI
+- can host connet and all libs to run in internal networks
+- Angular SPA can also run separate from the node.js server
+- opensource
 
-AsperaBrowser can run on the same system as the Aspera Highspeed Transfer Server or on a separate system with https access to the NodeAPI of the Transfer Server.
-The easiest way to install AsperaBrowser is to use the npm module.
-
-### Install on CentOS
-(all steps need to run root)
-#### :wrench: Beta version: docu and setup currently under work!
-
-Install Node.js 
-- https://nodejs.org/en/download
-- https://nodejs.org/en/download/package-manager/
-
-```
-curl --silent --location https://rpm.nodesource.com/setup_8.x | sudo bash -
-yum -y install nodejs
-```
-
-Install asperabrowser (global)
-```
-npm i -g asperabrowser
-```
-
-config systemd to run asperabrowser as service and start the service
-```
-asperabrowser --config
-```
-
-check status
-```
-asperabrowser -s
-```
-
-(optional) copy config files for customization 
-```
-asperabrowser --defaults
-```
-### Additional Infos
-More ways to install and run AsperaBrowser are explained in the
-[Installation Guide](/doc/Installation_Guide.md)
+### For more Information to use/install it on your own system see the  
+[AsperaBrowser Handbook](https://github.com/m67hoff/aspera-browser/wiki) .
