@@ -34,4 +34,4 @@ this node.js server is just a server side "helper" to provide the AsperaBrowser 
 - opensource
 
 ### For more Information to use/install it on your own system see the  
-[AsperaBrowser Handbook](https://github.com/m67hoff/aspera-browser/wiki) .
+[AsperaBrowser Handbook](https://github.com/m67hoff/aspera-browser/wiki) 
