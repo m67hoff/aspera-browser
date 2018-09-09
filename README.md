@@ -8,7 +8,10 @@ UI using Angular Material components.
 
 #### Features:
 - modern, fast & intuitive to use WebUI
-- works with any Aspera Transfer Server or ATS/Folder Access-Key - local or remote
+- browse, upload, download to any Aspera Transfer Server or ATS/Folder Access-Key - local or remote
+- drag-and-drop to upload
+- see and manage your transfer activity
+- "goto" feature together with aslmcli
 - cloud or on-prem
 - separate or on same system as Transfer Server
 - support for HTTPS 
@@ -16,8 +19,8 @@ UI using Angular Material components.
 - Docker Image available  
 - highly configurable
 - just uses Aspera Connect and NodeAPI
+- can host connet and all libs to run in internal networks
 - Angular SPA can also run separate from the node.js server
-- "goto" feature together with aslmcli
 - opensource
 
 ### See it live:
