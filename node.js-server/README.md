@@ -6,7 +6,7 @@ a simple node.js server to run the AsperaBrowser Angular WebApp.
 It provides all static files (from folder "webapp") for the AsperaBrowser. And also works as simple "REST proxy" for the Aspera NodeAPI, to forward REST calls from the AsperaBrowser WebApp to the NodeAPI on the specified Aspera Transfer Server.
 (The Rest-call forward is needed to avoid CORS and SSL exceptions form the client Browser)
 
-(:exclamation: At the moment this is just a personal project for me to get familiar with the Aspera APIs and technology, and not an "official" open source project from IBM / Aspera)
+(:exclamation: At the moment this is just a personal project, to get familiar with the Aspera APIs and technology, and not an "official" open source project from IBM / Aspera)
 
 ### See it live:
 A sample is deployed on IBM Cloud:
