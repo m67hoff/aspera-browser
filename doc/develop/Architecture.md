@@ -2,11 +2,11 @@
 title: Architecture
 ---
 
-![](img/aspera.png)
+![](../img/aspera.png)
 ## AsperaBrowser -  Architecture  
 
 ### component diagram
-![](img/components.jpg) 
+![](../img/components.jpg) 
 
 Aspera NodeAPI is a feature of Aspera Enterprise Server that provides a RESTful interface for control of the transfer server environment.
 The NodeAPI is accessed by basic https auth from the web client.  

@@ -3,53 +3,56 @@
 
 {% assign base = './' %}
 {% assign depth = page.url | split: '/' | size | minus: 1 %}
-{% if    depth == 1 %}{% assign base = './' %}
+{% if depth == 1 %}{% assign base = './' %}
 {% elsif depth == 2 %}{% assign base = '../' %}
 {% elsif depth == 3 %}{% assign base = '../../' %}
 {% elsif depth == 4 %}{% assign base = '../../../' %}{% endif %}
 
 <head>
-<title>AsperaBrowser Handbook: {{ page.title }}</title>
-<meta charset="utf-8">
-<link href='{{ base }}doc/css/style.css' rel='stylesheet' type='text/css'>
+    <title>AsperaBrowser Handbook: {{ page.title }}</title>
+    <meta charset="utf-8">
+    <link href='{{ base }}doc/css/style.css' rel='stylesheet' type='text/css'>
 </head>
+
 <body class="{{ page.title | slugify }}">
-<header>
-    <h1><strong>AsperaBrowser Handbook</strong></h1>
-</header>
-<div id="background">
-<div id="page">
-<nav>
-    <h3>Use</h3>
-    <ul>
-        <li><a href="{{ base }}" class="introduction">Introduction</a></li>
-        <li><a href="{{ base }}doc/fundamentals/format.html" class="format">Format</a></li>
-        <li><a href="{{ base }}doc/fundamentals/methods.html" class="methods">Methods</a></li>
-        <li><a href="{{ base }}doc/fundamentals/headers.html" class="headers">Headers</a></li>
-        <li><a href="{{ base }}doc/fundamentals/status-codes.html" class="status-codes">Status Codes</a></li>
-    </ul>
-    <h3>Install & Configure</h3>
-    <ul>
-        <li><a href="{{ base }}doc/design/terminology.html" class="terminology">Terminology</a></li>
-        <li><a href="{{ base }}doc/design/models.html" class="models">Models</a></li>
-        <li><a href="{{ base }}doc/design/types.html" class="types">Types</a></li>
-        <li><a href="{{ base }}doc/design/uris.html" class="uris">URIs</a></li>
-        <li><a href="{{ base }}doc/design/errors.html" class="errors">Errors</a></li>
-    </ul>
-    <h3>Insights & Develop</h3>
-    <ul>
-        <li><a href="{{ base }}doc/collections/overview.html" class="collections">Overview</a></li>
-        <li><a href="{{ base }}doc/collections/pagination.html" class="pagination">Pagination</a></li>
-        <li><a href="{{ base }}doc/collections/sorting.html" class="sorting">Sorting</a></li>
-        <li><a href="{{ base }}doc/collections/filtering.html" class="filtering">Filtering</a></li> 
-</nav>
-<main>
-<article>
-{{ content }}
-</article>
-</main>
-</div>
-</div>
-<script src='{{ base }}doc/scripts/behavior.js'></script>
+    <header>
+        <h1><strong>AsperaBrowser Handbook</strong></h1>
+    </header>
+    <div id="background">
+        <div id="page">
+            <nav>
+                <h3>Use</h3>
+                <ul>
+                    <li><a href="{{ base }}">Introduction</a></li>
+                    <li><a href="{{ base }}doc/use/use.html">Readme</a></li>
+                    <li><a href="{{ base }}doc/use/methods.html">Methods</a></li>
+                    <li><a href="{{ base }}doc/use/status.html">Status</a></li>
+                </ul>
+                <h3>Install & Configure</h3>
+                <ul>
+                    <li><a href="{{ base }}doc/install/Installation_Guide.html">Install</a></li>
+                    <li><a href="{{ base }}doc/install/test.html">gheht nix</a></li>
+                    <h4> System</h4>
+                    <ul>
+                        <li><a href="{{ base }}doc/install/win.html">win</a></li>
+                        <li><a href="{{ base }}doc/install/mac.html">Mac</a></li>
+                        <li><a href="{{ base }}doc/install/linux.html">KLinux</a></li>
+                    </ul>
+                </ul>
+                <h3>Insights & Develop</h3>
+                <ul>
+                    <li><a href="{{ base }}doc/develop/Architecture.html">Arch</a></li>
+                    <li><a href="{{ base }}doc/develop/code.html">code</a></li>
+                    <li><a href="{{ base }}doc/develop/overview.html">Fußnote</a></li>
+            </nav>
+            <main>
+                <article>
+                    {{ content }}
+                </article>
+            </main>
+        </div>
+    </div>
+    <script src='{{ base }}doc/scripts/behavior.js'></script>
 </body>
+
 </html>

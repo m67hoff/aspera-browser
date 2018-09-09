@@ -5,6 +5,8 @@ title: Introduction
 
 # Introduction
 
+Alles nur Test und Beispiele 
+
 This handbook is designed [Architecture Overview](doc/Architecture.html) 
 
 ## Using This Handbook
@@ -31,29 +33,6 @@ UI using Angular Material components.
 - Angular SPA can also run separate from the node.js server
 - "goto" feature together with aslmcli
 - opensource
-
-### See it live:
-A sample is deployed on IBM Cloud:
-[asperabrowser.mybluemix.net](https://asperabrowser.mybluemix.net)
-(This sample is preconfigured with a login to the Aspera Demoserver. Just click login)
-
-### use it on you own system / node.js server
-AsperaBrowser can be provided by a node.js web server. See the [node.js-server directory](node.js-server) to use/install it on your own system.
-
-### Build the AsperaBrowser Angular
-This directory contains the sources for the Angular App. It can be deployed as static SPA (see [Installation Guide](doc/Installation_Guide.md))
-To build the AsperaBrowser Angular App run `npm run build`.  This will create a new build in the `node.js-server/webapp/` directory that contains the static WebApp.   
-
-[Architecture Overview](doc/Architecture.md) provides information on the application components and the used APIs. 
-
-### Todo / planned / ideas
-- Docs & more Docs
-- unittests & e2e 
-- setting to load icon fonts local
-- run as windows service   
-- authorization integration for node.js server 
-- sharing via access keys  (as suggested by Laurent)  
-- more connect error Handling
 
 ### Screenshots 
 
