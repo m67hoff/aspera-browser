@@ -1,4 +1,4 @@
-![](doc/img/aspera.png)
+![](/doc/img/aspera.png)
 ## AsperaBrowser -  Angular SPA for Aspera Connect & Node API  
 
 Angular App using Aspera Connect API and Node API for file and folder upload & download, using Angular Material components.
@@ -27,8 +27,8 @@ A sample is deployed on IBM Cloud:
 - Angular SPA can also run separate from the node.js server
 - opensource
 
-### For more Information to use/install it on your own system see the  
-[AsperaBrowser Handbook](https://github.com/m67hoff/aspera-browser/wiki) 
+### For more Information how to use/install it on your own system see the  
+#### [AsperaBrowser Handbook](https://github.com/m67hoff/aspera-browser/wiki) 
 
 ### Todo / planned / ideas 
 - Docs & more Docs
@@ -41,10 +41,5 @@ A sample is deployed on IBM Cloud:
 - sharing via access keys  (as suggested by Laurent)  
 - more connect error Handling
 
-### Screenshots 
-
-##### Browse Directory:
-![](doc/img/browse.jpg)
-
-##### Settings panel:
-![](doc/img/settings.jpg)
+### Screenshot 
+![](/doc/img/browse.jpg)

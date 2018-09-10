@@ -33,5 +33,8 @@ this node.js server is just a server side "helper" to provide the AsperaBrowser 
 - Angular SPA can also run separate from the node.js server
 - opensource
 
-### For more Information to use/install it on your own system see the  
-[AsperaBrowser Handbook](https://github.com/m67hoff/aspera-browser/wiki) 
+### For more Information how to use/install it on your own system see the  
+### [AsperaBrowser Handbook](https://github.com/m67hoff/aspera-browser/wiki) 
+
+### Screenshot 
+![](/doc/img/browse.jpg)
