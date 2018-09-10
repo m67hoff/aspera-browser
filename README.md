@@ -33,7 +33,6 @@ A sample is deployed on IBM Cloud:
 ### Todo / planned / ideas 
 - Docs & more Docs
 - user Help
-- Load icon fonts local ???
 - unittests & e2e 
 - setting to load icon fonts local
 - run as windows service   
