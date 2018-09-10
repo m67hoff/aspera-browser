@@ -28,7 +28,7 @@ A sample is deployed on IBM Cloud:
 - opensource
 
 ### For more Information how to use/install it on your own system see the  
-#### [AsperaBrowser Handbook](https://github.com/m67hoff/aspera-browser/wiki) 
+### [AsperaBrowser Handbook](https://github.com/m67hoff/aspera-browser/wiki) 
 
 ### Todo / planned / ideas 
 - Docs & more Docs
