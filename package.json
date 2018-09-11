@@ -14,6 +14,7 @@
     "build": "ng build --prod --aot",
     "build_all": "npm run merge_npm; npm run merge_blue; npm run merge_docker; npm run build_docker; git push --all; git push --tags",
     "build_docker": "git checkout docker; ng build --prod --aot; cd node.js-server; docker build -t mhoff/asperabrowser . ; cd .. ; git checkout master",
+    "docker_push": "v=v$(jq .version package.json | tr -d '\"') ; echo $v ;  docker tag mhoff/asperabrowser mhoff/asperabrowser:$v ; docker push mhoff/asperabrowser:$v  ; docker push mhoff/asperabrowser ",
     "version": "v=$(jq .version package.json) ; echo $v ; jq .version=$v node.js-server/package.json > p$$.json ; mv p$$.json node.js-server/package.json; git add node.js-server/package* ",
     "merge_npm": "git checkout npm_package ; git merge -m 'merge master' master ; git checkout master",
     "merge_blue": "git checkout bluemix_deploy ; git merge -m 'merge master' master ; git checkout master",
