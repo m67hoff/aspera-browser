@@ -29,7 +29,7 @@ this node.js server is just a server side "helper" to provide the AsperaBrowser 
 - Docker Image available  
 - highly configurable
 - just uses Aspera Connect and NodeAPI
-- can host connet and all libs to run in internal networks
+- can host connect and all libs to run in internal networks
 - Angular SPA can also run separate from the node.js server
 - opensource
 
