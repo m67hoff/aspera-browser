@@ -23,7 +23,7 @@ A sample is deployed on IBM Cloud:
 - Docker Image available  
 - highly configurable
 - just uses Aspera Connect and NodeAPI
-- can host connet and all libs to run in internal networks
+- can host connect and all libs to run in internal networks
 - Angular SPA can also run separate from the node.js server
 - opensource
 
