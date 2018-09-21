@@ -1,5 +1,8 @@
 ![](/doc/img/aspera.png)
 ## AsperaBrowser -  Angular SPA for Aspera Connect & Node API  
+[![Dependencies Status](https://david-dm.org/m67hoff/aspera-browser.svg)](https://david-dm.org/m67hoff/aspera-browser)
+[![devDependencies Status](https://david-dm.org/m67hoff/aspera-browser/dev-status.svg)](https://david-dm.org/m67hoff/aspera-browser?type=dev)
+
 
 Angular App using Aspera Connect API and Node API for file and folder upload & download, using Angular Material components.
 
