@@ -17,12 +17,12 @@ export class StatusPipe implements PipeTransform {
 export class StringPipe implements PipeTransform {
 
   transform(str: string): string {
-    const max = 35;
-    const begin = 10;
-    const end = 20;
+    const max = 60;
+    const begin = 25;
+    const end = 30;
 
     if (str.length < max) { return str; }
 
-    return str.substring(0, begin) + '....' + str.substring(end);
+    return str.substring(0, begin) + '....' + str.substring(str.length - end);
   }
 }
