@@ -116,7 +116,7 @@
             }}
           </div>
           <div class="transfer-error" *ngIf="ti.status === 'failed'">
-            Error: {{ ti.error_desc }}
+            Error: {{ ti.error_desc | string }}
           </div>
           <div class="transfer-bar" *ngIf="ti.status !== 'completed'" matTooltip="{{ ti.percentage | percent }}"
             matTooltipShowDelay="200" matTooltipHideDelay="300">
