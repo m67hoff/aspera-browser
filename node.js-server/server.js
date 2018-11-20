@@ -193,6 +193,7 @@ function createNodeRequest (localReq, localRes) {
   options.method = localReq.method
   options.json = localReq.body
   options.headers = localReq.headers
+  options.headers['accept-encoding'] = 'identity'
   if (FIXED_NODEAPI_USER !== '') {
     log.verbose('createNodeRequest', 'set authorization from config -> User: %s Password: %s', FIXED_NODEAPI_USER, FIXED_NODEAPI_PASS)
     options.headers.authorization = 'Basic ' + btoa(FIXED_NODEAPI_USER + ':' + FIXED_NODEAPI_PASS)
@@ -225,6 +226,10 @@ function createNodeRequest (localReq, localRes) {
     } else {
       log.http('remoteNodeApiRequest', 'statusCode:', remoteRes.statusCode)
       log.verbose('remoteNodeApiRequest', 'body:\n', json2s(remoteBody))
+      localRes.set({
+        'Content-Encoding': remoteRes.headers['content-encoding'],
+        'Content-Type': remoteRes.headers['content-type']
+      })
       localRes.status(remoteRes.statusCode)
         .json(remoteBody)
     }
