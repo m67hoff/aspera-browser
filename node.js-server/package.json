@@ -1,6 +1,6 @@
 {
   "name": "asperabrowser",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Angular App and node.js server for Aspera file transfer",
   "author": "mhoff@de.ibm.com",
   "license": "Apache-2.0",
@@ -18,9 +18,9 @@
   },
   "dependencies": {
     "body-parser": "^1.18.3",
-    "commander": "^2.18.0",
-    "express": "^4.16.3",
-    "helmet": "^3.13.0",
+    "commander": "^2.19.0",
+    "express": "^4.16.4",
+    "helmet": "^3.15.0",
     "npmlog": "^4.1.2",
     "request": "^2.88.0"
   },
@@ -28,6 +28,6 @@
     "node": "8.x"
   },
   "devDependencies": {
-    "nodemon": "^1.14.7"
+    "nodemon": "^1.18.6"
   }
 }
