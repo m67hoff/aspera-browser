@@ -14,7 +14,7 @@
             "nodePW": "demoaspera",
             "useTokenAuth": false
         },
-        "connectInstaller": "//d2txn6g36vhyhg.cloudfront.net/connect_3_9_0_beta/v4"
+        "connectInstaller": "//d2txn6g36vhyhg.cloudfront.net/connect_3_9_1_171801_ga/v4"
     },
     "config": {
         "enableLocalConfig": true,
