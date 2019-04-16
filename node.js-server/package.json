@@ -14,7 +14,7 @@
   },
   "scripts": {
     "start": "node server.js",
-    "live": "nodemon server.js"
+    "live": "./node_modules/.bin/nodemon server.js"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
