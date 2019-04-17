@@ -131,7 +131,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   private _initAsperaconnect() {
-    this.asperaWeb = new AW4.Connect({ sdkLocation: this.config.connectInstaller, minVersion: '3.9.0', pollingTime: 3000, dragDropEnabled: true });
+    this.asperaWeb = new AW4.Connect({ sdkLocation: this.config.connectInstaller, minVersion: '3.9.1', pollingTime: 3000, dragDropEnabled: true });
     const asperaInstaller = new AW4.ConnectInstaller({ sdkLocation: this.config.connectInstaller });
     asperaInstaller.supportsInstallingExtensions = true;
 
