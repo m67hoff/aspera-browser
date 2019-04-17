@@ -16,7 +16,7 @@ A sample is deployed on IBM Cloud:
 - browse, upload, download to any Aspera Transfer Server or ATS/Folder Access-Key - local or remote
 - drag-and-drop to upload
 - see and manage your transfer activity
-- "goto" feature together with aslmcli
+- "goto" feature together with [mlia](https://www.rubydoc.info/gems/asperalm)
 - cloud or on-prem
 - separate or on same system as Transfer Server
 - support for HTTPS 
