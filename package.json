@@ -1,6 +1,6 @@
 {
   "name": "asperabrowser",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "small Angular App and node.js server for Aspera file transfer",
   "author": "mhoff@de.ibm.com",
   "license": "Apache-2.0",
