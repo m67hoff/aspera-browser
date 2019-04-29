@@ -131,8 +131,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   private _initAsperaconnect() {
-    this.asperaWeb = new AW4.Connect({ sdkLocation: this.config.connectInstaller, minVersion: '3.8.0', pollingTime: 3000, dragDropEnabled: true });
+    this.asperaWeb = new AW4.Connect({ sdkLocation: this.config.connectInstaller, minVersion: '3.9.1', pollingTime: 3000, dragDropEnabled: true });
     const asperaInstaller = new AW4.ConnectInstaller({ sdkLocation: this.config.connectInstaller });
+    asperaInstaller.supportsInstallingExtensions = true;
 
     this.asperaWeb.addEventListener(AW4.Connect.EVENT.STATUS, (eventType, status) => {
       this.log.debug('AsperaInstaller status: ', status);
@@ -149,6 +150,9 @@ export class AppComponent implements OnInit, AfterViewInit {
           break;
         case AW4.Connect.STATUS.RUNNING:
           asperaInstaller.connected();
+          break;
+        case AW4.Connect.STATUS.EXTENSION_INSTALL:
+          asperaInstaller.showExtensionInstall();
           break;
       }
     });
