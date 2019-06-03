@@ -1,9 +1,12 @@
 import { Component, Inject, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
-import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar } from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { FormControl, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { HttpErrorResponse } from '@angular/common/http/src/response';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 
 import { AsperaNodeApiService, DirList, NodeAPIcred } from './services/aspera-node-api.service';
@@ -28,7 +31,7 @@ interface BreadcrumbNav { dirname: string; path: string; }
 })
 export class AppComponent implements OnInit, AfterViewInit {
 
-  version_footer: string = environment.package.name + ' v' + environment.package.version + ((environment.production) ? 'prod' : 'dev');
+  versionFooter: string = environment.package.name + ' v' + environment.package.version + ((environment.production) ? 'prod' : 'dev');
 
   asperaWeb: any;
   connectSettings = {
@@ -37,21 +40,21 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   // config file settings duplicate for supported keys & defaults
   config = {
-    'logLevel': 'WARN',
-    'apiConnectProxy': '',
-    'isFixedURL': false,
-    'fixedURL': '',
-    'isFixedConnectAuth': false,
-    'fixedConnectAuth': false,
-    'enableGoto': false,
-    'enableCredLocalStorage': true,
-    'defaultCred': {
-      'nodeURL': 'https://demo.asperasoft.com:9092',
-      'nodeUser': 'asperaweb',
-      'nodePW': 'demoaspera',
-      'useTokenAuth': false
+    logLevel: 'WARN',
+    apiConnectProxy: '',
+    isFixedURL: false,
+    fixedURL: '',
+    isFixedConnectAuth: false,
+    fixedConnectAuth: false,
+    enableGoto: false,
+    enableCredLocalStorage: true,
+    defaultCred: {
+      nodeURL: 'https://demo.asperasoft.com:9092',
+      nodeUser: 'asperaweb',
+      nodePW: 'demoaspera',
+      useTokenAuth: false
     },
-    'connectInstaller': '//d3gcli72yxqn2z.cloudfront.net/connect/v4'
+    connectInstaller: '//d3gcli72yxqn2z.cloudfront.net/connect/v4'
   };
 
   uiCred: NodeAPIcred;
@@ -79,8 +82,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   isLoaded = {};
 
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
     private log: Logger,
@@ -120,12 +123,13 @@ export class AppComponent implements OnInit, AfterViewInit {
     node.src = url;
     node.type = 'text/javascript';
     node.async = true;
-    node.charset = 'utf-8';
     node.onload = () => {
       this.isLoaded[name] = true;
       this.log.debug('loaded lib: ', url);
       this.log.debug('isloaded: ', this.isLoaded);
+      /* tslint:disable:no-string-literal */
       if (this.isLoaded['asperaweb'] && this.isLoaded['connectinstaller']) { this._initAsperaconnect(); }
+      /* tslint:enable:no-string-literal */
     };
     document.getElementsByTagName('head')[0].appendChild(node);
   }
@@ -191,15 +195,18 @@ export class AppComponent implements OnInit, AfterViewInit {
       }
     });
 
-    const app_id = this.asperaWeb.initSession();
-    this.log.debug('Connect init App_ID: ', app_id);
-    this.asperaWeb.version({ success: (data => this.log.info('Connect version: ', data)), error: (err => this.log.error('connect.version CB ERROR: ', err.error)) });
+    const appId = this.asperaWeb.initSession();
+    this.log.debug('Connect init AppID: ', appId);
+    this.asperaWeb.version({
+      success: (data => this.log.info('Connect version: ', data)),
+      error: (err => this.log.error('connect.version CB ERROR: ', err.error))
+    });
 
     let dragDropEventTypeLast: string;
 
     this.asperaWeb.setDragDropTargets(
       '#dragdroparea',
-      { 'dragEnter': false, 'dragLeave': true, 'dragOver': true, 'drop': true },
+      { dragEnter: false, dragLeave: true, dragOver: true, drop: true },
       dragDropObject => {
         if (!this.isConnected) { return; }
         if (dragDropObject.event.type !== dragDropEventTypeLast) {
@@ -243,7 +250,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         if (gotoCred != null) {
           this.log.info('setting cred from goto json: ', gotoCred);
           this.uiCred.useTokenAuth = true;
-          Object.keys(this.uiCred).forEach( k => {
+          Object.keys(this.uiCred).forEach(k => {
             if (typeof this.uiCred[k] === typeof gotoCred[k]) { this.uiCred[k] = gotoCred[k]; }
           });
         }
@@ -432,7 +439,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     if (transferSpecs.transfer_specs && transferSpecs.transfer_specs[0]) {
       const transferSpec = transferSpecs.transfer_specs[0].transfer_spec;
       if (this.uiCred.useTokenAuth) {
-        transferSpec['authentication'] = 'token';
+        transferSpec.authentication = 'token';
         this.connectSettings.allow_dialogs = false;
       } else {
         this.connectSettings.allow_dialogs = true;
@@ -521,10 +528,16 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   showSelectFileDialog() {
-    this.asperaWeb.showSelectFileDialog({ success: (data => this.uploadFiles(data)), error: (err => this.log.error('showSelectFileDialog CB ERROR: ', err.error)) });
+    this.asperaWeb.showSelectFileDialog({
+      success: (data => this.uploadFiles(data)),
+      error: (err => this.log.error('showSelectFileDialog CB ERROR: ', err.error))
+    });
   }
   showSelectFolderDialog() {
-    this.asperaWeb.showSelectFolderDialog({ success: (data => this.uploadFiles(data)), error: (err => this.log.error('showSelectFolderDialog CB ERROR: ', err.error)) });
+    this.asperaWeb.showSelectFolderDialog({
+      success: (data => this.uploadFiles(data)),
+      error: (err => this.log.error('showSelectFolderDialog CB ERROR: ', err.error))
+    });
   }
   uploadFiles(data) {
     this.log.debug('--> action upload');
