@@ -84,7 +84,7 @@ export class AsperaNodeApiService {
     localStorage.setItem('nodeAPIcred', JSON.stringify(storedCred));
   }
 
-  info(): Observable<Object> {
+  info(): Observable<object> {
     const url = this._nodeURL + '/info';
     this.log.info('URL: ', url);
     this.log.debug('nodeAPIcred: ', this._nodeAPIcred);
@@ -95,7 +95,7 @@ export class AsperaNodeApiService {
 
   browse(path: string): Observable<DirList> {
     const url = this._nodeURL + '/files/browse';
-    const data = { path: path, count: 1000 };
+    const data = { path, count: 1000 };
 
     this.log.info('URL: ', url);
     this.log.debug('headers: ', this._headers);
@@ -105,12 +105,12 @@ export class AsperaNodeApiService {
       .post<DirList>(url, data, { headers: this._headers });
   }
 
-  download_setup(paths: Array<Object>): Observable<any> {
+  download_setup(paths: Array<object>): Observable<any> {
     const url = this._nodeURL + '/files/download_setup';
     const data = {
       transfer_requests:
         [
-          { transfer_request: { paths: paths } }
+          { transfer_request: { paths } }
         ]
     };
 
@@ -122,14 +122,14 @@ export class AsperaNodeApiService {
       .post<any>(url, data, { headers: this._headers });
   }
 
-  upload_setup(paths: Array<Object>, destination: string): Observable<any> {
+  upload_setup(paths: Array<object>, destination: string): Observable<any> {
     const url = this._nodeURL + '/files/upload_setup';
     const data = {
       transfer_requests:
         [
           {
             transfer_request: {
-              paths: paths,
+              paths,
               destination_root: destination
             }
           }
@@ -144,9 +144,9 @@ export class AsperaNodeApiService {
       .post<any>(url, data, { headers: this._headers });
   }
 
-  delete(paths: Array<Object>): Observable<any> {
+  delete(paths: Array<object>): Observable<any> {
     const url = this._nodeURL + '/files/delete';
-    const data = { paths: paths };
+    const data = { paths };
 
     this.log.info('URL: ', url);
     this.log.debug('headers: ', this._headers);
@@ -160,7 +160,7 @@ export class AsperaNodeApiService {
     const url = this._nodeURL + '/files/create';
     const data = {
       paths: [
-        { path: path, type: 'directory' }
+        { path, type: 'directory' }
       ]
     };
 
@@ -175,10 +175,10 @@ export class AsperaNodeApiService {
 } // class AsperaNodeApiService
 
 export interface DirList {
-  items: Array<Object>;
+  items: Array<object>;
   self: {
     path: string
-    permissions: Array<Object>,
+    permissions: Array<object>,
   };
   total_count: number;
 }
