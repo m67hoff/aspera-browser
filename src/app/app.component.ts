@@ -54,7 +54,8 @@ export class AppComponent implements OnInit, AfterViewInit {
       nodePW: 'demoaspera',
       useTokenAuth: false
     },
-    connectInstaller: '//d3gcli72yxqn2z.cloudfront.net/connect/v4'
+    connectInstaller: '//d3gcli72yxqn2z.cloudfront.net/connect/v4',
+    connectMinVersion: '3.8.1'
   };
 
   uiCred: NodeAPIcred;
@@ -135,7 +136,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   private _initAsperaconnect() {
-    this.asperaWeb = new AW4.Connect({ sdkLocation: this.config.connectInstaller, minVersion: '3.9.1', pollingTime: 3000, dragDropEnabled: true });
+    this.asperaWeb = new AW4.Connect({ sdkLocation: this.config.connectInstaller, minVersion: this.config.connectMinVersion, pollingTime: 3000, dragDropEnabled: true });
     const asperaInstaller = new AW4.ConnectInstaller({ sdkLocation: this.config.connectInstaller });
     asperaInstaller.supportsInstallingExtensions = true;
 
