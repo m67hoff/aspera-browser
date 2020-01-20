@@ -33,6 +33,7 @@ A sample is deployed on IBM Cloud:
 
 ### Todo / planned / ideas 
 - Docs & more Docs
+- support also ascmd (in addition to nodeApi)
 - user Help
 - unittests & e2e 
 - setting to load icon fonts local
