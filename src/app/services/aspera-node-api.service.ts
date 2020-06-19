@@ -15,7 +15,7 @@ export class AsperaNodeApiService {
 
   private _nodeAPIcred: NodeAPIcred = {
     nodeURL: 'https://demo.asperasoft.com:9092',
-    nodeUser: 'asperaweb',
+    nodeUser: 'aspera',
     nodePW: 'demoaspera',
     useTokenAuth: false
   };
