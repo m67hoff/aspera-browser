@@ -50,7 +50,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     enableCredLocalStorage: true,
     defaultCred: {
       nodeURL: 'https://demo.asperasoft.com:9092',
-      nodeUser: 'asperaweb',
+      nodeUser: 'aspera',
       nodePW: 'demoaspera',
       useTokenAuth: false
     },
