@@ -115,7 +115,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.selection = new SelectionModel<any>(true, []);
 
     this._loadLib('asperaweb', this.config.connectInstaller + '/asperaweb-4.min.js');
-    this._loadLib('connectinstaller', this.config.connectInstaller + '/connectinstaller-4.min.js');
+    // this._loadLib('connectinstaller', this.config.connectInstaller + '/connectinstaller-4.min.js');
   }
 
   private _loadLib(name: string, url: string) {
@@ -129,7 +129,8 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.log.debug('loaded lib: ', url);
       this.log.debug('isloaded: ', this.isLoaded);
       /* tslint:disable:no-string-literal */
-      if (this.isLoaded['asperaweb'] && this.isLoaded['connectinstaller']) { this._initAsperaconnect(); }
+      // if (this.isLoaded['asperaweb'] && this.isLoaded['connectinstaller']) { this._initAsperaconnect(); }
+      if (this.isLoaded['asperaweb']) { this._initAsperaconnect(); }
       /* tslint:enable:no-string-literal */
     };
     document.getElementsByTagName('head')[0].appendChild(node);
