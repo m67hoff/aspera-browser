@@ -173,7 +173,7 @@ app.get(['/config', '/webappconfig.json'], (req, res) => {
 log.http('express', 'static_file_path: ', path.join(__dirname, '/webapp'))
 app.use(function (req, res, next) {
   log.http('express', 'Static ' + req.method + ' ' + req.originalUrl)
-  res.setHeader("Content-Security-Policy", "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com d3gcli72yxqn2z.cloudfront.net")
+  res.setHeader("Content-Security-Policy", "script-src 'self' 'unsafe-inline' www.googletagmanager.com www.google-analytics.com d3gcli72yxqn2z.cloudfront.net")
   next()
 })
 app.use(express.static(path.join(__dirname, '/webapp')))
