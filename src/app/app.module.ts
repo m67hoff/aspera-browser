@@ -42,10 +42,10 @@ import { ZlibB64Module } from './zlib-b64/zlib-b64.module';
     MaterialImportModule,
     BrowserAnimationsModule,
     RouterModule.forRoot([{
-        path: '',
-        component: AppComponent
+      path: '',
+      component: AppComponent
     },
-], { relativeLinkResolution: 'legacy' }),
+    ], { relativeLinkResolution: 'legacy' }),
     ConfigModule,
     LoggerModule,
     ZlibB64Module
