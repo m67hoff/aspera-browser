@@ -35,7 +35,7 @@
     "@angular/platform-browser": "^11.1.1",
     "@angular/platform-browser-dynamic": "^11.1.1",
     "@angular/router": "^11.1.1",
-    "pako": "^2.0.3",
+    "pako": "^1.0.11",
     "rxjs": "^6.6.3",
     "tslib": "^2.1.0",
     "zone.js": "^0.11.3"
