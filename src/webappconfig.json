@@ -15,8 +15,7 @@
             "useTokenAuth": false
         },
         "connectInstaller": "//d3gcli72yxqn2z.cloudfront.net/connect/v4",
-        "// connectInstaller": "//d3gcli72yxqn2z.cloudfront.net/connect_3_9_6_173386_ga/v4",
-        "connectMinVersion": "3.9.8"
+        "connectMinVersion": "3.10.0"
     },
     "config": {
         "enableLocalConfig": true,
