@@ -15,7 +15,6 @@ const setup = require('./setup')
 const nodeApiRequest = require('request')
 const express = require('express')
 const app = express()
-const bodyParser = require('body-parser')
 const helmet = require('helmet')
 
 // duplicate config file settings
@@ -92,7 +91,7 @@ process.on('SIGHUP', () => {
 })
 
 app.use(helmet())
-app.use(bodyParser.json())
+app.use(express.json())
 
 if (
   (PORT <= 1024 || (USE_HTTPS && HTTPS_PORT <= 1024)) &&
@@ -194,6 +193,7 @@ function createNodeRequest (localReq, localRes) {
   options.method = localReq.method
   options.json = localReq.body
   options.headers = localReq.headers
+  delete options.headers.host
   options.headers['accept-encoding'] = 'identity'
   if (FIXED_NODEAPI_USER !== '') {
     log.verbose('createNodeRequest', 'set authorization from config -> User: %s Password: %s', FIXED_NODEAPI_USER, FIXED_NODEAPI_PASS)
