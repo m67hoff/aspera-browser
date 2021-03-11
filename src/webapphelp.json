@@ -1,31 +1,31 @@
 [
     {
-        "url": "https: //www.ibm.com/products/aspera",
+        "url": "https://www.ibm.com/products/aspera",
         "name": "Aspera Homepage",
         "detail": "move the world’s data at maximum speed"
     },
     {
-        "url": "https: //www.ibm.com/products/aspera/downloads",
+        "url": "https://www.ibm.com/products/aspera/downloads",
         "name": "Aspera Downloads",
         "detail": "Documentation & Downloads for Aspera Products"
     },
     {
-        "url": "https: //demo.asperasoft.com",
+        "url": "https://demo.asperasoft.com",
         "name": "Aspera Demoserver",
         "detail": "official site for the Aspera Demoserver used in this example"
     },
     {
-        "url": "https: //github.com/m67hoff/aspera-browser",
+        "url": "https://github.com/m67hoff/aspera-browser",
         "name": "AsperaBrowser @ GitHub",
         "detail": "Source and Docu for this Application (for Developers & Admins)"
     },
     {
-        "url": "https: //github.com/IBM/aspera-cli",
+        "url": "https://github.com/IBM/aspera-cli",
         "name": "Swissarmy knife:  aspera-CLI ",
         "detail": "(with cool asperabrowser goto feature)"
     },
     {
-        "url": "https: //developer.ibm.com/apis/catalog?search=aspera",
+        "url": "https://developer.ibm.com/apis/catalog?search=aspera",
         "name": "Aspera API Documentation",
         "detail": "Discover and try aspera APIs"
     }
