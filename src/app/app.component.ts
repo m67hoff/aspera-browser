@@ -352,7 +352,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   // settings sidenav methods
   testconnection() {
     this.log.debug('--> action test');
-    this.uiCred.nodeURL = this.uiCred.nodeURL.trim();
+    this.uiCred.nodeURL = this.uiCred.nodeURL.trim().replace(/\/+$/, "");
     this.uiCred.nodeUser = this.uiCred.nodeUser.trim();
     this.uiCred.nodePW = this.uiCred.nodePW.trim();
     (this.config.enableCredLocalStorage) ? this.nodeAPI.saveCred(this.uiCred) : this.nodeAPI.setCred(this.uiCred);
@@ -396,7 +396,7 @@ export class AppComponent implements OnInit, AfterViewInit {
           this.APIerror = undefined;
 
           this.log.info('browse result dirList: ', dirList);
-          if (dirList.self && dirList.self.path) {
+          if (dirList.self && dirList.self.path && dirList.items ) {
             this.isConnected = true;
             this.dirList = dirList;
             this.dataSource.data = dirList.items;
