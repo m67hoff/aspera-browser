@@ -9,26 +9,26 @@ const noop = (): any => undefined;
 @Injectable()
 export class Logger {
 
-  private _curLogLevel: LogLevel;
+  private curLogLevel: LogLevel;
 
   constructor(
     private config: Config
   ) {
     const level = +LogLevel[config.logLevel];
-    this._curLogLevel = (level) ? level : LogLevel.WARN;
-    this.log('LogLevel: ', LogLevel[this._curLogLevel]);
+    this.curLogLevel = (level) ? level : LogLevel.WARN;
+    this.log('LogLevel: ', LogLevel[this.curLogLevel]);
   }
 
-  getLogLevel() { return this._curLogLevel; }
+  getLogLevel() { return this.curLogLevel; }
   setLogLevel(level: LogLevel) {
-    this._curLogLevel = level;
+    this.curLogLevel = level;
     this.info('new LogLevel: ', LogLevel[level]);
   }
 
   get log() { return console.log.bind(console); }
 
   get error() {
-    if (this._curLogLevel >= LogLevel.ERROR) {
+    if (this.curLogLevel >= LogLevel.ERROR) {
       return console.error.bind(console);
     } else {
       return noop;
@@ -36,7 +36,7 @@ export class Logger {
   }
 
   get warn() {
-    if (this._curLogLevel >= LogLevel.WARN) {
+    if (this.curLogLevel >= LogLevel.WARN) {
       return console.warn.bind(console);
     } else {
       return noop;
@@ -44,7 +44,7 @@ export class Logger {
   }
 
   get info() {
-    if (this._curLogLevel >= LogLevel.INFO) {
+    if (this.curLogLevel >= LogLevel.INFO) {
       return console.info.bind(console);
     } else {
       return noop;
@@ -52,7 +52,7 @@ export class Logger {
   }
 
   get debug() {
-    if (this._curLogLevel >= LogLevel.DEBUG) {
+    if (this.curLogLevel >= LogLevel.DEBUG) {
       return console.debug.bind(console);
     } else {
       return noop;

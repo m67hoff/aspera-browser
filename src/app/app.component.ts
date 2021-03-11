@@ -91,7 +91,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private configFile: Config,
     private z: ZlibB64,
     public dialog: MatDialog,
-    private _snackBar: MatSnackBar,
+    private snackBar: MatSnackBar,
     private nodeAPI: AsperaNodeApiService,
     private activatedRoute: ActivatedRoute
   ) {
@@ -578,7 +578,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   showConnectSnackBar() {
-    this._snackBar.open('Aspera Connect started', '', { duration: 3000 });
+    this.snackBar.open('Aspera Connect started', '', { duration: 3000 });
   }
 
 }
