@@ -137,7 +137,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   private _initAsperaconnect() {
-    this.asperaWeb = new AW4.Connect({ sdkLocation: this.config.connectInstaller, minVersion: this.config.connectMinVersion, pollingTime: 3000, dragDropEnabled: true });
+    this.asperaWeb =
+      new AW4.Connect({ sdkLocation: this.config.connectInstaller, minVersion: this.config.connectMinVersion, pollingTime: 3000, dragDropEnabled: true });
     const asperaInstaller = new AW4.ConnectInstaller({ sdkLocation: this.config.connectInstaller });
     asperaInstaller.supportsInstallingExtensions = true;
 
@@ -352,7 +353,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   // settings sidenav methods
   testconnection() {
     this.log.debug('--> action test');
-    this.uiCred.nodeURL = this.uiCred.nodeURL.trim().replace(/\/+$/, "");
+    this.uiCred.nodeURL = this.uiCred.nodeURL.trim().replace(/\/+$/, '');
     this.uiCred.nodeUser = this.uiCred.nodeUser.trim();
     this.uiCred.nodePW = this.uiCred.nodePW.trim();
     (this.config.enableCredLocalStorage) ? this.nodeAPI.saveCred(this.uiCred) : this.nodeAPI.setCred(this.uiCred);
