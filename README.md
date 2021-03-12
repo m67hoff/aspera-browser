@@ -16,7 +16,7 @@ A sample is deployed on IBM Cloud:
 - browse, upload, download to any Aspera Transfer Server or ATS/Folder Access-Key - local or remote
 - drag-and-drop to upload
 - see and manage your transfer activity
-- "goto" feature together with [mlia](https://www.rubydoc.info/gems/asperalm)
+- "goto" feature to start from [aspera-cli](https://github.com/IBM/aspera-cli)
 - cloud or on-prem
 - separate or on same system as Transfer Server
 - support for HTTPS 
@@ -32,15 +32,16 @@ A sample is deployed on IBM Cloud:
 ### [AsperaBrowser Handbook](https://github.com/m67hoff/aspera-browser/wiki) 
 
 ### Todo / planned / ideas 
-- Docs & more Docs
+- run on Openshift 
 - support also ascmd (in addition to nodeApi)
+- replace request dependency in node.js (deprecated)
+- run as windows service   
+- Docs & more Docs
+- more error handling
 - user Help
 - unittests & e2e 
-- setting to load icon fonts local
-- run as windows service   
-- authorization integration for node.js server 
+- admin ui for node.js server to set config 
 - sharing via access keys  (as suggested by Laurent)  
-- more connect error Handling
 
 ### Screenshot 
 ![](/doc/img/browse.jpg)
