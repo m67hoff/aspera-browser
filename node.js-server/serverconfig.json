@@ -7,5 +7,8 @@
     "ENABLE_CORS": true,
     "CORS_ORIGIN": "http://localhost:4200",
     "HTTPS_PORT": 44344,
-    "USE_HTTPS": false
+    "USE_HTTPS": false,
+    "EXPRESS_STATIC_HEADERS": {
+        "Content-Security-Policy": "script-src 'self' 'unsafe-inline' www.googletagmanager.com www.google-analytics.com d3gcli72yxqn2z.cloudfront.net"
+    }
 }

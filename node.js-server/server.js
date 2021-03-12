@@ -28,6 +28,7 @@ var PORT = 8888
 
 var HTTPS_PORT = 44344
 var USE_HTTPS = false
+var EXPRESS_STATIC_HEADERS = {"Content-Security-Policy": "script-src 'self' 'unsafe-inline' d3gcli72yxqn2z.cloudfront.net"}
 
 /**************************************************************/
 /*                      Main                                  */
@@ -170,9 +171,10 @@ app.get(['/config', '/webappconfig.json'], (req, res) => {
 
 // serve static files / angular web client
 log.http('express', 'static_file_path: ', path.join(__dirname, '/webapp'))
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
   log.http('express', 'Static ' + req.method + ' ' + req.originalUrl)
-  res.setHeader("Content-Security-Policy", "script-src 'self' 'unsafe-inline' www.googletagmanager.com www.google-analytics.com d3gcli72yxqn2z.cloudfront.net")
+  res.set(EXPRESS_STATIC_HEADERS)
+  log.verbose('express', 'headers:\n', json2s(EXPRESS_STATIC_HEADERS))
   next()
 })
 app.use(express.static(path.join(__dirname, '/webapp')))
@@ -274,6 +276,7 @@ function loadConf () {
   if (c.PORT) { PORT = c.PORT }
   if (c.HTTPS_PORT) { HTTPS_PORT = c.HTTPS_PORT }
   if (c.USE_HTTPS) { USE_HTTPS = c.USE_HTTPS }
+  if (c.EXPRESS_STATIC_HEADERS) { EXPRESS_STATIC_HEADERS = c.EXPRESS_STATIC_HEADERS }
   return c
 }
 
