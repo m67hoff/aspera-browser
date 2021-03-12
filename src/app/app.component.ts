@@ -91,7 +91,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private configFile: Config,
     private z: ZlibB64,
     public dialog: MatDialog,
-    private _snackBar: MatSnackBar,
+    private snackBar: MatSnackBar,
     private nodeAPI: AsperaNodeApiService,
     private activatedRoute: ActivatedRoute
   ) {
@@ -137,7 +137,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   private _initAsperaconnect() {
-    this.asperaWeb = new AW4.Connect({ sdkLocation: this.config.connectInstaller, minVersion: this.config.connectMinVersion, pollingTime: 3000, dragDropEnabled: true });
+    this.asperaWeb =
+      new AW4.Connect({ sdkLocation: this.config.connectInstaller, minVersion: this.config.connectMinVersion, pollingTime: 3000, dragDropEnabled: true });
     const asperaInstaller = new AW4.ConnectInstaller({ sdkLocation: this.config.connectInstaller });
     asperaInstaller.supportsInstallingExtensions = true;
 
@@ -352,7 +353,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   // settings sidenav methods
   testconnection() {
     this.log.debug('--> action test');
-    this.uiCred.nodeURL = this.uiCred.nodeURL.trim();
+    this.uiCred.nodeURL = this.uiCred.nodeURL.trim().replace(/\/+$/, '');
     this.uiCred.nodeUser = this.uiCred.nodeUser.trim();
     this.uiCred.nodePW = this.uiCred.nodePW.trim();
     (this.config.enableCredLocalStorage) ? this.nodeAPI.saveCred(this.uiCred) : this.nodeAPI.setCred(this.uiCred);
@@ -396,7 +397,7 @@ export class AppComponent implements OnInit, AfterViewInit {
           this.APIerror = undefined;
 
           this.log.info('browse result dirList: ', dirList);
-          if (dirList.self && dirList.self.path) {
+          if (dirList.self && dirList.self.path && dirList.items ) {
             this.isConnected = true;
             this.dirList = dirList;
             this.dataSource.data = dirList.items;
@@ -577,7 +578,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   showConnectSnackBar() {
-    this._snackBar.open('Aspera Connect started', '', { duration: 3000 });
+    this.snackBar.open('Aspera Connect started', '', { duration: 3000 });
   }
 
 }

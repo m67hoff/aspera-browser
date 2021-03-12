@@ -50,7 +50,9 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/webappconfig.json"
+              "src/connect",
+              "src/webappconfig.json",
+              "src/webapphelp.json"
             ],
             "styles": [
               "src/styles.css"
