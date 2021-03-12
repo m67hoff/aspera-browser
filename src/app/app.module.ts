@@ -45,7 +45,7 @@ import { ZlibB64Module } from './zlib-b64/zlib-b64.module';
       path: '',
       component: AppComponent
     },
-    ]),
+    ], { relativeLinkResolution: 'legacy' }),
     ConfigModule,
     LoggerModule,
     ZlibB64Module

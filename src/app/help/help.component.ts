@@ -1,4 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+import { Logger } from '../logger/logger.module';
+
+const HELPFILE = 'webapphelp.json';
 
 @Component({
   selector: 'app-help',
@@ -7,33 +13,35 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HelpComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private http: HttpClient,
+    private log: Logger
+  ) { }
 
   links = [
-    {
-      url: 'https://www.asperasoft.com',
-      name: 'Aspera Homepage',
-      detail: 'move the world’s data at maximum speed'
-    },
-    {
-      url: 'https://demo.asperasoft.com',
-      name: 'Aspera Demoserver',
-      detail: 'official Site for the Asper Demoserver used in this example'
-    },
     {
       url: 'https://github.com/m67hoff/aspera-browser',
       name: 'AsperaBrowser @ GitHub',
       detail: 'Source and Docu for this Application (for Developers & Admins)'
-    },
-    {
-      url: 'https://www.rubydoc.info/gems/asperalm',
-      name: 'Laurents Aspera Command Line Interface',
-      detail: 'Amelia - the Multi Layer IBM Aspera Command Line Tool'
     }
   ];
 
+  getHelp(): Observable<object> {
+    const url = HELPFILE;
+    this.log.info('get helpfile links URL: ', url);
+    return this.http.get<object>(url);
+  }
 
   ngOnInit() {
+    this.getHelp().subscribe(
+      (links: any) => {
+        this.links = links;
+        this.log.debug('get help result json: ', links);
+      },
+      (err) => {
+        this.log.error(' getHelp info ERROR: ', err);
+      }
+    );
   }
 
 }
