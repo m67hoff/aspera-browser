@@ -14,3 +14,12 @@ manifest.yml
 node_modules/
 npm-debug.log
 Thumbs.db
+
+# ignore genrated files from ibmcloud toolchain npm publish job
+_env
+_toolchain.json
+_cust_script.sh                                        
+_customer_script.sh                                    
+_pipeline_script.sh                                    
+_pre_script.sh    
+_codestation_script.sh         
