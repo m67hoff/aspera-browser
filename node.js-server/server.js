@@ -45,25 +45,27 @@ program
   .version(packagejson.version, '-v, --version')
   .parse(process.argv)
 
-if (program.config) {
+const options = program.opts()
+
+if (options.config) {
   loadConf()
   setup.service()
   process.exit(0)
 }
 
-if (program.status) {
+if (options.status) {
   loadConf()
   setup.status()
   process.exit(0)
 }
 
-if (program.restart) {
+if (options.restart) {
   loadConf()
   setup.restart()
   process.exit(0)
 }
 
-if (program.defaults) {
+if (options.defaults) {
   loadConf()
   setup.copyDefaults()
   process.exit(0)
