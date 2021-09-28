@@ -17,16 +17,16 @@
     "live": "./node_modules/.bin/nodemon server.js"
   },
   "dependencies": {
-    "commander": "^6.1.0",
+    "commander": "^8.2.0",
     "express": "^4.17.1",
-    "helmet": "^4.4.1",
-    "npmlog": "^4.1.2",
+    "helmet": "^4.6.0",
+    "npmlog": "^5.0.1",
     "request": "^2.88.2"
   },
   "engines": {
     "node": "12.x"
   },
   "devDependencies": {
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.13"
   }
 }
