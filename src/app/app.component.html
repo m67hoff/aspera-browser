@@ -73,12 +73,8 @@
           <button mat-raised-button class="test-button" (click)="testconnection()" [disabled]="!settings.valid || !settings.dirty">
             Apply & Save
           </button>
-          <mat-icon color="warn" class="test-icon" [ngStyle]=" isConnected ? {color: 'green'} : {} ">{{ isConnected ?
-            'check_circle'
-            : 'error' }}</mat-icon>
-          <span class="status" *ngIf="HTTPerror">Error: {{ HTTPerror.status }} - {{ HTTPerror.statusText }} - {{
-            HTTPerror.message
-            }} - {{ HTTPerror.error?.code }} - {{ HTTPerror.error?.host }}</span>
+          <mat-icon color="warn" class="test-icon" [ngStyle]=" isConnected ? {color: 'green'} : {} ">{{ isConnected ? 'check_circle' : 'error' }}</mat-icon>
+          <span class="status" *ngIf="HTTPerror">Error: {{ HTTPerror.status }} - {{ HTTPerror.statusText }} - {{ HTTPerror.message }} - {{ HTTPerror.error?.error?.code }} - {{ HTTPerror.error?.error?.user_message }}</span>
         </p>
       </form>
     </mat-card>
@@ -111,9 +107,7 @@
           <div class="transfer-subtitle" matTooltip="{{ ti.status === 'running' && ti.current_file.length > 30 ? ti.current_file : '' }}"
             matTooltipShowDelay="200" matTooltipHideDelay="300">
             Files: {{ ti.files ? ti.files.length : '?'}}
-            <br /> {{ ti.status === 'running' ? 'Current: ' + (ti.current_file | string) : 'Status: ' + (ti.status |
-            status)
-            }}
+            <br /> {{ ti.status === 'running' ? 'Current: ' + (ti.current_file | string) : 'Status: ' + (ti.status | status) }}
           </div>
           <div class="transfer-error" *ngIf="ti.status === 'failed'">
             Error: {{ ti.error_desc | string }}
@@ -125,8 +119,7 @@
           <div class="transfer-detail">
             <span *ngIf="ti.status !== 'completed'">{{ ti.bytes_written | size }} of {{ ti.bytes_expected | size }}
             </span>
-            <span *ngIf="ti.status === 'completed'">{{ ti.bytes_written | size }} in {{ ti.elapsed_usec/1000 | duration
-              }}
+            <span *ngIf="ti.status === 'completed'">{{ ti.bytes_written | size }} in {{ ti.elapsed_usec/1000 | duration }}
             </span>
             <br />
             <span *ngIf="ti.status === 'running'">ETA: {{(ti.remaining_usec/1000) | ETA | date:'EE HH:mm:ss'}} -
@@ -245,9 +238,7 @@
         </button>
         <div class="progressInfo">
           <mat-progress-bar mode="indeterminate" *ngIf="browseInProgress"></mat-progress-bar>
-          <span class="status" *ngIf="HTTPerror">Error: {{ HTTPerror.status }} - {{ HTTPerror.statusText }} - {{
-            HTTPerror.message
-            }} - {{ HTTPerror.error?.code }} - {{ HTTPerror.error?.host }}</span>
+          <span class="status" *ngIf="HTTPerror">Error: {{ HTTPerror.status }} - {{ HTTPerror.statusText }} - {{ HTTPerror.message }} - {{ HTTPerror.error?.error?.code }} - {{ HTTPerror.error?.error?.user_message }}</span>
           <span class="status" *ngIf="APIerror">Error: {{ APIerror }}</span>
         </div>
         <!-- result / table -->
@@ -317,11 +308,10 @@
 
             <ng-container matColumnDef="mtime">
               <mat-header-cell *matHeaderCellDef mat-sort-header matTooltip="click to sort column" matTooltipShowDelay="200"
-                matTooltipHideDelay="300">
-                M Time </mat-header-cell>
+                matTooltipHideDelay="300"> M Time 
+              </mat-header-cell>
               <mat-cell *matCellDef="let item"> {{ item.mtime | date:'yyyy-MM-dd HH:mm:ss z' }} </mat-cell>
-              <mat-footer-cell *matFooterCellDef><span *ngIf="(selection.selected.length > 0)">+ {{totalDirs}}
-                  Directories</span></mat-footer-cell>
+              <mat-footer-cell *matFooterCellDef><span *ngIf="(selection.selected.length > 0)">+ {{totalDirs}} Directories</span></mat-footer-cell>
             </ng-container>
 
             <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
